@@ -41,13 +41,12 @@ function Header() {
           fontSize: '14px',
           textTransform: 'uppercase',
           lineHeight: headerHeight,
-          padding: '0 24px',
-          width: '100px'
-        },
-        '& a:hover': {
-          fontSize: '13px',
-          opacity: '0.8'
+          padding: '0 24px'
         }
+        // '& a:hover': {
+        //   fontSize: '13px',
+        //   opacity: '0.8'
+        // }
       }}>
         <Link href="/ProductPage" underline="none" >Product</Link>
         <Link href="/NikePage" underline="none" >Nike</Link>
