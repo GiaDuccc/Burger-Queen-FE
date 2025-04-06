@@ -1,6 +1,6 @@
 import { extendTheme } from '@mui/material/styles'
 
-const HEADER_HEIGHT = '44px'
+const HEADER_HEIGHT = '46px'
 
 const theme = extendTheme ({
   shop: {
@@ -10,7 +10,18 @@ const theme = extendTheme ({
     light: {},
     dark: {}
   },
-  components: {}
+  components: {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          '&.MuiTypography-body1': { fontSize: '0.875rem' }
+        }
+      }
+    }
+  },
+  typography: {
+    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Arial, sans-serif'
+  }
 })
 
 export default theme
