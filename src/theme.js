@@ -20,7 +20,8 @@ const theme = extendTheme ({
     }
   },
   typography: {
-    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Arial, sans-serif'
+    // fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Arial, sans-serif'
+    fontFamily: 'SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif'
   }
 })
 

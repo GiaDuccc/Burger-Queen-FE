@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Link from '@mui/material/Link'
-import logoIcon from '~/assets/logo.png'
+import logoIcon from '~/assets/logo2.png'
 import shoppingBagIcon from '~/assets/cart.png'
 import loginIcon from '~/assets/login.png'
 import searchIcon from '~/assets/search.png'
@@ -19,12 +19,13 @@ function Header() {
 
   return (
     <Box sx={{
-      width: '100vw',
+      width: '100%',
       heigth: headerHeight,
       bgcolor: 'white',
       display: 'flex',
       justifyContent: 'center',
-      gap: 2
+      gap: 2,
+      overflow: 'hidden'
     }}>
       <Link href="/" sx={{ height: headerHeight, padding: '0 16px' }} >
         <img src={logoIcon} alt="logo" style={{ height: '44px' }}/>

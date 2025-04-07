@@ -1,4 +1,5 @@
 import Header from '~/components/Header/Header'
+import HeroSection from '~/components/HeroSection/HeroSection'
 import Slogan from '~/components/Slogan/Slogan'
 
 function PumaPage () {
@@ -6,6 +7,7 @@ function PumaPage () {
     <>
       <Header />
       <Slogan />
+      <HeroSection />
       <h1>HELOO PumaPage</h1>
     </>
   )

@@ -26,7 +26,7 @@ export default function HeroSection () {
   useEffect(() => {
     const videoObserver = new IntersectionObserver (([entry]) => {
       setIsVisible(entry.isIntersecting)
-    }, { threshold: 0.5 })
+    }, { threshold: 0.6 })
 
     if (videoRef.current) {
       videoObserver.observe(videoRef.current)
@@ -45,8 +45,12 @@ export default function HeroSection () {
 
     const handleScroll = () => {
       const scrollY = window.scrollY
-      let newScale = Math.max(0.88, 1 - scrollY / 4.5 / 1000)
+      let newScale = Math.max(0.88, 1 - scrollY / 4.7 / 1000)
       let newBorderRadius = Math.min(52, scrollY / 14)
+      if (scrollY < 30) {
+        newScale = 1
+        newBorderRadius = 0
+      }
       setScale(newScale)
       setBorderRadius(`${newBorderRadius}px`)
     }
@@ -56,9 +60,9 @@ export default function HeroSection () {
   }, [isVisible])
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'rgba(0,0,0,.85)', p: '64px' }} >
-        <Typography variant='h1' sx={{ fontSize: '84px' }}>Mac</Typography>
+    <Box sx={{ width: '100%' }} >
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'rgba(0,0,0,.85)', p: '64px 92px ' }} >
+        <Typography variant='h1' sx={{ fontSize: '80px', fontWeight: '600' }}>Mac</Typography>
         <Typography variant='h5' sx={{ fontWeight: 'bold' }} >Bạn nghĩ được <br /> là Mac làm được.</Typography>
       </Box>
       <Box
@@ -97,8 +101,8 @@ export default function HeroSection () {
             bgcolor: '#dcdcdc',
             width: '40px',
             height: '40px',
-            top: '90%',
-            left: '93%',
+            top: '89%',
+            right: '4%',
             borderRadius: '40px',
             display: 'flex',
             alignItems: 'center',

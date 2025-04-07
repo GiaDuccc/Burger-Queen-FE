@@ -19,6 +19,7 @@ const ColorChangeSlogan = () => {
 
   return (
     <Box sx ={{
+      width: '100%',
       bgcolor: colorSlogan.bgcolor,
       padding: '16px 0',
       transition:
