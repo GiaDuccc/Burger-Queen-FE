@@ -3,16 +3,18 @@ import Container from '@mui/material/Container'
 // import Header from '~/components/Header/Header'
 import Header from '~/components/Header/Header'
 import Slogan from '~/components/Slogan/Slogan'
+import HeroSection from './HeroSection'
 
 function HomePage () {
   return (
     <>
       <Container disableGutters maxWidth={false} sx={{
-        bgcolor: 'gray',
-        height: '100vh'
+        bgcolor: 'white',
+        height: '3000px'
       }}>
         <Header />
         <Slogan />
+        <HeroSection />
       </Container>
     </>
   )

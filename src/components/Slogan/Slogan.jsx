@@ -11,7 +11,7 @@ const ColorChangeSlogan = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setColorSlogan({ bgcolor: 'white', textColor: 'rgba(0,0,0,.9)', linkColor:'#2980b9' })
+      setColorSlogan({ bgcolor: '#ecf0f1', textColor: 'rgba(0,0,0,.9)', linkColor:'#2980b9' })
     }, 2000)
 
     return () => clearTimeout(timer)
@@ -21,7 +21,8 @@ const ColorChangeSlogan = () => {
     <Box sx ={{
       bgcolor: colorSlogan.bgcolor,
       padding: '16px 0',
-      transition: 'background-color 1.8s cubic-bezier(0.42, 0, 0.58, 1)'
+      transition:
+        'background-color 1.8s cubic-bezier(0.42, 0, 0.58, 1)'
     }}>
       <Box sx={{
         display: 'flex',
