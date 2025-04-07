@@ -7,6 +7,8 @@ import VansPage from './pages/VansPage/VansPage'
 import ConversePage from './pages/ConversePage/ConversePage'
 import PumaPage from './pages/PumaPage/PumaPage'
 import ProductPage from './pages/ProductPage/ProductPage'
+import BitisPage from './pages/BitisPage/BitisPage'
+
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
         <Route path='/PumaPage' element={<PumaPage />} />
         <Route path='/VansPage' element={<VansPage />} />
         <Route path='/ConversePage' element={<ConversePage />} />
+        <Route path='/BitisPage' element={<BitisPage />} />
         <Route path='/login' element={<Login />} />
       </Routes>
     </Router>

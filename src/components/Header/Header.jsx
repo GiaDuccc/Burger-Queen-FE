@@ -52,6 +52,7 @@ function Header() {
         <Link href="/ProductPage" underline="none" >Product</Link>
         <Link href="/NikePage" underline="none" >Nike</Link>
         <Link href="/AdidasPage" underline="none" >Adidas</Link>
+        <Link href="/BitisPage" underline="none" >Biti&apos;s</Link>
         <Link href="/PumaPage" underline="none" >Puma</Link>
         <Link href="/VansPage" underline="none" >Vans</Link>
         <Link href="/ConversePage" underline="none" >Converse</Link>

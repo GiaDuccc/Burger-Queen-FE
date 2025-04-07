@@ -4,6 +4,8 @@ import Container from '@mui/material/Container'
 import Header from '~/components/Header/Header'
 import Slogan from '~/components/Slogan/Slogan'
 import HeroSection from '~/components/HeroSection/HeroSection'
+import Slider from '~/components/Slider/Slider'
+
 
 function HomePage () {
   return (
@@ -18,6 +20,7 @@ function HomePage () {
         <Header />
         <Slogan />
         <HeroSection />
+        <Slider />
       </Container>
     </>
   )
