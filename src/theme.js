@@ -14,14 +14,15 @@ const theme = extendTheme ({
     MuiTypography: {
       styleOverrides: {
         root: {
-          '&.MuiTypography-body1': { fontSize: '0.875rem' }
+          // '&.MuiTypography-body1': { fontSize: '0.875rem' }
+          fontSize: '0.875rem'
         }
       }
     }
   },
   typography: {
-    // fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Arial, sans-serif'
-    fontFamily: 'SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif'
+    fontFamily: 'Inter, sans-serif'
+    // fontFamily: 'SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif'
   }
 })
 

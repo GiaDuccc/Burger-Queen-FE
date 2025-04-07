@@ -63,7 +63,7 @@ export default function HeroSection () {
     <Box sx={{ width: '100%' }} >
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'rgba(0,0,0,.85)', p: '64px 92px ' }} >
         <Typography variant='h1' sx={{ fontSize: '80px', fontWeight: '600' }}>Mac</Typography>
-        <Typography variant='h5' sx={{ fontWeight: 'bold' }} >Bạn nghĩ được <br /> là Mac làm được.</Typography>
+        <Typography variant='h5' sx={{ fontSize: '28px', fontWeight: 'bold', lineHeight: '1.1428571429' }} >If you can dream it,<br />Mac can do it.</Typography>
       </Box>
       <Box
         sx={{
