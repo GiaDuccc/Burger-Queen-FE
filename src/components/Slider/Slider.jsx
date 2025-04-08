@@ -1,5 +1,8 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useRef } from 'react';
 
 // Mock data
 const items = [
@@ -65,12 +68,33 @@ const items = [
   }
 ]
 
+function Slider() {
 
-function AppleStyleCarousel() {
+  const sliderRef = useRef(null)
+
+  const sliderNextItem = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({
+        left: 424,
+        behavior: 'smooth'
+      })
+    }
+  }
+
+  const sliderPrevItem = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({
+        left: -424,
+        behavior: 'smooth'
+      })
+    }
+  }
+
   return (
     <Box sx={{ p: '0 0  24px' }}>
       <Typography sx={{ fontSize: '56px', fontWeight: '600', p: '32px 0 32px 91px', color: 'rgba(0,0,0,.85)' }}>All Brand.</Typography>
       <Box
+        ref={ sliderRef }
         sx={{
           display: 'flex',
           overflowX: 'scroll',
@@ -117,8 +141,49 @@ function AppleStyleCarousel() {
           </Box>
         ))}
       </Box>
+      <Box sx={{ display: 'flex', gap: 2, p: '16px 32px', justifyContent: 'right' }}>
+        <Box
+          sx={{
+            bgcolor: '#f5f6fa',
+            width: '40px',
+            height: '40px',
+            borderRadius: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            color: 'rgba(0,0,0,.85)',
+            '&:hover': {
+              bgcolor: '#eeeeee'
+            }
+          }}
+          onClick={sliderPrevItem}
+        >
+          <ChevronLeftIcon/>
+        </Box>
+        <Box
+          sx={{
+            bgcolor: '#f5f6fa',
+            width: '40px',
+            height: '40px',
+            borderRadius: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            color: 'rgba(0,0,0,.85)',
+            '&:hover': {
+              bgcolor: '#eeeeee'
+            }
+          }}
+          onClick={sliderNextItem}
+        >
+          <ChevronRightIcon />
+        </Box>
+      </Box>
+      
     </Box>
   )
 }
 
-export default AppleStyleCarousel
+export default Slider
