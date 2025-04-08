@@ -6,11 +6,17 @@ import Container from '@mui/material/Container'
 
 function NikePage () {
   return (
-    <Container disableGutters maxWidth={false} sx={{ bgcolor: 'white', width: '100vw' }}>
+    <Container disableGutters maxWidth={false} sx={{
+      bgcolor: 'white',
+      width: '100%',
+      height: '3000px',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
       <Header />
       <Slogan />
-      <HeroSection video={nikeVideoHeroSection} />
-      <h1>HELOO NikePage</h1>
+      <HeroSection video={nikeVideoHeroSection} title={'Mac'} descTitle={'If you can dream it,\nMac can do it.'} />
+      <h1 style={{ color: 'black' }}>Helo NikePage</h1>
     </Container>
   )
 }

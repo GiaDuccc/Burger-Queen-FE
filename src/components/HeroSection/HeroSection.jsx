@@ -5,7 +5,7 @@ import PauseIcon from '@mui/icons-material/Pause'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 
 
-export default function HeroSection ({ video }) {
+export default function HeroSection ({ video, title, descTitle}) {
 
   const [scale, setScale] = useState(1)
   const [borderRadius, setBorderRadius] = useState('0px')
@@ -61,8 +61,8 @@ export default function HeroSection ({ video }) {
   return (
     <Box sx={{ width: '100%' }} >
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'rgba(0,0,0,.85)', p: '64px 92px ' }} >
-        <Typography variant='h1' sx={{ fontSize: '80px', fontWeight: '600' }}>Mac</Typography>
-        <Typography variant='h5' sx={{ fontSize: '28px', fontWeight: 'bold', lineHeight: '1.1428571429' }} >If you can dream it,<br />Mac can do it.</Typography>
+        <Typography variant='h1' sx={{ fontSize: '72px', fontWeight: '600' }}>{title}</Typography>
+        <Typography variant='h5' sx={{ fontSize: '28px', fontWeight: 'bold', lineHeight: '1.1428571429', whiteSpace: 'pre-line' }} >{descTitle}</Typography>
       </Box>
       <Box
         sx={{
