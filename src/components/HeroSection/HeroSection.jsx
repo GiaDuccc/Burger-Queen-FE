@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import video1 from '~/assets/video1.mp4'
 import PauseIcon from '@mui/icons-material/Pause'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 
 
-export default function HeroSection () {
+export default function HeroSection ({ video }) {
 
   const [scale, setScale] = useState(1)
   const [borderRadius, setBorderRadius] = useState('0px')
@@ -87,7 +86,7 @@ export default function HeroSection () {
           loop
           muted
           playsInline
-          src={video1}
+          src={video}
           sx={{
             width: '100%',
             height: '100%',
@@ -98,7 +97,7 @@ export default function HeroSection () {
         <Box
           sx={{
             position: 'absolute',
-            bgcolor: '#dcdcdc',
+            bgcolor: '#f5f6fa',
             width: '40px',
             height: '40px',
             top: '89%',
@@ -107,7 +106,10 @@ export default function HeroSection () {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            '&:hover': {
+              bgcolor: '#dcdcdc'
+            }
           }}
           onClick={togglePlayVideo}
         >
