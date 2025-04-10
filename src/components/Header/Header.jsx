@@ -37,24 +37,23 @@ function Header() {
         alignItems: 'center',
         height: headerHeight,
         '& a': {
-          color: 'rgba(0,0,0,0.9)',
+          color: 'rgba(0,0,0,0.85)',
           fontWeight: 400,
           fontSize: '14px',
-          textTransform: 'uppercase',
+          // textTransform: 'uppercase',
           lineHeight: headerHeight,
           padding: '0 24px'
+        },
+        '& a:hover': {
+          opacity: '.8'
         }
-        // '& a:hover': {
-        //   fontSize: '13px',
-        //   opacity: '0.8'
-        // }
       }}>
         <Link href="/ProductPage" underline="none" >Product</Link>
         <Link href="/NikePage" underline="none" >Nike</Link>
         <Link href="/AdidasPage" underline="none" >Adidas</Link>
         <Link href="/BitisPage" underline="none" >Biti&apos;s</Link>
         <Link href="/PumaPage" underline="none" >Puma</Link>
-        <Link href="/VansPage" underline="none" >Vans</Link>
+        <Link href="/NewBalancePage" underline="none" >NewBalance</Link>
         <Link href="/ConversePage" underline="none" >Converse</Link>
       </Box>
 

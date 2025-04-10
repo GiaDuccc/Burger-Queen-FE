@@ -47,6 +47,7 @@ const ColorChangeSlogan = () => {
   )
 }
 
+
 export default function Slogan () {
   return <ColorChangeSlogan />
 }

@@ -18,7 +18,7 @@ function HomePage () {
     }}>
       <Header />
       <Slogan />
-      <HeroSection video={video1} />
+      <HeroSection video={video1} title={'Mac'} descTitle={'If you can dream it,\nMac can do it.'} />
       <Slider />
     </Container>
   )
