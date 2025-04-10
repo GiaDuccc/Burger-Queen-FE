@@ -97,11 +97,11 @@ export default function HeroSection ({ video, title, descTitle}) {
         <Box
           sx={{
             position: 'absolute',
+            top: '89%',
+            right: '4%',
             bgcolor: '#f5f6fa',
             width: '40px',
             height: '40px',
-            top: '89%',
-            right: '4%',
             borderRadius: '40px',
             display: 'flex',
             alignItems: 'center',

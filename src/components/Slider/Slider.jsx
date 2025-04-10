@@ -92,7 +92,7 @@ function Slider() {
 
   return (
     <Box sx={{ p: '0 0  24px' }}>
-      <Typography sx={{ fontSize: '56px', fontWeight: '600', p: '32px 0 32px 91px', color: 'rgba(0,0,0,.85)' }}>All Brand.</Typography>
+      <Typography sx={{ fontSize: '56px', fontWeight: '600', p: '32px 0 32px 91px', color: 'rgba(0,0,0,.85)' }}>All brand.</Typography>
       <Box
         ref={ sliderRef }
         sx={{
@@ -101,7 +101,7 @@ function Slider() {
           // scrollSnapType: 'x mandatory',
           gap: 3,
           p: '12px 91px 12px 91px',
-          scrollbarWidth: 'none', // Ẩn scroll bar ở Firefox
+          scrollbarWidth: 'none',
           '&::-webkit-scrollbar': {
             display: 'none' // Ẩn scroll bar ở Chrome
           }
@@ -118,8 +118,6 @@ function Slider() {
               borderRadius: 4,
               bgcolor: 'lightgray',
               display: 'flex',
-              // alignItems: 'center',
-              // justifyContent: 'center',
               fontWeight: 'bold',
               transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
               backgroundImage: `url(${item.products.image})`,
@@ -181,7 +179,6 @@ function Slider() {
           <ChevronRightIcon />
         </Box>
       </Box>
-      
     </Box>
   )
 }
