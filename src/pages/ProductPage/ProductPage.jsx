@@ -9,11 +9,13 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { useState, useEffect } from 'react'
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material'
 import DoneIcon from '@mui/icons-material/Done';
+import { fetchProductDetailsAPI } from '~/apis'
+import ProductList from './ProductList/ProductList'
 
 const products = [
   {
     image: [
-      'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/c4c1acba-008a-4955-bcf8-dc17250523c5/W+AIR+MAX+DN8.png',
+      'https://assets.adidas.com/images/h_2000,f_auto,q_auto,fl_lossy,c_fill,g_auto/68ae7ea7849b43eca70aac1e00f5146d_9366/Giay_Stan_Smith_trang_FX5502_01_standard.jpg',
       'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/ab8e8332-0a72-44b7-9049-030819e196ab/W+AIR+MAX+DN8.png'
     ],
     colors: ['blue-#749cbe', 'white-#f5f5f7'],
@@ -178,16 +180,42 @@ const filterOptions = [
   { Price: ['Blue', 'Green', 'White', 'Black', 'Gray'] }
 ]
 
+function getColorHex(colorName) {
+  const colorMap = {
+    red: '#ff0000',
+    blue: '#0000ff',
+    green: '#00ff00',
+    white: '#ffffff',
+    black: '#000000'
+  }
+  return colorMap[colorName] || '#000000'
+}
+
 function ProductPage() {
 
-  const [hoveredObject, setHoveredObject] = useState({ hoveredItem: null, hoveredColor: 0 })
   const [openFilterOption, setOpenFilterOption] = useState({ brand: false, colour: false, price: false, stock: false })
 
+  const [productList, setProductList] = useState([])
+
+  useEffect(() => {
+    // Tạm thời fix cứng boardId, flow chuẩn chỉnh về sau khi học nâng cao là chúng ta sẽ sử dụng react-router-dom để lấy chuẩn boardId từ URL về
+    const productId = '67f791fa8273df6069ac3d53'
+    // callAPI
+    fetchProductDetailsAPI(productId).then(item => {
+      const product = {
+        image: ['/assets/anh1.png', '/assets/anh3.png'],
+        colors: item.color.map(c => c + `-${getColorHex(c)}`),
+        name: item.name,
+        stock: item.stock,
+        price: item.price
+      }
+      setProductList([product])
+    })
+  }, [])
+
   // useEffect(() => {
-  //   console.log('hoveredItem:', hoveredObject.hoveredItem)
-  //   console.log('hoveredColor:', hoveredObject.hoveredColor)
   //   console.log(openFilterOption)
-  // }, [hoveredObject])
+  // }, [])
 
   return (
     <Container disableGutters maxWidth={false} sx={{ bgcolor: 'white', width: '100%', height: 'fit-content' }}>
@@ -199,8 +227,8 @@ function ProductPage() {
         <Box>
           <Typography sx={{ color: 'rgba(0,0,0,.85)', fontSize: '48px', fontWeight: '600', p: '24px 8px', display: 'inline-block' }} >
             All products.
-            <Typography sx={{ display: 'inline-block', color: '#7e7e85', fontSize: '48px', fontWeight: '600' }} >Choose one</Typography>
           </Typography>
+          <Typography sx={{ display: 'inline-block', color: '#7e7e85', fontSize: '48px', fontWeight: '600' }} >Choose one</Typography>
         </Box>
         <Box
           className="ProductList_Filter"
@@ -269,24 +297,30 @@ function ProductPage() {
                           transform: 'scale(1.02)',
                           transformOrigin: 'center',
                           cursor: 'pointer'
+                        },
+                        '&:hover svg': {
+                          color: 'rgba(0,0,0,.85)'
                         }
                       }}
                     >
                       <Typography >{key}</Typography>
                       <Box sx={{
                         bgcolor: '#f3f3f3',
+                        // bgcolor: '#333336',
                         width: '36px',
                         height: '36px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        borderRadius: '36px'
-                      }}>
-                        <KeyboardArrowDownIcon sx={{
-                          transition: 'transform 0.4s cubic-bezier(0.42, 0, 0.58, 1)',
+                        borderRadius: '36px',
+                        '& svg': {
+                          transition: 'all 0.4s cubic-bezier(0.42, 0, 0.58, 1)',
                           transform: openFilterOption[key.toLowerCase()] ? 'scaleY(-1)' : 'scaleY(1)',
-                          transformOrigin: 'center'
-                        }}/>
+                          transformOrigin: 'center',
+                          color: 'rgba(0,0,0,.5)'
+                        }
+                      }}>
+                        <KeyboardArrowDownIcon />
                       </Box>
                     </Box>
                     <Box sx={{
@@ -384,86 +418,7 @@ function ProductPage() {
           </Box>
 
           {/* Products list */}
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            color: 'black',
-            flex: 8,
-            gap: 3,
-            height: '100%',
-            py: '24px'
-          }}>
-            {products.map((product, index) => (
-              <Box
-                key={index}
-                onMouseEnter={() => setHoveredObject(prev => ({ ...prev, hoveredItem: index }))}
-                onMouseLeave={() => setHoveredObject({ hoveredItem: null, hoveredColor: 0 })}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  bgcolor: 'white',
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '16px',
-                  boxShadow: '1px 1px 10px rgb(220, 220, 220)',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
-                  '&:hover': {
-                    boxShadow: '2px 2px 8px rgb(201, 200, 200)',
-                    transform: 'scale(1.02)',
-                    transformOrigin: 'center',
-                    cursor: 'pointer'
-                  }
-                }}
-              >
-                <Box sx={{ height: '315px' }}>
-
-                  {/* Ảnh khi chưa click color */}
-                  <img src={product.image[0]}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: hoveredObject.hoveredItem === index ? 'none' : 'block' }} />
-
-                  {/* Ảnh khi click color */}
-                  {hoveredObject.hoveredItem === index && (
-                    <img
-                      src={product.image[hoveredObject.hoveredColor]}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        display: 'block'
-                      }}
-                    />
-                  )}
-
-                </Box>
-                <Box sx={{ p: '16px 0' }}>
-                  {/* Màu sắc... */}
-                  <Box sx={{ display: 'flex', gap: 1.3, justifyContent: 'center' }}>
-                    {product.colors.map((color, idx) => (
-                      <Box
-                        key={idx}
-                        onMouseEnter={() => setHoveredObject(prev => ({ ...prev, hoveredColor: idx }))}
-                        sx={{
-                          bgcolor: color.split('-')[1],
-                          width: '13px', height: '13px',
-                          borderRadius: '16px',
-                          border: '1px solid rgba(129, 125, 119, .6)'
-                        }}
-                      ></Box>
-                    ))}
-                  </Box>
-                  <Box sx={{ p: '12px 0 0 16px' }}>
-                    {/* Stock */}
-                    <Typography sx={{ color: '#d33918', fontSize: '16px', fontWeight: '600' }}>{product.stock > 0 ? 'Just in' : 'Sold Out'}</Typography>
-                    {/* Tên sản phẩm */}
-                    <Typography sx={{ fontWeight: '600', fontSize: '20px', py: '4px' }} >{product.name}</Typography>
-                    {/* Price */}
-                    <Typography>{Number(product.price).toLocaleString('vi-VN')}đ</Typography>
-                  </Box>
-                </Box>
-              </Box>
-            ))}
-          </Box>
+          <ProductList products={ productList } />
         </Box>
       </Box>
     </Container>

@@ -99,7 +99,7 @@ export default function HeroSection ({ video, title, descTitle}) {
             position: 'absolute',
             top: '89%',
             right: '4%',
-            bgcolor: '#f5f6fa',
+            bgcolor: '#333336',
             width: '40px',
             height: '40px',
             borderRadius: '40px',
@@ -107,16 +107,17 @@ export default function HeroSection ({ video, title, descTitle}) {
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            '&:hover': {
-              bgcolor: '#dcdcdc'
+            '&:hover svg': {
+              color: 'white',
+              transition: 'color 0.3s cubic-bezier(0.42, 0, 0.58, 1)'
             }
           }}
           onClick={togglePlayVideo}
         >
           {playVideo ?
-            <PauseIcon sx={{ color: 'rgba(0,0,0,.5)' }} />
+            <PauseIcon sx={{ color: '#d6d6d7' }} />
             :
-            <PlayArrowIcon sx={{ color: 'rgba(0,0,0,.5)' }} />
+            <PlayArrowIcon sx={{ color: '#d6d6d7' }} />
           }
         </Box>
       </Box>

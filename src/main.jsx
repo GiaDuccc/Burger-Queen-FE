@@ -6,10 +6,10 @@ import { CssVarsProvider } from '@mui/material/styles'
 import theme from './theme.js'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <CssVarsProvider theme={theme}>
       <CssBaseline />
       <App />
     </CssVarsProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 )
