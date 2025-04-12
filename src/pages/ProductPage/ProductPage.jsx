@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable react-hooks/exhaustive-deps */
 import Header from '~/components/Header/Header'
 import HeroSection from '~/components/HeroSection/HeroSection'
 import Slogan from '~/components/Slogan/Slogan'
@@ -27,6 +29,7 @@ import '~/App.css'
 //   }
 // ]
 
+// bảng quy đổi từ màu -> mã màu
 function getColorHex(colorName) {
   const colorMap = {
     red: '#f54a4a',
@@ -44,20 +47,29 @@ function getColorHex(colorName) {
 }
 
 function ProductPage() {
+  // state lưu danh sách sản phẩm
   const [productList, setProductList] = useState([])
+  // Theo dõi biến ref (mục đích cho cuộn lên khi đổi trang)
   const contentRef = useRef(null)
+  // lưu biến lần đầu load tránh vào lần đầu bị cuộn lên
   const isFirstLoad = useRef(true)
+  // state lưu khi đang fetch
   const [isLoading, setIsLoading] = useState(true)
+  // state lưu trang product (dùng để lưu trang product đã qua và trang product mới để khi đổi trang không bị khựng)
   const [productCache, setProductCache] = useState({})
 
-
+  // set param trên URL
   const [searchParams, setSearchParams] = useSearchParams()
+  // Lấy ra page ở trên URL, nếu chưa có thì mặc định là 1 khi vừa vào trang lần đầu
   const pageFromURL = parseInt(searchParams.get('page')) || 1
 
-  // const [currentPage, setCurrentPage] = useState(pageFromURL)
+  // set Current page bằng page trên param
   const currentPage = pageFromURL
+
+  // state lưu tổng trang để làm mục trang phía cuối
   const [totalPages, setTotalPages] = useState(0)
 
+  // Hàm handle khi next trang
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setSearchParams({ page: currentPage + 1 }, { replace: false })
@@ -65,6 +77,7 @@ function ProductPage() {
     }
   }
 
+  // Hàm handle khi prev trang
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setSearchParams({ page: currentPage - 1 }, { replace: false })
