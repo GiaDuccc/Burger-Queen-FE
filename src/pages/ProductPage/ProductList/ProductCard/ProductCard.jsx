@@ -4,8 +4,6 @@ import { useState } from 'react'
 
 function ProductCard({ product, index }) {
 
-  console.log('product:', product)
-
   const [hoveredObject, setHoveredObject] = useState({ hoveredItem: null, hoveredColor: 0 })
 
   return (
@@ -67,7 +65,12 @@ function ProductCard({ product, index }) {
             ></Box>
           ))}
         </Box>
-        <Box sx={{ p: '12px 0 0 16px' }}>
+        <Box sx={{
+          p: '12px 16px 0 16px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center'
+        }}>
           {/* Stock */}
           <Typography sx={{ color: '#d33918', fontSize: '16px', fontWeight: '600' }}>{product.stock > 0 ? 'Just in' : 'Sold Out'}</Typography>
           {/* Tên sản phẩm */}
