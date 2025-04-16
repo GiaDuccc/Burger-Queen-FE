@@ -6,14 +6,20 @@ export const fetchProductDetailsAPI = async (productId) => {
   return response.data
 }
 
-export const fetchAllProductAPI = async () => {
-  const response = await axios.get(`${API_ROOT}/v1/products/`)
+export const fetchAllProductFilter = async () => {
+  const response = await axios.get(`${API_ROOT}/v1/products/filter`)
   return response.data
 }
 
-export const fetchAllProductPageAPI = async (page, limit) => {
+// export const fetchAllProductAPI = async () => {}
+
+export const fetchAllProductPageAPI = async (page, limit, filter={}) => {
   const response = await axios.get(`${API_ROOT}/v1/products/`, {
-    params: { page, limit }
+    params: {
+      page,
+      limit,
+      ...filter
+    }
   })
   return response
 }

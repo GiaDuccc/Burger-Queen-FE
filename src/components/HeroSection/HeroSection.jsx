@@ -5,7 +5,7 @@ import PauseIcon from '@mui/icons-material/Pause'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 
 
-export default function HeroSection ({ video, title, descTitle}) {
+export default function HeroSection({ video, title, descTitle }) {
 
   const [scale, setScale] = useState(1)
   const [borderRadius, setBorderRadius] = useState('0px')
@@ -23,7 +23,8 @@ export default function HeroSection ({ video, title, descTitle}) {
   }
 
   useEffect(() => {
-    const videoObserver = new IntersectionObserver (([entry]) => {
+
+    const videoObserver = new IntersectionObserver(([entry]) => {
       setIsVisible(entry.isIntersecting)
     }, { threshold: 0.6 })
 
@@ -44,6 +45,9 @@ export default function HeroSection ({ video, title, descTitle}) {
 
     const handleScroll = () => {
       const scrollY = window.scrollY
+
+      sessionStorage.setItem('scrollYStorage', scrollY)
+
       let newScale = Math.max(0.88, 1 - scrollY / 4.7 / 1000)
       let newBorderRadius = Math.min(52, scrollY / 14)
       if (scrollY < 30) {
@@ -55,8 +59,28 @@ export default function HeroSection ({ video, title, descTitle}) {
     }
 
     window.addEventListener('scroll', handleScroll)
+
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isVisible])
+
+  useEffect(() => {
+    const savedY = sessionStorage.getItem('scrollYStorage')
+    if (savedY) {
+      const scroll = parseFloat(savedY)
+      let newScale = Math.max(0.88, 1 - scroll / 4.7 / 1000)
+      let newBorderRadius = Math.min(52, scroll / 14)
+      if (scroll < 30) {
+        newScale = 1
+        newBorderRadius = 0
+      }
+      setScale(newScale)
+      setBorderRadius(`${newBorderRadius}px`)
+    }
+  }, [isVisible])
+
+  // useEffect(() => {
+  //   console.log(isVisible)
+  // })
 
   return (
     <Box sx={{ width: '100%' }} >
@@ -90,7 +114,9 @@ export default function HeroSection ({ video, title, descTitle}) {
           sx={{
             width: '100%',
             height: '100%',
-            objectFit: 'cover'
+            objectFit: 'cover',
+            overflowY: 'hidden',
+            border: 'none'
           }}
           onClick={togglePlayVideo}
         />

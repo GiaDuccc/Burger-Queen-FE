@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable react-hooks/exhaustive-deps */
 import Header from '~/components/Header/Header'
 import HeroSection from '~/components/HeroSection/HeroSection'
@@ -9,12 +8,13 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { fetchAllProductPageAPI } from '~/apis'
+import { fetchAllProductFilter, fetchAllProductPageAPI } from '~/apis'
 import ProductList from './ProductList/ProductList'
 import Filter from './Filter/Filter'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import '~/App.css'
+import CircularProgress from '@mui/material/CircularProgress'
 
 // const products = [
 //   {
@@ -40,19 +40,25 @@ function getColorHex(colorName) {
     purple: '#b56fe9',
     orange: '#ff8939',
     brown: '#9b6d4e',
-    grey: '#a7a7a7',
-    yellow: '#ffeb00'
+    gray: '#a7a7a7',
+    yellow: '#ffeb00',
+    cream: '#fff8dc',
+    gold: '#FFD700',
+    pink: '#f188ff',
+    copper: '#B87333',
+    lightPink: '#FFB6C1',
+    darkPink: '#FF69B4'
   }
-  return colorMap[colorName] || '#000000'
+  return colorMap[colorName] || '#00e7c5'
 }
 
-function ProductPage() {
+function ProductPage () {
   // state lưu danh sách sản phẩm
   const [productList, setProductList] = useState([])
   // Theo dõi biến ref (mục đích cho cuộn lên khi đổi trang)
   const contentRef = useRef(null)
   // lưu biến lần đầu load tránh vào lần đầu bị cuộn lên
-  const isFirstLoad = useRef(true)
+  const [isFirstLoad, setIsFirstLoad] = useState(true)
   // state lưu khi đang fetch
   const [isLoading, setIsLoading] = useState(true)
   // state lưu trang product (dùng để lưu trang product đã qua và trang product mới để khi đổi trang không bị khựng)
@@ -69,10 +75,14 @@ function ProductPage() {
   // state lưu tổng trang để làm mục trang phía cuối
   const [totalPages, setTotalPages] = useState(0)
 
+  const [filterOptions, setFilterOptions] = useState([])
+
   // Hàm handle khi next trang
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setSearchParams({ page: currentPage + 1 }, { replace: false })
+      const currentParams = Object.fromEntries(searchParams.entries())
+      currentParams.page = currentPage + 1
+      setSearchParams(currentParams, { replace: false })
       // setCurrentPage(prev => prev + 1)
     }
   }
@@ -80,26 +90,58 @@ function ProductPage() {
   // Hàm handle khi prev trang
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setSearchParams({ page: currentPage - 1 }, { replace: false })
-      // setCurrentPage(prev => prev - 1)
+      const currentParams = Object.fromEntries(searchParams.entries())
+      currentParams.page = currentPage - 1
+      setSearchParams(currentParams, { replace: false })
     }
   }
 
+  useEffect( () => {
+    const brandSet = new Set()
+    const colorSet = new Set()
+    const typeSet = new Set()
+    const stockSet = (['Just in', 'Sold out'])
+    const priceSet = (['Just in', 'Sold out'])
+
+    fetchAllProductFilter().then(data => {
+      data.forEach(product => {
+        brandSet.add(product.brand.toLowerCase())
+        product.color.forEach(c => colorSet.add(c.toLowerCase()))
+        typeSet.add(product.type.toLowerCase())
+      })
+      setFilterOptions([
+        { Brand: Array.from(brandSet).sort() },
+        { Color: Array.from(colorSet).sort() },
+        { Type: Array.from(typeSet).sort() },
+        { Stock: Array.from(stockSet).sort() },
+        { Price: Array.from(priceSet).sort() }
+      ])
+    })
+
+  }, [isFirstLoad])
+
   useEffect(() => {
     setIsLoading(true)
-    // setSearchParams({ page: currentPage }, { replace: false })
-    if (productCache[currentPage]) {
-      setProductList(productCache[currentPage])
+
+    const allParams = Object.fromEntries(searchParams.entries())
+    const { page, limit, ...filters } = allParams
+    const cacheKey = searchParams.toString()
+
+    if (productCache[cacheKey]) {
+      setProductList(productCache[cacheKey])
       setIsLoading(false)
     } else {
-      fetchAllProductPageAPI(currentPage, 12).then(data => {
+
+      fetchAllProductPageAPI(currentPage, 12, filters).then(data => {
         const products = data.data.products.map(product => ({
-          image: ['/assets/anh1.png', '/assets/anh3.png'],
+          image: product.image?.map?.(i => `/allProduct/${product.name}/`+i.split('.')[0] + '.png'),
           colors: product.color.map(c => c + `-${getColorHex(c)}`),
           name: product.name,
+          type: product.type,
           stock: product.stock,
           price: product.price
         }))
+
         setProductList(products)
         setProductCache(prev => ({
           ...prev,
@@ -108,18 +150,20 @@ function ProductPage() {
         setTotalPages(Math.ceil(data.data.total / 12))
         setIsLoading(false)
       })
-
     }
-  }, [currentPage])
+  }, [searchParams])
 
   useEffect(() => {
+
+    const allParams = Object.fromEntries(searchParams.entries())
+    const { page, limit, ...filters } = allParams
     if (!productCache[currentPage + 1] && currentPage < totalPages) {
-      console.log('chay fetch 2')
-      fetchAllProductPageAPI(currentPage + 1, 12).then(data => {
+      fetchAllProductPageAPI(currentPage + 1, 12, filters).then(data => {
         const nextProducts = data.data.products.map(product => ({
           image: ['/assets/anh1.png', '/assets/anh3.png'],
           colors: product.color.map(c => c + `-${getColorHex(c)}`),
           name: product.name,
+          type: product.type,
           stock: product.stock,
           price: product.price
         }))
@@ -131,41 +175,43 @@ function ProductPage() {
     }
   }, [currentPage, totalPages])
 
-  // useEffect(() => {
-  //   // Khi URL thay đổi, update lại currentPage
-  //   setCurrentPage(pageFromURL)
-  // }, [pageFromURL])
 
   useEffect(() => {
-    // console.log(totalPages)
-    // console.log(`${currentPage}`, productCache[currentPage])
-    // console.log(`${currentPage + 1}`, productCache[currentPage + 1])
-    console.log('productCache:', productCache)
-
-  })
-
+    const currentParams = Object.fromEntries(searchParams.entries())
+    currentParams.page = pageFromURL
+    setSearchParams(currentParams, { replace: false })
+    setIsFirstLoad(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Chạy 1 lần duy nhất
+  
+  // Chạy khi đổi trang hoặc filter để scroll
   useEffect(() => {
-    if (isFirstLoad.current) {
-      isFirstLoad.current = false
-      return
-    }
-    if (contentRef.current) {
-      contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!isFirstLoad && contentRef.current) {
+      contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [currentPage])
 
+  useEffect(() => {
+    // console.log(productList)
+    console.log(isFirstLoad)
+    // console.log(totalPages)
+    // console.log('productCache', productCache)
+    // console.log('searchParams', searchParams)
+  }, [isFirstLoad])
 
   return (
     <Container disableGutters maxWidth={false} sx={{ bgcolor: 'white', width: '100%', height: 'fit-content' }}>
       <Header />
       <Slogan />
       <HeroSection video={productHeroSection} title={'My product.'} descTitle={'Connects you to your\nevery adventure.'} />
+      {/* <Box sx={{ height: '1000px', bgcolor: '#000' }}></Box> */}
       {/* Product list & Filter */}
       <Box
         ref={contentRef}
+        id="productContent"
         sx={{
-          p: '0 84px 128px 84px',
-          heigth: 'fit-content',
+          p: '0 84px 128px',
+          height: 'fit-content',
           width: '100%'
         }}
       >
@@ -173,84 +219,93 @@ function ProductPage() {
           <Typography sx={{ color: 'rgba(0,0,0,.85)', fontSize: '48px', fontWeight: '600', p: '24px 8px', display: 'inline-block' }} >
             All products.
           </Typography>
-          <Typography sx={{ display: 'inline-block', color: '#7e7e85', fontSize: '48px', fontWeight: '600' }} >Choose one</Typography>
+          <Typography sx={{ display: 'inline-block', color: '#7e7e85', fontSize: '48px', fontWeight: '600' }} >Choose for you</Typography>
         </Box>
         <Box
-          key={currentPage}
+          // key={currentPage}
           className="ProductList_Filter"
           sx={{ display: 'flex', gap: 3, heigth: '100%' }}>
+
           {/* Filter */}
-          <Filter />
+          <Filter filterOptions={filterOptions} />
 
           {/* Products list */}
-          <Box
-            className="fade-in"
-            sx={{
-              flex: 8,
-              height: 'fit-content'
-            }}
-          >
-            <ProductList products={productList} />
-            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', alignItems: 'center' }}>
-              {currentPage === 1 ?
-                (<Box sx={{ width: '40px', height: '40px', bgcolor: 'white' }}></Box>)
-                :
-                (<Box
-                  sx={{
-                    bgcolor: '#f3f3f3',
-                    // bgcolor: '#333336',
-                    width: '40px',
-                    height: '40px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: '36px',
-                    transition: 'all 0.4s cubic-bezier(0.42, 0, 0.58, 1)',
-                    transformOrigin: 'center',
-                    color: 'rgba(0,0,0,.5)',
-                    '&:hover': {
-                      color: 'rgba(0,0,0,.85)',
-                      cursor: 'pointer',
-                      boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
-                    }
-                  }}
-                  onClick={handlePrevPage}
-                >
-                  <KeyboardArrowLeftIcon />
-                </Box>)
-              }
+          {isLoading ?
+            (<div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', flex: 8 }}>
+              <CircularProgress />
+            </div>)
+            :
+            (<Box
+              className="fade-in"
+              sx={{
+                flex: 8,
+                height: 'fit-content'
+              }}
+            >
+              <ProductList products={productList} />
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', alignItems: 'center' }}>
+                {currentPage === 1 ?
+                  (<Box sx={{ width: '40px', height: '40px', bgcolor: 'white' }}></Box>)
+                  :
+                  (<Box
+                    sx={{
+                      bgcolor: '#f3f3f3',
+                      // bgcolor: '#333336',
+                      width: '40px',
+                      height: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '36px',
+                      transition: 'all 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
+                      transformOrigin: 'center',
+                      color: 'rgba(0,0,0,.5)',
+                      '&:hover': {
+                        color: 'white',
+                        bgcolor: 'rgba(0,0,0,.85)',
+                        cursor: 'pointer',
+                        boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
+                      }
+                    }}
+                    onClick={handlePrevPage}
+                  >
+                    <KeyboardArrowLeftIcon />
+                  </Box>)
+                }
 
-              <Typography sx={{ color: '#000', fontSize: '16px' }}>{currentPage}</Typography>
-              {currentPage === totalPages ?
-                (<Box sx={{ width: '40px', height: '40px', bgcolor: 'white' }}></Box>)
-                :
-                (<Box
-                  sx={{
-                    bgcolor: '#f3f3f3',
-                    // bgcolor: '#333336',
-                    width: '40px',
-                    height: '40px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: '36px',
-                    transition: 'all 0.4s cubic-bezier(0.42, 0, 0.58, 1)',
-                    transformOrigin: 'center',
-                    color: 'rgba(0,0,0,.5)',
-                    '&:hover': {
-                      color: 'rgba(0,0,0,.85)',
-                      cursor: 'pointer',
-                      boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
-                    }
-                  }}
-                  onClick={handleNextPage}
-                >
-                  <KeyboardArrowRightIcon />
-                </Box>)
-              }
+                <Typography sx={{ color: '#000', fontSize: '16px' }}>{currentPage}</Typography>
+                {currentPage === totalPages ?
+                  (<Box sx={{ width: '40px', height: '40px', bgcolor: 'white' }}></Box>)
+                  :
+                  (<Box
+                    sx={{
+                      bgcolor: '#f3f3f3',
+                      // bgcolor: '#333336',
+                      width: '40px',
+                      height: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '36px',
+                      transition: 'all 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
+                      transformOrigin: 'center',
+                      color: 'rgba(0,0,0,.5)',
+                      '&:hover': {
+                        color: 'white',
+                        bgcolor: 'rgba(0,0,0,.85)',
+                        cursor: 'pointer',
+                        boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
+                      }
+                    }}
+                    onClick={handleNextPage}
+                  >
+                    <KeyboardArrowRightIcon />
+                  </Box>)
+                }
 
-            </Box>
-          </Box>
+              </Box>
+            </Box>)
+          }
 
         </Box>
       </Box>

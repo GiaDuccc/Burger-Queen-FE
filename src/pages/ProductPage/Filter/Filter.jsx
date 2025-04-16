@@ -1,21 +1,58 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material'
 import DoneIcon from '@mui/icons-material/Done'
 
-const filterOptions = [
-  { Brand: ['Nike', 'Adidas', 'Bitis', 'Puma', 'New Balance', 'Converse'] },
-  { Colour: ['Blue', 'Green', 'White', 'Black', 'Gray'] },
-  { Stock: ['Blue', 'Green', 'White', 'Black', 'Gray'] },
-  { Type: ['Blue', 'Green', 'White', 'Black', 'Gray'] },
-  { Price: ['Blue', 'Green', 'White', 'Black', 'Gray'] }
-]
+// const filterOptions = [
+//   { Brand: ['Nike', 'Adidas', 'Bitis', 'Puma', 'New Balance', 'Converse'] },
+//   { Color: ['Blue', 'Green', 'White', 'Black', 'Gray'] },
+//   { Stock: ['Blue', 'Green', 'White', 'Black', 'Gray'] },
+//   { Type: ['Blue', 'Green', 'White', 'Black', 'Gray'] },
+//   { Price: ['Blue', 'Green', 'White', 'Black', 'Gray'] }
+// ]
 
-function Filter() {
+function Filter({ filterOptions }) {
 
-  const [openFilterOption, setOpenFilterOption] = useState({ brand: false, colour: false, price: false, stock: false })
+  const initFilterOption = filterOptions.reduce((acc, option) => {
+    const key = Object.keys(option)[0].toLowerCase()
+    acc[key] = false
+    return acc
+  }, {})
+  const [openFilterOption, setOpenFilterOption] = useState(initFilterOption)
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const handleChange = (event, filter, value) => {
+    const checked = event.target.checked
+    const currentFilters = searchParams.get(`${filter}`)?.split(',') || []
+
+    let newFilters
+    if (checked) {
+      newFilters = [...currentFilters, `${value}`]
+    }
+    else {
+      newFilters = currentFilters.filter(f => f !== `${value}`)
+    }
+
+    if (newFilters.length === 0) {
+      searchParams.delete(filter)
+    }
+    else {
+      searchParams.set(`${filter}`, newFilters.join(','))
+    }
+
+    searchParams.set('page', '1')
+    setSearchParams(searchParams)
+  }
+
+  useEffect(() => {
+    // fetchAllProductAPI().then(data => {
+
+    // })
+  })
 
   return (
     <Box
@@ -30,7 +67,6 @@ function Filter() {
         flex: 2,
         height: '100%',
         pt: '16px',
-        // px: '8px',
         '& div p': {
           fontSize: '24px',
           fontWeight: '600'
@@ -140,9 +176,11 @@ function Filter() {
                       }
                     }}>
                       <FormControlLabel
-                        label={item}
+                        label={item.slice(0, 1).toUpperCase() + item.slice(1)}
                         control={
                           <Checkbox
+                            checked={searchParams.get(key.toLowerCase())?.split(',').includes(item.toLowerCase()) || false}
+                            onChange={e => handleChange(e, key.toLowerCase(), item.toLowerCase())}
                             disableRipple
                             icon={<Box sx={{
                               width: '20px',

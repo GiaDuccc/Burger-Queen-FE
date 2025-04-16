@@ -74,7 +74,8 @@ function ProductCard({ product, index }) {
           {/* Stock */}
           <Typography sx={{ color: '#d33918', fontSize: '16px', fontWeight: '600' }}>{product.stock > 0 ? 'Just in' : 'Sold Out'}</Typography>
           {/* Tên sản phẩm */}
-          <Typography sx={{ fontWeight: '600', fontSize: '20px', py: '4px' }} >{product.name}</Typography>
+          <Typography sx={{ fontWeight: '600', fontSize: '20px', pt: '4px' }} >{product.name}</Typography>
+          <Typography sx={{ fontSize: '16px', color: '#7e7e85', pb: '4px' }} >{product.type.slice(0, 1).toUpperCase() + product.type.slice(1)}</Typography>
           {/* Price */}
           <Typography>{Number(product.price).toLocaleString('vi-VN')}đ</Typography>
         </Box>
