@@ -18,6 +18,17 @@ const theme = extendTheme ({
           fontSize: '0.875rem'
         }
       }
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          scrollbarWidth: 'none', // Firefox
+          msOverflowStyle: 'none' // IE 10+
+        },
+        // '&::-webkit-scrollbar': {
+        //   display: 'none' // Chrome, Safari
+        // }
+      }
     }
   },
   typography: {

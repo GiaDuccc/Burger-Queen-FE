@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import Header from '~/components/Header/Header'
 import HeroSection from '~/components/HeroSection/HeroSection'
@@ -15,19 +16,6 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import '~/App.css'
 import CircularProgress from '@mui/material/CircularProgress'
-
-// const products = [
-//   {
-//     image: [
-//       'https://assets.adidas.com/images/h_2000,f_auto,q_auto,fl_lossy,c_fill,g_auto/68ae7ea7849b43eca70aac1e00f5146d_9366/Giay_Stan_Smith_trang_FX5502_01_standard.jpg',
-//       'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/ab8e8332-0a72-44b7-9049-030819e196ab/W+AIR+MAX+DN8.png'
-//     ],
-//     colors: ['blue-#749cbe', 'white-#f5f5f7'],
-//     name: 'Air Runner Max',
-//     stock: 20,
-//     price: 5589000
-//   }
-// ]
 
 // bảng quy đổi từ màu -> mã màu
 function getColorHex(colorName) {
@@ -52,7 +40,7 @@ function getColorHex(colorName) {
   return colorMap[colorName] || '#00e7c5'
 }
 
-function ProductPage () {
+function ProductPage() {
   // state lưu danh sách sản phẩm
   const [productList, setProductList] = useState([])
   // Theo dõi biến ref (mục đích cho cuộn lên khi đổi trang)
@@ -75,6 +63,7 @@ function ProductPage () {
   // state lưu tổng trang để làm mục trang phía cuối
   const [totalPages, setTotalPages] = useState(0)
 
+  // State lưu filterOptions
   const [filterOptions, setFilterOptions] = useState([])
 
   // Hàm handle khi next trang
@@ -96,7 +85,8 @@ function ProductPage () {
     }
   }
 
-  useEffect( () => {
+  // UseEffect load Filter (Chỉ load lần đầu vì nó lấy hết dữ liệu)
+  useEffect(() => {
     const brandSet = new Set()
     const colorSet = new Set()
     const typeSet = new Set()
@@ -106,7 +96,7 @@ function ProductPage () {
     fetchAllProductFilter().then(data => {
       data.forEach(product => {
         brandSet.add(product.brand.toLowerCase())
-        product.color.forEach(c => colorSet.add(c.toLowerCase()))
+        product.colors.forEach(c => colorSet.add(c.color.toLowerCase()))
         typeSet.add(product.type.toLowerCase())
       })
       setFilterOptions([
@@ -120,6 +110,7 @@ function ProductPage () {
 
   }, [isFirstLoad])
 
+  // UseEffect load trang hiện tại
   useEffect(() => {
     setIsLoading(true)
 
@@ -134,12 +125,22 @@ function ProductPage () {
 
       fetchAllProductPageAPI(currentPage, 12, filters).then(data => {
         const products = data.data.products.map(product => ({
-          image: product.image?.map?.(i => `/allProduct/${product.name}/`+i.split('.')[0] + '.png'),
-          colors: product.color.map(c => c + `-${getColorHex(c)}`),
+          colors: product.colors.map(color => ({
+            color: color.color.toLowerCase(),
+            colorHex: color.colorHex,
+            image: `/allProduct/${product.name}/${color.image}`,
+            imageDetail: color.imageDetail.map(image =>
+              `/allProduct/${product.name}/${product.name}_detail-${color.color.toLowerCase()}/${image}`
+            ),
+            size: color.sizes
+          })),
           name: product.name,
           type: product.type,
           stock: product.stock,
-          price: product.price
+          price: product.price,
+          highLight: product.highLight,
+          desc: product.desc,
+          slug: product.slug
         }))
 
         setProductList(products)
@@ -153,19 +154,29 @@ function ProductPage () {
     }
   }, [searchParams])
 
+  // UseEffect load trang kế tiếp (trang hiện tại + 1)
   useEffect(() => {
-
     const allParams = Object.fromEntries(searchParams.entries())
     const { page, limit, ...filters } = allParams
     if (!productCache[currentPage + 1] && currentPage < totalPages) {
       fetchAllProductPageAPI(currentPage + 1, 12, filters).then(data => {
         const nextProducts = data.data.products.map(product => ({
-          image: ['/assets/anh1.png', '/assets/anh3.png'],
-          colors: product.color.map(c => c + `-${getColorHex(c)}`),
+          colors: product.colors.map(color => ({
+            color: color.color.toLowerCase(),
+            colorHex: color.colorHex,
+            image: `/allProduct/${product.name}/${color.image}`,
+            imageDetail: color.imageDetail.map(image =>
+              `/allProduct/${product.name}/${product.name}_detail-${color.color.toLowerCase()}/${image}`
+            ),
+            size: color.sizes
+          })),
           name: product.name,
           type: product.type,
           stock: product.stock,
-          price: product.price
+          price: product.price,
+          highLight: product.highLight,
+          desc: product.desc,
+          slug: product.slug
         }))
         setProductCache(prev => ({
           ...prev,
@@ -175,36 +186,40 @@ function ProductPage () {
     }
   }, [currentPage, totalPages])
 
-
+  // UseEffect load lần load đầu tiên
   useEffect(() => {
     const currentParams = Object.fromEntries(searchParams.entries())
     currentParams.page = pageFromURL
     setSearchParams(currentParams, { replace: false })
     setIsFirstLoad(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // Chạy 1 lần duy nhất
-  
+
   // Chạy khi đổi trang hoặc filter để scroll
+  // Bug thay đổi filter chưa được áp hiệu ứng cuộn
   useEffect(() => {
     if (!isFirstLoad && contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [currentPage])
 
-  useEffect(() => {
-    // console.log(productList)
-    console.log(isFirstLoad)
-    // console.log(totalPages)
-    // console.log('productCache', productCache)
-    // console.log('searchParams', searchParams)
-  }, [isFirstLoad])
+  // useEffect(() => {
+  //   console.log(totalPages)
+  //   console.log(currentPage)
+  // })
 
   return (
-    <Container disableGutters maxWidth={false} sx={{ bgcolor: 'white', width: '100%', height: 'fit-content' }}>
+    <Container
+      disableGutters
+      maxWidth={false}
+      sx={{
+        bgcolor: 'white',
+        width: '100%',
+        height: 'fit-content'
+      }}
+    >
       <Header />
       <Slogan />
       <HeroSection video={productHeroSection} title={'My product.'} descTitle={'Connects you to your\nevery adventure.'} />
-      {/* <Box sx={{ height: '1000px', bgcolor: '#000' }}></Box> */}
       {/* Product list & Filter */}
       <Box
         ref={contentRef}
@@ -244,13 +259,12 @@ function ProductPage () {
             >
               <ProductList products={productList} />
               <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', alignItems: 'center' }}>
-                {currentPage === 1 ?
+                {currentPage === 1 || totalPages === 0 ?
                   (<Box sx={{ width: '40px', height: '40px', bgcolor: 'white' }}></Box>)
                   :
                   (<Box
                     sx={{
                       bgcolor: '#f3f3f3',
-                      // bgcolor: '#333336',
                       width: '40px',
                       height: '40px',
                       display: 'flex',
@@ -274,13 +288,12 @@ function ProductPage () {
                 }
 
                 <Typography sx={{ color: '#000', fontSize: '16px' }}>{currentPage}</Typography>
-                {currentPage === totalPages ?
+                {currentPage === totalPages || totalPages === 0 ?
                   (<Box sx={{ width: '40px', height: '40px', bgcolor: 'white' }}></Box>)
                   :
                   (<Box
                     sx={{
                       bgcolor: '#f3f3f3',
-                      // bgcolor: '#333336',
                       width: '40px',
                       height: '40px',
                       display: 'flex',
@@ -302,11 +315,9 @@ function ProductPage () {
                     <KeyboardArrowRightIcon />
                   </Box>)
                 }
-
               </Box>
             </Box>)
           }
-
         </Box>
       </Box>
     </Container>

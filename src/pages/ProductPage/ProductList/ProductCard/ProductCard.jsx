@@ -2,13 +2,14 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
-function ProductCard({ product, index }) {
+function ProductCard({ product, index, onClick }) {
 
   const [hoveredObject, setHoveredObject] = useState({ hoveredItem: null, hoveredColor: 0 })
 
   return (
     <Box
       key={index}
+      onClick={onClick}
       onMouseEnter={() => setHoveredObject(prev => ({ ...prev, hoveredItem: index }))}
       onMouseLeave={() => setHoveredObject({ hoveredItem: null, hoveredColor: 0 })}
       sx={{
@@ -32,13 +33,13 @@ function ProductCard({ product, index }) {
       <Box sx={{ height: '315px' }}>
 
         {/* Ảnh khi chưa click color */}
-        <img src={product.image[0]}
+        <img src={product.colors[0].image}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: hoveredObject.hoveredItem === index ? 'none' : 'block' }} />
 
         {/* Ảnh khi click color */}
         {hoveredObject.hoveredItem === index && (
           <img
-            src={product.image[hoveredObject.hoveredColor]}
+            src={product.colors[hoveredObject.hoveredColor].image}
             style={{
               width: '100%',
               height: '100%',
@@ -57,7 +58,7 @@ function ProductCard({ product, index }) {
               key={idx}
               onMouseEnter={() => setHoveredObject(prev => ({ ...prev, hoveredColor: idx }))}
               sx={{
-                bgcolor: color.split('-')[1],
+                bgcolor: color.colorHex,
                 width: '13px', height: '13px',
                 borderRadius: '16px',
                 border: '1px solid rgba(129, 125, 119, .6)'
@@ -77,7 +78,7 @@ function ProductCard({ product, index }) {
           <Typography sx={{ fontWeight: '600', fontSize: '20px', pt: '4px' }} >{product.name}</Typography>
           <Typography sx={{ fontSize: '16px', color: '#7e7e85', pb: '4px' }} >{product.type.slice(0, 1).toUpperCase() + product.type.slice(1)}</Typography>
           {/* Price */}
-          <Typography>{Number(product.price).toLocaleString('vi-VN')}đ</Typography>
+          <Typography sx={{ fontWeight: '600', fontSize: '15px', color: '#000000c2' }} >{Number(product.price).toLocaleString('vi-VN')}đ</Typography>
         </Box>
       </Box>
     </Box>
