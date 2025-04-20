@@ -1,12 +1,25 @@
 import Box from '@mui/material/Box'
 import ProductCard from './ProductCard/ProductCard'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import ProductCardDetail from './ProductCardDetail/ProductCardDetail'
 
 function ProductList({ products }) {
   const [selectedProduct, setSelectedProduct] = useState(null)
 
-  // const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+    const slug = searchParams.get('slug')
+
+    if (!slug) {
+      setSelectedProduct(null)
+      return
+    }
+
+    const foundProduct = products.find(p => p.slug === slug)
+    setSelectedProduct(foundProduct || null)
+  }, [searchParams, products])
 
   return (
     <Box sx={{
@@ -25,9 +38,9 @@ function ProductList({ products }) {
           onClick={() => {
             setSelectedProduct(product)
 
-            // const currentParams = Object.fromEntries(searchParams.entries())
-            // currentParams.slug = product.slug // gán slug mới
-            // setSearchParams(currentParams, { replace: false })
+            const currentParams = Object.fromEntries(searchParams.entries())
+            currentParams.slug = product.slug
+            setSearchParams(currentParams, { replace: false })
           }}
         />
       ))}
@@ -35,7 +48,9 @@ function ProductList({ products }) {
         <ProductCardDetail
           product={selectedProduct}
           open={Boolean(selectedProduct)}
-          onClose={() => setSelectedProduct(null)}
+          onClose={() => {
+            setSelectedProduct(null)
+          }}
         />
       )}
     </Box>

@@ -2,6 +2,7 @@ import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import CloseIcon from '@mui/icons-material/Close'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
@@ -11,6 +12,7 @@ import '~/App.css'
 export default function ProductCardDetail({ product, open, onClose }) {
 
   const [opacity, setOpacity] = useState(1); // Đặt opacity ban đầu là 1 (hiển thị)
+  const [searchParams, setSearchParams] = useSearchParams()
 
   // eslint-disable-next-line no-unused-vars
   const [productList, setProductList] = useState(
@@ -39,9 +41,10 @@ export default function ProductCardDetail({ product, open, onClose }) {
 
   const handleClose = () => {
     setOpacity(0); // Khi nhấn nút, opacity sẽ thay đổi thành 0 (ẩn)
-    setTimeout(() => {
-      onClose()
-    }, 400)
+    const currentParams = Object.fromEntries(searchParams.entries())
+    delete currentParams.slug
+    setSearchParams(currentParams, { replace: false })
+    onClose()
   }
 
   useEffect(() => {
@@ -71,7 +74,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
           display: 'flex',
           justifyContent: 'center',
           backdropFilter: 'blur(3px)',
-          backgroundColor: 'rgba(0, 0, 0, 0.4)'
+          backgroundColor: 'rgba(0, 0, 0, 0.2)'
         }}
       >
         <Box
@@ -90,7 +93,8 @@ export default function ProductCardDetail({ product, open, onClose }) {
             flexDirection: 'column',
             alignItems: 'end',
             px: '100px',
-            py: '24px'
+            py: '24px',
+            boxShadow: '4px 4px 15px rgb(138, 138, 138)'
           }}
         >
           {/* Close Button */}
@@ -339,7 +343,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
                           boxShadow: size.split(':')[1] > 0 ? '1px 1px 10px rgb(201, 200, 200)' : '0.5px 0.5px 10px rgb(220, 220, 220)',
                           transform: 'scale(1.02)',
                           transformOrigin: 'center',
-                          cursor: 'pointer'
+                          cursor: size.split(':')[1] > 0 ? 'pointer' : 'not-allowed'
                           // border: size.split(':')[1] > 0 ? 'solid 0.5px #b6b6b6' : 'solid 0.5px rgba(255, 255, 255, 0)'
                         }
                       }}

@@ -58,6 +58,7 @@ function ProductPage() {
   const pageFromURL = parseInt(searchParams.get('page')) || 1
 
   // set Current page bằng page trên param
+  // const [currentPage, setCurrentPage] = useState(pageFromURL)
   const currentPage = pageFromURL
 
   // state lưu tổng trang để làm mục trang phía cuối
@@ -65,6 +66,8 @@ function ProductPage() {
 
   // State lưu filterOptions
   const [filterOptions, setFilterOptions] = useState([])
+
+  const [isApply, setIsApply] = useState(false)
 
   // Hàm handle khi next trang
   const handleNextPage = () => {
@@ -91,20 +94,28 @@ function ProductPage() {
     const colorSet = new Set()
     const typeSet = new Set()
     const stockSet = (['Just in', 'Sold out'])
-    const priceSet = (['Just in', 'Sold out'])
+    // const priceSet = (['Low-High', 'High-Low'])
+    const sortBy = (['Newest', 'Oldest', 'Low-High', 'High-Low'])
 
     fetchAllProductFilter().then(data => {
       data.forEach(product => {
         brandSet.add(product.brand.toLowerCase())
         product.colors.forEach(c => colorSet.add(c.color.toLowerCase()))
         typeSet.add(product.type.toLowerCase())
+        // if (product.stock > 0) {
+        //   stockSet.add('Just in')
+        // }
+        // else {
+        //   stockSet.add('Sold out')
+        // }
       })
       setFilterOptions([
         { Brand: Array.from(brandSet).sort() },
         { Color: Array.from(colorSet).sort() },
         { Type: Array.from(typeSet).sort() },
         { Stock: Array.from(stockSet).sort() },
-        { Price: Array.from(priceSet).sort() }
+        // { Price: Array.from(priceSet).sort() },
+        { Sort: sortBy.sort() }
       ])
     })
 
@@ -115,8 +126,10 @@ function ProductPage() {
     setIsLoading(true)
 
     const allParams = Object.fromEntries(searchParams.entries())
-    const { page, limit, ...filters } = allParams
+    const { page, limit, slug, ...filters } = allParams
     const cacheKey = searchParams.toString()
+
+    // if ( slug ) return
 
     if (productCache[cacheKey]) {
       setProductList(productCache[cacheKey])
@@ -152,7 +165,7 @@ function ProductPage() {
         setIsLoading(false)
       })
     }
-  }, [searchParams])
+  }, [currentPage, isApply])
 
   // UseEffect load trang kế tiếp (trang hiện tại + 1)
   useEffect(() => {
@@ -184,7 +197,7 @@ function ProductPage() {
         }))
       })
     }
-  }, [currentPage, totalPages])
+  }, [currentPage])
 
   // UseEffect load lần load đầu tiên
   useEffect(() => {
@@ -200,7 +213,7 @@ function ProductPage() {
     if (!isFirstLoad && contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
-  }, [currentPage])
+  }, [currentPage, isApply])
 
   // useEffect(() => {
   //   console.log(totalPages)
@@ -239,10 +252,10 @@ function ProductPage() {
         <Box
           // key={currentPage}
           className="ProductList_Filter"
-          sx={{ display: 'flex', gap: 3, heigth: '100%' }}>
+          sx={{ display: 'flex', gap: 2, heigth: '100%' }}>
 
           {/* Filter */}
-          <Filter filterOptions={filterOptions} />
+          <Filter filterOptions={filterOptions} apply={() => setIsApply(!isApply)} />
 
           {/* Products list */}
           {isLoading ?

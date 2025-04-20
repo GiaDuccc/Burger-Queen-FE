@@ -11,7 +11,7 @@ function ProductCard({ product, index, onClick }) {
       key={index}
       onClick={onClick}
       onMouseEnter={() => setHoveredObject(prev => ({ ...prev, hoveredItem: index }))}
-      onMouseLeave={() => setHoveredObject({ hoveredItem: null, hoveredColor: 0 })}
+      // onMouseLeave={() => setHoveredObject( prev => ({ ...prev, hoveredColor: 0 }))}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -33,10 +33,10 @@ function ProductCard({ product, index, onClick }) {
       <Box sx={{ height: '315px' }}>
 
         {/* Ảnh khi chưa click color */}
-        <img src={product.colors[0].image}
+        <img src={product.colors[hoveredObject.hoveredColor].image}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: hoveredObject.hoveredItem === index ? 'none' : 'block' }} />
 
-        {/* Ảnh khi click color */}
+        {/* Ảnh khi hover color */}
         {hoveredObject.hoveredItem === index && (
           <img
             src={product.colors[hoveredObject.hoveredColor].image}

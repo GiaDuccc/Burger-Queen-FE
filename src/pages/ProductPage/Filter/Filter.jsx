@@ -1,20 +1,12 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import { Checkbox, FormControlLabel, FormGroup } from '@mui/material'
+import { Checkbox, FormControlLabel, FormGroup, Radio } from '@mui/material'
 import DoneIcon from '@mui/icons-material/Done'
 
-// const filterOptions = [
-//   { Brand: ['Nike', 'Adidas', 'Bitis', 'Puma', 'New Balance', 'Converse'] },
-//   { Color: ['Blue', 'Green', 'White', 'Black', 'Gray'] },
-//   { Stock: ['Blue', 'Green', 'White', 'Black', 'Gray'] },
-//   { Type: ['Blue', 'Green', 'White', 'Black', 'Gray'] },
-//   { Price: ['Blue', 'Green', 'White', 'Black', 'Gray'] }
-// ]
-
-function Filter({ filterOptions }) {
+function Filter({ filterOptions, apply }) {
 
   const initFilterOption = filterOptions.reduce((acc, option) => {
     const key = Object.keys(option)[0].toLowerCase()
@@ -27,21 +19,34 @@ function Filter({ filterOptions }) {
 
   const handleChange = (event, filter, value) => {
     const checked = event.target.checked
-    const currentFilters = searchParams.get(`${filter}`)?.split(',') || []
+    const isRadio = filter === 'sort'
 
     let newFilters
-    if (checked) {
-      newFilters = [...currentFilters, `${value}`]
-    }
-    else {
-      newFilters = currentFilters.filter(f => f !== `${value}`)
-    }
+    if (isRadio) {
+      const currentValue = searchParams.get(filter)
 
-    if (newFilters.length === 0) {
-      searchParams.delete(filter)
+      if (currentValue === value) {
+        searchParams.delete(filter)
+      }
+      else {
+        searchParams.set(filter, value)
+      }
     }
     else {
-      searchParams.set(`${filter}`, newFilters.join(','))
+      const currentFilters = searchParams.get(`${filter}`)?.split(',') || []
+      if (checked) {
+        newFilters = [...currentFilters, `${value}`]
+      }
+      else {
+        newFilters = currentFilters.filter(f => f !== `${value}`)
+      }
+
+      if (newFilters.length === 0) {
+        searchParams.delete(filter)
+      }
+      else {
+        searchParams.set(`${filter}`, newFilters.join(','))
+      }
     }
 
     searchParams.set('page', '1')
@@ -49,9 +54,7 @@ function Filter({ filterOptions }) {
   }
 
   useEffect(() => {
-    // fetchAllProductAPI().then(data => {
-
-    // })
+    console.log(filterOptions)
   })
 
   return (
@@ -63,23 +66,18 @@ function Filter({ filterOptions }) {
         display: 'flex',
         flexDirection: 'column',
         color: 'rgba(0,0,0,.85)',
-        gap: 2,
         flex: 2,
         height: '100%',
-        pt: '16px',
-        '& div p': {
-          fontSize: '24px',
-          fontWeight: '600'
-        }
+        pt: '16px'
       }}
     >
       <Box sx={{
-        gap: 2,
+        gap: 1,
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         maxHeight: '100vh',
-        p: '8px 8px 24px 8px',
+        p: '8px 12px 16px 8px',
         overflowY: 'scroll',
         '&::-webkit-scrollbar': {
           display: 'none'
@@ -87,23 +85,28 @@ function Filter({ filterOptions }) {
         scrollbarWidth: 'none', // Firefox
         msOverflowStyle: 'none' // IE/Edge
       }}>
+        {/* Filter Options */}
         {filterOptions.map((filterOption, index) => {
           const key = Object.keys(filterOption)[0];
           return (
             <Box
-              className="Filter-Option"
+              className="Filter-Options"
               key={index}
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 transition: 'all 0.35s cubic-bezier(0.42, 0, 0.58, 1)',
-                maxHeight: openFilterOption[key.toLowerCase()] ? '450px' : '76px'
+                maxHeight: openFilterOption[key.toLowerCase()] ? '450px' : '76px',
+                '& div p': {
+                  fontSize: '24px',
+                  fontWeight: '600'
+                }
               }}
             >
               <Box
                 onClick={() => setOpenFilterOption(prev => ({ ...prev, [key.toLowerCase()]: !prev[key.toLowerCase()] }))}
                 sx={{
-                  p: '20px 16px',
+                  p: '16px 16px',
                   fontSize: '20px',
                   bgcolor: 'white',
                   borderRadius: '16px',
@@ -178,50 +181,97 @@ function Filter({ filterOptions }) {
                       <FormControlLabel
                         label={item.slice(0, 1).toUpperCase() + item.slice(1)}
                         control={
-                          <Checkbox
-                            checked={searchParams.get(key.toLowerCase())?.split(',').includes(item.toLowerCase()) || false}
-                            onChange={e => handleChange(e, key.toLowerCase(), item.toLowerCase())}
-                            disableRipple
-                            icon={<Box sx={{
-                              width: '20px',
-                              height: '20px',
-                              borderRadius: '16px',
-                              border: '0.5px solid #e6e6e6'
-                            }} />}
-                            checkedIcon={<Box sx={{
-                              width: '20px',
-                              height: '20px',
-                              bgcolor: '#59c561',
-                              borderRadius: '16px',
-                              border: '0.5px solid white',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}>
-                              <DoneIcon sx={{ fontSize: '14px' }} />
-                            </Box>
-                            }
-                            sx={{
-                              padding: '8px 6px',
-                              '&:hover': {
-                                backgroundColor: 'transparent'
-                              },
-                              '&.Mui-checked:hover': {
-                                backgroundColor: 'transparent'
-                              },
-                              '&:active': {
-                                boxShadow: 'none'
-                              },
-                              '&.Mui-focusVisible': {
-                                boxShadow: 'none'
-                              },
-                              '&:focus': {
-                                outline: 'none',
-                                boxShadow: 'none'
+                          key.toLowerCase() === 'sort' ? (
+                            <Radio
+                              checked={searchParams.get(key.toLowerCase())?.split(',').includes(item.toLowerCase()) || false}
+                              onClick={e => handleChange(e, key.toLowerCase(), item.toLowerCase())}
+                              disableRipple
+                              icon={<Box sx={{
+                                width: '20px',
+                                height: '20px',
+                                borderRadius: '16px',
+                                border: '0.5px solid #e6e6e6'
+                              }} />}
+                              checkedIcon={<Box sx={{
+                                width: '20px',
+                                height: '20px',
+                                bgcolor: '#59c561',
+                                borderRadius: '16px',
+                                border: '0.5px solid white',
+                                color: 'white',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}>
+                                <DoneIcon sx={{ fontSize: '14px' }} />
+                              </Box>
                               }
-                            }}
-                          />
+                              sx={{
+                                padding: '8px 6px',
+                                '&:hover': {
+                                  backgroundColor: 'transparent'
+                                },
+                                '&.Mui-checked:hover': {
+                                  backgroundColor: 'transparent'
+                                },
+                                '&:active': {
+                                  boxShadow: 'none'
+                                },
+                                '&.Mui-focusVisible': {
+                                  boxShadow: 'none'
+                                },
+                                '&:focus': {
+                                  outline: 'none',
+                                  boxShadow: 'none'
+                                }
+                              }}
+                            />
+                          ) : (
+                            <Checkbox
+                              checked={searchParams.get(key.toLowerCase())?.split(',').includes(item.toLowerCase()) || false}
+                              onChange={e => handleChange(e, key.toLowerCase(), item.toLowerCase())}
+                              disableRipple
+                              icon={<Box sx={{
+                                width: '20px',
+                                height: '20px',
+                                borderRadius: '16px',
+                                border: '0.5px solid #e6e6e6'
+                              }} />}
+                              checkedIcon={<Box sx={{
+                                width: '20px',
+                                height: '20px',
+                                bgcolor: '#59c561',
+                                borderRadius: '16px',
+                                border: '0.5px solid white',
+                                color: 'white',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}>
+                                <DoneIcon sx={{ fontSize: '14px' }} />
+                              </Box>
+                              }
+                              sx={{
+                                padding: '8px 6px',
+                                '&:hover': {
+                                  backgroundColor: 'transparent'
+                                },
+                                '&.Mui-checked:hover': {
+                                  backgroundColor: 'transparent'
+                                },
+                                '&:active': {
+                                  boxShadow: 'none'
+                                },
+                                '&.Mui-focusVisible': {
+                                  boxShadow: 'none'
+                                },
+                                '&:focus': {
+                                  outline: 'none',
+                                  boxShadow: 'none'
+                                }
+                              }}
+                            />
+                          )
                         }
                         labelPlacement="start"
                         sx={{
@@ -237,6 +287,35 @@ function Filter({ filterOptions }) {
             </Box>
           )
         })}
+      </Box>
+      <Box sx={{ p: '0 12px 0 8px' }}>
+        <Box
+          onClick={apply}
+          sx={{
+            bgcolor: 'black',
+            p: '6px 16px',
+            borderRadius: '16px',
+            textAlign: 'center',
+            transition: 'all 0.35s cubic-bezier(0.42, 0, 0.58, 1)',
+            boxShadow: '1px 1px 10px rgb(201, 200, 200)',
+            '& p': {
+              fontSize: '20px',
+              fontWeight: '600',
+              color: 'rgb(204, 204, 204)',
+              transition: 'all 0.35s cubic-bezier(0.42, 0, 0.58, 1)'
+            },
+            '&:hover': {
+              boxShadow: '1.5px 1.5px 10px rgb(122, 122, 122)',
+              transform: 'scale(1.02)',
+              transformOrigin: 'center',
+              cursor: 'pointer'
+            },
+            '&:hover p': {
+              color: 'rgb(255, 255, 255)'
+            }
+          }}>
+          <Typography>Apply</Typography>
+        </Box>
       </Box>
     </Box>
   )
