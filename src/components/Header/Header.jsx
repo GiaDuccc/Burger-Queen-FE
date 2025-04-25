@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import Link from '@mui/material/Link'
 import logoIcon from '~/assets/logo2.png'
 import shoppingBagIcon from '~/assets/cart.png'
-import loginIcon from '~/assets/login.png'
+import signInIcon from '~/assets/login.png'
 import searchIcon from '~/assets/search.png'
 import TextField from '@mui/material/TextField'
 import Cart from '../Cart/Cart'
@@ -48,13 +48,13 @@ function Header() {
           opacity: '.8'
         }
       }}>
-        <Link href="/ProductPage" underline="none" >Product</Link>
-        <Link href="/NikePage" underline="none" >Nike</Link>
-        <Link href="/AdidasPage" underline="none" >Adidas</Link>
-        <Link href="/BitisPage" underline="none" >Biti&apos;s</Link>
-        <Link href="/PumaPage" underline="none" >Puma</Link>
-        <Link href="/NewBalancePage" underline="none" >NewBalance</Link>
-        <Link href="/ConversePage" underline="none" >Converse</Link>
+        <Link href="/product" underline="none" >Product</Link>
+        <Link href="/nike" underline="none" >Nike</Link>
+        <Link href="/adidas" underline="none" >Adidas</Link>
+        <Link href="/bitis" underline="none" >Biti&apos;s</Link>
+        <Link href="/puma" underline="none" >Puma</Link>
+        <Link href="/newbalance" underline="none" >NewBalance</Link>
+        <Link href="/converse" underline="none" >Converse</Link>
       </Box>
 
       <Box sx={{
@@ -119,8 +119,8 @@ function Header() {
           <img src={shoppingBagIcon} alt="cart" style={{ height: '17px' }}/>
         </Box>
         <Cart open={openCart} toggleDrawer={toggleCartDrawer} />
-        <Link href="/Login" sx={{ height: headerHeight, display: 'flex', alignItems: 'center' }} >
-          <img src={loginIcon} alt="cart" style={{ height: '17px' }}/>
+        <Link href="/sign-in" sx={{ height: headerHeight, display: 'flex', alignItems: 'center' }} >
+          <img src={signInIcon} alt="sign-in" style={{ height: '17px' }}/>
         </Link>
       </Box>
     </Box>

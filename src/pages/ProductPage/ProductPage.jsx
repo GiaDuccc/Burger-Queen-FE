@@ -259,9 +259,9 @@ function ProductPage() {
 
           {/* Products list */}
           {isLoading ?
-            (<div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', flex: 8 }}>
-              <CircularProgress />
-            </div>)
+            (<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '50vh', flex: 8 }}>
+              <Box className='spinner-large'></Box>
+            </Box>)
             :
             (<Box
               className="fade-in"
