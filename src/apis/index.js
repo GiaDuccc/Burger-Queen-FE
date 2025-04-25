@@ -13,7 +13,7 @@ export const fetchAllProductFilter = async () => {
 
 // export const fetchAllProductAPI = async () => {}
 
-export const fetchAllProductPageAPI = async (page, limit, filter={}) => {
+export const fetchAllProductPageAPI = async (page, limit, filter = {}) => {
   const response = await axios.get(`${API_ROOT}/v1/products/`, {
     params: {
       page,
@@ -22,4 +22,18 @@ export const fetchAllProductPageAPI = async (page, limit, filter={}) => {
     }
   })
   return response
+}
+
+export const fetchCreateCustomerAPI = async (payload) => {
+  try {
+    const response = await axios.post(`${API_ROOT}/v1/customers/`, payload)
+    return response.data
+  } catch (error) {
+    throw error.response.data.errors
+  }
+}
+
+export const fetchLoginAPI = async (data) => {
+  const response = await axios.post(`${API_ROOT}/v1/customers/login`, data)
+  return response.data
 }

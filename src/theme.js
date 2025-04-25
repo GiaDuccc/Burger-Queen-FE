@@ -24,10 +24,19 @@ const theme = extendTheme ({
         body: {
           scrollbarWidth: 'none', // Firefox
           msOverflowStyle: 'none' // IE 10+
-        },
+        }
         // '&::-webkit-scrollbar': {
         //   display: 'none' // Chrome, Safari
         // }
+      }
+    },
+    MuiFilledInput: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            backgroundColor: 'white' // override luôn biến var(...)
+          }
+        }
       }
     }
   },

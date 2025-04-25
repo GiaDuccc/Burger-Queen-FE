@@ -16,3 +16,51 @@
     transform: translateY(0);
   }
 }
+
+.shake {
+  animation: shake 0.15s;
+}
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-16px); }
+  50% { transform: translateX(16px); }
+  75% { transform: translateX(-16px); }
+  100% { transform: translateX(0); }
+}
+
+/* CSS */
+.spinner-white {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.332);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin: auto;
+}
+
+.spinner-black {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(104, 104, 104, 0.332);
+  border-top-color: #080808;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin: auto;
+}
+
+.spinner-large {
+  width: 72px;
+  height: 72px;
+  border: 2px solid rgba(104, 104, 104, 0.332);
+  border-top-color: #080808;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
