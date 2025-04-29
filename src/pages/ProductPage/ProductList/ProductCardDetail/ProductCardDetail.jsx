@@ -2,16 +2,24 @@ import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import CloseIcon from '@mui/icons-material/Close'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import '~/App.css'
+import checkIcon from '~/assets/check.png'
+import heartColorIcon from '~/assets/heart-color.png'
+import dingSound from '~/assets/ding-sound.mp3'
+import tapSound from '~/assets/tap-sound.mp3'
+import { addProductToOrder } from '~/apis'
+
 
 export default function ProductCardDetail({ product, open, onClose }) {
 
-  const [opacity, setOpacity] = useState(1); // Đặt opacity ban đầu là 1 (hiển thị)
+  const user = JSON.parse(localStorage.getItem('user'))
+  const navigate = useNavigate()
+
   const [searchParams, setSearchParams] = useSearchParams()
 
   // eslint-disable-next-line no-unused-vars
@@ -39,12 +47,46 @@ export default function ProductCardDetail({ product, open, onClose }) {
 
   const [currentImage, setCurrentImage] = useState({ image: activeProduct.image, id: 0 })
 
+  const tickSound = new Audio(dingSound)
+  const addFavouriteSound = new Audio(tapSound)
+  const [addProductStatus, setAddProductStatus] = useState('idle')
+  const [addFavouriteStatus, setAddFavouriteStatus] = useState(false)
+
   const handleClose = () => {
-    setOpacity(0); // Khi nhấn nút, opacity sẽ thay đổi thành 0 (ẩn)
     const currentParams = Object.fromEntries(searchParams.entries())
     delete currentParams.slug
     setSearchParams(currentParams, { replace: false })
     onClose()
+  }
+
+  const handleAddToCart = async () => {
+    setAddProductStatus('loading')
+    if (!user) navigate('/sign-in')
+    const productData = {
+      productId: product.id,
+      color: activeProduct.color,
+      size: activeSize.split(':')[0].trim()
+    }
+    // CHỜ 4s rồi thêm vào giỏ
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    try {
+      const data = await addProductToOrder(user.orders[user.orders.length - 1].orderId, productData);
+      console.log('thanh cong');
+      console.log(data);
+      tickSound.volume = 0.25
+      tickSound.play()
+      setAddProductStatus('success')
+
+      // CHỜ 3s rồi quay lại idle
+      setTimeout(() => {
+        setAddProductStatus('idle');
+      }, 3000);
+
+    } catch (error) {
+      console.error('Lỗi:', error);
+      setAddProductStatus('idle');
+    }
   }
 
   useEffect(() => {
@@ -62,7 +104,6 @@ export default function ProductCardDetail({ product, open, onClose }) {
       open={open}
       sx={{
         overflowY: 'scroll',
-        opacity: opacity,
         transition: 'opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)'
       }}
       onClick={handleClose}
@@ -365,7 +406,8 @@ export default function ProductCardDetail({ product, open, onClose }) {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    p: '16px',
+                    // p: '16px',
+                    height: '50px',
                     transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
                     borderRadius: '32px',
                     boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
@@ -382,12 +424,41 @@ export default function ProductCardDetail({ product, open, onClose }) {
                   }
                 }}
               >
-                <Box sx={{ bgcolor: 'black', color: 'white' }}>
-                  <Typography>Add to Cart</Typography>
+                <Box
+                  onClick={() => (activeSize && addProductStatus !== 'loading' && addProductStatus !== 'success') && handleAddToCart()}
+                  sx={{
+                    bgcolor: 'black',
+                    color: 'white',
+                    opacity: activeSize ? 1 : 0.5
+                  }}>
+                  {addProductStatus === 'idle' && (
+                    <Typography className='fade-in'>{user ? 'Add to Cart' : 'Sign in to shopping'}</Typography>
+                  )}
+                  {addProductStatus === 'loading' && (
+                    <span className='spinner-white' style={{ width: '28px', height: '28px' }}></span>
+                  )}
+                  {addProductStatus === 'success' && (
+                    <span className='boom' style={{ display: 'flex', alignItems: 'center' }} >
+                      <img src={checkIcon} style={{ width: '32px', height: '32px' }} />
+                    </span>
+                  )}
                 </Box>
-                <Box sx={{ color: 'rgba(0,0,0,.85)', display: 'flex', gap: 1 }}>
+                <Box
+                  onClick={() => {
+                    setAddFavouriteStatus(!addFavouriteStatus)
+                    if (!addFavouriteStatus) {
+                      addFavouriteSound.volume = 0.4
+                      addFavouriteSound.play()
+                    }
+                  }}
+                  sx={{ color: 'rgba(0,0,0,.85)', display: 'flex', gap: 1 }}
+                >
                   <Typography>Add Favourite</Typography>
-                  <FavoriteBorderIcon />
+                  {addFavouriteStatus ? (
+                    <img className='boom' src={heartColorIcon} style={{ width: '28px', height: '28px' }} />
+                  ) : (
+                    <FavoriteBorderIcon className='fade-in' sx={{ mx: '2px' }} />
+                  )}
                 </Box>
               </Box>
               {/* HighLight and Desc */}

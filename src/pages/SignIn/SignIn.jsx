@@ -11,6 +11,9 @@ import Slide from '@mui/material/Slide'
 import { fetchLoginAPI } from '~/apis'
 import { useNavigate } from 'react-router-dom'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import checkIcon from '~/assets/check.png'
+import dangerIcon from '~/assets/danger.png'
+import dingSound from '~/assets/ding-sound.mp3'
 import '~/App.css'
 
 // import Fade from '@mui/material/Fade'
@@ -22,14 +25,16 @@ function Login() {
   const [inputValue, setInputValue] = useState('')
   const [passwordValue, setPasswordValue] = useState('')
   const [isValid, setIsValid] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState('idle')
   const navigate = useNavigate()
 
   const [showPassword, setShowPassword] = useState(false)
-  const passwordRef = useRef(null);
+  const passwordRef = useRef(null)
+
+  const tickSound = new Audio(dingSound)
 
   const handleSubmit = async () => {
-    setIsLoading(true)
+    setSubmitStatus('loading')
     const user = {
       username: inputValue,
       password: passwordValue
@@ -39,28 +44,35 @@ function Login() {
         .then(data => {
           const customerId = `customer-${data._id.slice(0, data._id.length / 2)}`
           localStorage.setItem('user', JSON.stringify(data))
-          navigate(`/${customerId}`, { user: data })
+          tickSound.volume = 0.4
+          tickSound.play()
+          setTimeout(() => {
+            setSubmitStatus('success')
+          }, 400)
+          setTimeout(() => {
+            navigate(`/${customerId}`, { user: data })
+          }, 1200)
         })
         .catch(error => {
+          setSubmitStatus('failed')
           setIsValid(error.response.data.message)
         })
-        .finally(() => setIsLoading(false))
     }, 2000)
   }
 
-  useEffect(() => {
-    setTimeout(() => {
-      const userData = JSON.parse(localStorage.getItem('user'))
-      if (userData) {
-        // console.log(userData)
-        const customerId = `customer-${userData._id.slice(0, userData._id.length / 2)}`
-        navigate(`/${customerId}`, { user: userData })
-      }
-      else {
-        setUser(false)
-      }
-    }, 1000)
-  }, [])
+  // useEffect(() => {
+  setTimeout(() => {
+    const userData = JSON.parse(localStorage.getItem('user'))
+    if (userData) {
+      // console.log(userData)
+      const customerId = `customer-${userData._id.slice(0, userData._id.length / 2)}`
+      navigate(`/${customerId}`, { user: userData })
+    }
+    else {
+      setUser(false)
+    }
+  }, 1000)
+  // }, [])
 
   useEffect(() => {
     if (showPassword && passwordRef.current) {
@@ -68,11 +80,16 @@ function Login() {
     }
   }, [showPassword])
 
+  useEffect(() => {
+    console.log(submitStatus)
+  }, [])
+
   if (user) {
     return (<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
       <Box className='spinner-large'></Box>
     </Box>)
   }
+
 
   return (
     <Container
@@ -99,12 +116,14 @@ function Login() {
         </Typography>
 
         {/* Content */}
-        <Box sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          mt: '52px'
-        }}>
+        <Box
+          className='fade-in-up'
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            mt: '52px'
+          }}>
           <Box sx={{ width: '60%', textAlign: 'center' }}>
             <Typography sx={{
               color: 'rgb(78, 78, 78)',
@@ -191,6 +210,7 @@ function Login() {
                   onChange={(e) => {
                     showPassword ? setPasswordValue(e.target.value) : setPasswordValue('')
                     setIsValid('')
+                    setSubmitStatus('idle')
                   }}
                   id="fieldPassword"
                   label="Password"
@@ -198,9 +218,7 @@ function Login() {
                   type='password'
                   InputProps={{
                     endAdornment: (
-                      isLoading ? (
-                        <Box className='spinner-black'></Box>
-                      ) : (
+                      submitStatus === 'idle' ? (
                         <Box
                           onClick={() => (passwordValue && !isValid) && handleSubmit()}
                           sx={{
@@ -216,7 +234,17 @@ function Login() {
                             }}
                           />
                         </Box>
-                      )
+                      ) : submitStatus === 'loading' ? (
+                        <Box className='spinner-black'></Box>
+                      ) : submitStatus === 'success' ? (
+                        <Box sx={{ display: 'flex' }}>
+                          <img src={checkIcon} style={{ width: '28px' }} />
+                        </Box>
+                      ) : submitStatus === 'failed' ? (
+                        <Box sx={{ display: 'flex' }}>
+                          <img src={dangerIcon} style={{ width: '28px' }} />
+                        </Box>
+                      ) : null
                     ),
                     disableUnderline: true
                   }}

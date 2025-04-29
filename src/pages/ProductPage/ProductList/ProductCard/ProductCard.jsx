@@ -33,13 +33,13 @@ function ProductCard({ product, index, onClick }) {
       <Box sx={{ height: '315px' }}>
 
         {/* Ảnh khi chưa click color */}
-        <img src={product.colors[hoveredObject.hoveredColor].image}
+        <img src={product.colors[hoveredObject.hoveredColor].imageDetail[0]}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: hoveredObject.hoveredItem === index ? 'none' : 'block' }} />
 
         {/* Ảnh khi hover color */}
         {hoveredObject.hoveredItem === index && (
           <img
-            src={product.colors[hoveredObject.hoveredColor].image}
+            src={product.colors[hoveredObject.hoveredColor].imageDetail[0]}
             style={{
               width: '100%',
               height: '100%',
