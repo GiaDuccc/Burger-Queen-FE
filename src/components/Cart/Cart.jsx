@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // ShoppingCart.js
 import Drawer from '@mui/material/Drawer'
 import Box from '@mui/material/Box'
@@ -40,8 +41,8 @@ function ShoppingCart({ open, toggleDrawer }) {
     // console.log('product[idx]', products[idx])
     const availableQuantity = getMaxQuantityByIdx(idx)
 
-    console.log(orderData.items[idx].quantity + 1)
-    console.log(availableQuantity)
+    // console.log(orderData.items[idx].quantity + 1)
+    // console.log(availableQuantity)
     if (orderData.items[idx].quantity + 1 > availableQuantity) {
       return
     }
@@ -128,8 +129,6 @@ function ShoppingCart({ open, toggleDrawer }) {
       }
     }
 
-    console.log('user thay đổi')
-
     if (open) { // chỉ fetchData khi mở cart
       setIsLoading(true)
       fetchData()
@@ -140,11 +139,11 @@ function ShoppingCart({ open, toggleDrawer }) {
   }, [open, user])
 
 
-  useEffect(() => {
-    console.log('orderData', orderData)
-    console.log('products', products)
-    console.log('quantitySelect', quantitySelect)
-  }, [orderData])
+  // useEffect(() => {
+  //   console.log('orderData', orderData)
+  //   console.log('products', products)
+  //   console.log('quantitySelect', quantitySelect)
+  // }, [orderData])
 
   if (!user) return (
     <Drawer

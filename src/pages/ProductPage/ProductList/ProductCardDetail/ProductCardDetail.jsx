@@ -68,24 +68,22 @@ export default function ProductCardDetail({ product, open, onClose }) {
       size: activeSize.split(':')[0].trim()
     }
     // CHỜ 4s rồi thêm vào giỏ
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
     try {
-      const data = await addProductToOrder(user.orders[user.orders.length - 1].orderId, productData);
-      console.log('thanh cong');
-      console.log(data);
+      await addProductToOrder(user.orders[user.orders.length - 1].orderId, productData)
       tickSound.volume = 0.25
       tickSound.play()
       setAddProductStatus('success')
 
       // CHỜ 3s rồi quay lại idle
       setTimeout(() => {
-        setAddProductStatus('idle');
-      }, 3000);
+        setAddProductStatus('idle')
+      }, 3000)
 
     } catch (error) {
-      console.error('Lỗi:', error);
-      setAddProductStatus('idle');
+      // console.error('Lỗi:', error)
+      setAddProductStatus('idle')
     }
   }
 
