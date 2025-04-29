@@ -15,7 +15,6 @@ import Filter from './Filter/Filter'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import '~/App.css'
-import CircularProgress from '@mui/material/CircularProgress'
 
 // bảng quy đổi từ màu -> mã màu
 function getColorHex(colorName) {
@@ -141,9 +140,9 @@ function ProductPage() {
           colors: product.colors.map(color => ({
             color: color.color.toLowerCase(),
             colorHex: color.colorHex,
-            image: `/allProduct/${product.name}/${color.image}`,
+            image: `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${color.imageDetail[0]}`,
             imageDetail: color.imageDetail.map(image =>
-              `/allProduct/${product.name}/${product.name}_detail-${color.color.toLowerCase()}/${image}`
+              `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${image}`
             ),
             size: color.sizes
           })),
@@ -153,7 +152,8 @@ function ProductPage() {
           price: product.price,
           highLight: product.highLight,
           desc: product.desc,
-          slug: product.slug
+          slug: product.slug,
+          id: product._id
         }))
 
         setProductList(products)
@@ -177,9 +177,9 @@ function ProductPage() {
           colors: product.colors.map(color => ({
             color: color.color.toLowerCase(),
             colorHex: color.colorHex,
-            image: `/allProduct/${product.name}/${color.image}`,
+            image: `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${color.imageDetail[0]}`,
             imageDetail: color.imageDetail.map(image =>
-              `/allProduct/${product.name}/${product.name}_detail-${color.color.toLowerCase()}/${image}`
+              `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${image}`
             ),
             size: color.sizes
           })),
@@ -189,7 +189,8 @@ function ProductPage() {
           price: product.price,
           highLight: product.highLight,
           desc: product.desc,
-          slug: product.slug
+          slug: product.slug,
+          id: product._id
         }))
         setProductCache(prev => ({
           ...prev,
@@ -249,21 +250,22 @@ function ProductPage() {
           </Typography>
           <Typography sx={{ display: 'inline-block', color: '#7e7e85', fontSize: '48px', fontWeight: '600' }} >Choose for you</Typography>
         </Box>
-        <Box
-          // key={currentPage}
-          className="ProductList_Filter"
-          sx={{ display: 'flex', gap: 2, heigth: '100%' }}>
 
-          {/* Filter */}
-          <Filter filterOptions={filterOptions} apply={() => setIsApply(!isApply)} />
+        {isLoading ?
+          (<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '50vh', flex: 8 }}>
+            <Box className='spinner-large'></Box>
+          </Box>)
+          :
+          (<Box
+            // key={currentPage}
+            className="ProductList_Filter"
+            sx={{ display: 'flex', gap: 2, heigth: '100%' }}>
 
-          {/* Products list */}
-          {isLoading ?
-            (<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '50vh', flex: 8 }}>
-              <Box className='spinner-large'></Box>
-            </Box>)
-            :
-            (<Box
+            {/* Filter */}
+            <Filter filterOptions={filterOptions} apply={() => setIsApply(!isApply)} />
+
+            {/* Products list */}
+            <Box
               className="fade-in"
               sx={{
                 flex: 8,
@@ -329,9 +331,10 @@ function ProductPage() {
                   </Box>)
                 }
               </Box>
-            </Box>)
-          }
-        </Box>
+            </Box>
+
+          </Box>)
+        }
       </Box>
     </Container>
   )

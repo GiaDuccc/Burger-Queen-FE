@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box'
 
 const categories = [
-  { image: '/allProduct/Nike Sabrina 2 EP/Nike Sabrina 2 EP-0.avif', title: 'sneaker' },
-  { image: '/allProduct/Nike Sabrina 2 EP/Nike Sabrina 2 EP-0.avif', title: 'classic' },
-  { image: '/allProduct/Nike Sabrina 2 EP/Nike Sabrina 2 EP-0.avif', title: 'running' },
+  { image: '/allProduct/Air Jordan 1 Low/Air Jordan 1 Low-blue.png', title: 'sneaker' },
+  { image: '/allProduct/Nike Air Max 1/Nike Air Max 1-white.png', title: 'classic' },
+  { image: '/allProduct/Nike Air Max 1/Nike Air Max 1-brown.png', title: 'running' },
   { image: '/allProduct/Nike Sabrina 2 EP/Nike Sabrina 2 EP-0.avif', title: 'basketball' },
   { image: '/allProduct/Nike Sabrina 2 EP/Nike Sabrina 2 EP-0.avif', title: 'football' },
   { image: '/allProduct/Nike Sabrina 2 EP/Nike Sabrina 2 EP-0.avif', title: 'boot' }

@@ -1,8 +1,9 @@
 import Box from '@mui/material/Box'
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Typography from '@mui/material/Typography';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import Typography from '@mui/material/Typography'
+import '~/App.css'
 
 const slogan = 'Explore our exclusive collection of authentic sneakers from Nike, Adidas, Converse,...'
 
@@ -11,20 +12,22 @@ const ColorChangeSlogan = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setColorSlogan({ bgcolor: '#ecf0f1', textColor: 'rgba(0,0,0,.9)', linkColor:'#2980b9' })
+      setColorSlogan({ bgcolor: '#ecf0f1', textColor: 'rgba(0,0,0,.9)', linkColor: '#2980b9' })
     }, 2000)
 
     return () => clearTimeout(timer)
   }, [])
 
   return (
-    <Box sx ={{
-      width: '100%',
-      bgcolor: colorSlogan.bgcolor,
-      padding: '16px 0',
-      transition:
-        'background-color 1.8s cubic-bezier(0.42, 0, 0.58, 1)'
-    }}>
+    <Box
+      className='fade-in-up'
+      sx={{
+        width: '100%',
+        bgcolor: colorSlogan.bgcolor,
+        padding: '16px 0',
+        transition:
+          'background-color 1.8s cubic-bezier(0.42, 0, 0.58, 1)'
+      }}>
       <Box sx={{
         display: 'flex',
         justifyContent: 'center',
@@ -48,6 +51,6 @@ const ColorChangeSlogan = () => {
 }
 
 
-export default function Slogan () {
+export default function Slogan() {
   return <ColorChangeSlogan />
 }

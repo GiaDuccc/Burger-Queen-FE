@@ -229,36 +229,6 @@ function SignUp() {
 
   const handleSubmit = async () => {
     setIsSubmit(true)
-    // let hasError = false
-
-    // Object.entries(values).forEach(([key, field]) => {
-    //   if (typeof field.value === 'object' && !Array.isArray(field.value) && key !== 'formError') {
-    //     Object.entries(field.value).forEach(([, subVal]) => {
-    //       if (subVal === '') {
-    //         hasError = true
-    //         setValues(prev => ({
-    //           ...prev,
-    //           [key]: {
-    //             ...prev[key],
-    //             nameError: 'Enter valid date of birth.',
-    //             error: true
-    //           }
-    //         }))
-    //       }
-    //     })
-    //   }
-    //   else if (field.value === '' && key !== 'formError') {
-    //     hasError = true
-    //     setValues(prev => ({
-    //       ...prev,
-    //       [key]: {
-    //         ...prev[key],
-    //         error: true,
-    //         nameError: `${key.slice(0, 1).toUpperCase() + key.slice(1)} is required.`
-    //       }
-    //     }))
-    //   }
-    // })
 
     if (!formError) {
       const payload = {
@@ -340,7 +310,7 @@ function SignUp() {
       }}
     >
       <Header />
-      <Box>
+      <Box className='fade-in-up'>
         {/* Title */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', m: '16px auto 0', width: '70%' }}>
           <Typography sx={{ color: 'rgba(0,0,0,.85)', fontWeight: '600', fontSize: '24px' }}>Dynamic Hype Club Account</Typography>
