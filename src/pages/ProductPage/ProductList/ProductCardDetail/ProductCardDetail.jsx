@@ -33,8 +33,8 @@ export default function ProductCardDetail({ product, open, onClose }) {
         imageDetail: color.imageDetail,
         name: product.name,
         type: product.type,
-        size: color.size.map(size => `${size.size} : ${size.quantity}`),
-        stock: color.size.reduce((sum, item) => sum + Number(item.quantity), 0),
+        size: color.sizes.map(size => `${size.size} : ${size.quantity}`),
+        stock: color.sizes.reduce((sum, item) => sum + Number(item.quantity), 0),
         price: product.price,
         highLight: product.highLight,
         desc: product.desc
@@ -68,13 +68,15 @@ export default function ProductCardDetail({ product, open, onClose }) {
       size: activeSize.split(':')[0].trim()
     }
     // CHỜ 4s rồi thêm vào giỏ
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise(resolve => setTimeout(resolve, 800))
 
     try {
       await addProductToOrder(user.orders[user.orders.length - 1].orderId, productData)
       tickSound.volume = 0.25
       tickSound.play()
-      setAddProductStatus('success')
+      setTimeout(() => {
+        setAddProductStatus('success')
+      }, 250)
 
       // CHỜ 3s rồi quay lại idle
       setTimeout(() => {
@@ -92,9 +94,10 @@ export default function ProductCardDetail({ product, open, onClose }) {
   }, [activeProduct])
 
   // useEffect(() => {
-  //   console.log('activeProduct', activeProduct)
-  //   console.log('currentImage', currentImage)
-  // })
+  //   // console.log('activeProduct', activeProduct)
+  //   // console.log('currentImage', currentImage)
+  //   console.log('product', product)
+  // }, [])
 
   return (
     <Modal
@@ -310,7 +313,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
             }}>
               {/* Title */}
               <Box>
-                <Typography sx={{ color: '#d33918', fontSize: '18px', fontWeight: '600' }}>{activeProduct.stock > 0 ? 'Just in' : 'Sold Out'}</Typography>
+                <Typography sx={{ color: '#d33918', fontSize: '18px', fontWeight: '600' }}>{activeProduct.stock > 0 ? 'Just in' : 'Sold out'}</Typography>
                 <Typography sx={{ fontWeight: '600', fontSize: '22px', pt: '4px' }} >{activeProduct.name}</Typography>
                 <Typography sx={{ fontSize: '16px', color: '#7e7e85', pb: '4px' }} >{activeProduct.type.slice(0, 1).toUpperCase() + product.type.slice(1)}</Typography>
                 <Typography sx={{ fontSize: '18px', fontWeight: '600', color: '#000000c2', pt: '8px' }}>{Number(activeProduct.price).toLocaleString('vi-VN')}đ</Typography>
@@ -327,14 +330,17 @@ export default function ProductCardDetail({ product, open, onClose }) {
                     }}
                     key={product.id}
                     sx={{
+                      position: 'relative',
                       width: '70px',
                       height: '70px',
                       borderRadius: '4px',
                       transition: 'all 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
-                      opacity: product.stock > 0 ? '1' : '0.7',
+                      opacity: product.stock > 0 ? '1' : '0.4',
                       border: activeProduct.id === product.id ? 'solid 1px #000' : 'solid 1px rgba(255,255,255, 0)',
                       transform: activeProduct.id === product.id ? 'scale(1.02)' : 'none',
-                      // border: 'solid 0.5px rgba(255,255,255, 0)',
+                      // display: 'flex',
+                      // alignItems: 'center',
+                      // justifyContent: 'center',
                       '&:hover': {
                         transform: 'scale(1.02)',
                         transformOrigin: 'center',
@@ -352,13 +358,27 @@ export default function ProductCardDetail({ product, open, onClose }) {
                         boxShadow: '0.2px 0.2px 10px rgb(220, 220, 220)'
                       }}
                     />
+                    {product.stock === 0 && (
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          top: '5px',
+                          left: '5px',
+                          width: '83px',
+                          height: '1px',
+                          backgroundColor: 'red',
+                          transform: 'rotate(45deg)',
+                          transformOrigin: 'top left'
+                        }}
+                      />
+                    )}
                   </Box>
                 ))}
               </Box>
               {/* Size */}
               <Box sx={{ pt: '32px' }} >
                 <Typography sx={{ color: 'rgba(0,0,0, .85)', fontSize: '16px', fontWeight: '600', pb: 1 }}>Select Size</Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                   {activeProduct.size.map((size, idx) => (
                     <Typography
                       onClick={(e) => {

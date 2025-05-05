@@ -6,6 +6,10 @@
   animation: fadeInUp 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
+.fade-in-right {
+  animation: fadeInRight 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
 .shake {
   animation: shake 0.15s;
 }
@@ -42,7 +46,19 @@
 
 /* Class để nổ */
 .boom {
-  animation: boomEffect 0.4s ease-out forwards;
+  animation: boomEffect 0.4s ease-out forwards
+}
+
+.boom-small {
+  animation: boomSmall 0.4s ease-out forwards
+}
+
+.slide-from-right {
+  animation: slideFromRight 0.4s ease-out forwards
+}
+
+.slide-from-left {
+  animation: slideFromLeft 0.4s ease-out forwards
 }
 
 @keyframes fadeInUp {
@@ -50,18 +66,83 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromRight {
+  0% {
+    transform: scaleX(0.1);
+    transform-origin: right;
+    opacity: 1;
+  }
+
+  70% {
+    transform: scaleX(1.05);
+    transform-origin: right;
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: right;
+    opacity: 1;
+  }
+}
+
+@keyframes slideFromLeft {
+  0% {
+    transform: scaleX(0.1);
+    transform-origin: left;
+    opacity: 1;
+  }
+
+  70% {
+    transform: scaleX(1.05);
+    transform-origin: left;
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+    opacity: 1;
+  }
+}
+
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-16px); }
-  50% { transform: translateX(16px); }
-  75% { transform: translateX(-16px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-16px);
+  }
+
+  50% {
+    transform: translateX(16px);
+  }
+
+  75% {
+    transform: translateX(-16px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 @keyframes spin {
@@ -75,13 +156,31 @@
     transform: scale(0.5);
     opacity: 0;
   }
+
   50% {
-    transform: scale(1.5);
+    transform: scale(1.3);
     opacity: 0.8;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
   }
 }
 
+@keyframes boomSmall {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

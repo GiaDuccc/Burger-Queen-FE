@@ -40,28 +40,38 @@ export default function HeroSection({ video, title, descTitle }) {
     }
   }, [])
 
-  useEffect(() => {
-    if (!isVisible) return
+  // useEffect(() => {
 
-    const handleScroll = () => {
-      const scrollY = window.scrollY
+  //   const handleScroll = () => {
+  //     if (!isVisible) {
+  //       scale > 0.98 && setScale(1)
+  //       borderRadius < 6 && setBorderRadius('0')
+  //       return
+  //     }
 
-      sessionStorage.setItem('scrollYStorage', scrollY)
+  //     const scrollY = window.scrollY
+  //     console.log('scrollY', scrollY)
 
-      let newScale = Math.max(0.88, 1 - scrollY / 4.7 / 1000)
-      let newBorderRadius = Math.min(52, scrollY / 14)
-      if (scrollY < 30) {
-        newScale = 1
-        newBorderRadius = 0
-      }
-      setScale(newScale)
-      setBorderRadius(`${newBorderRadius}px`)
-    }
+  //     sessionStorage.setItem('scrollYStorage', scrollY)
 
-    window.addEventListener('scroll', handleScroll)
+  //     let newScale = Math.max(0.88, 1 - scrollY / 4.7 / 1000)
+  //     let newBorderRadius = Math.min(52, scrollY / 14)
+  //     console.log('newScale', newScale)
+  //     console.log('newBorderRadius', newBorderRadius)
+  //     // if (scrollY < 30) {
+  //     //   newScale = 1
+  //     //   newBorderRadius = 0
+  //     // }
+  //     // newScale > 0.98 ? setScale(1) : setScale(newScale)
+  //     // newBorderRadius < 6 ? setBorderRadius('0px') : setBorderRadius(`${newBorderRadius}px`)
+  //     setScale(newScale)
+  //     setBorderRadius(`${newBorderRadius}px`)
+  //   }
 
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isVisible])
+  //   window.addEventListener('scroll', handleScroll)
+
+  //   return () => window.removeEventListener('scroll', handleScroll)
+  // }, [isVisible])
 
   useEffect(() => {
     const savedY = sessionStorage.getItem('scrollYStorage')
@@ -76,11 +86,24 @@ export default function HeroSection({ video, title, descTitle }) {
       setScale(newScale)
       setBorderRadius(`${newBorderRadius}px`)
     }
+    const handleScroll = () => {
+      if (!isVisible) return
+
+      const scrollY = window.scrollY
+      sessionStorage.setItem('scrollYStorage', scrollY)
+
+      let newScale = Math.max(0.88, 1 - scrollY / 4.7 / 1000)
+      let newBorderRadius = Math.min(52, scrollY / 14)
+
+      setScale(newScale)
+      setBorderRadius(`${newBorderRadius}px`)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [isVisible])
 
-  // useEffect(() => {
-  //   console.log(isVisible)
-  // })
 
   return (
     <Box sx={{ width: '100%' }} >

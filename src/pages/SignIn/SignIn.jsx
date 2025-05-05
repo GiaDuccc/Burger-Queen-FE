@@ -50,7 +50,7 @@ function Login() {
             setSubmitStatus('success')
           }, 400)
           setTimeout(() => {
-            navigate(`/${customerId}`, { user: data })
+            navigate(`/${customerId}`)
           }, 1200)
         })
         .catch(error => {
@@ -60,11 +60,9 @@ function Login() {
     }, 2000)
   }
 
-  // useEffect(() => {
   setTimeout(() => {
     const userData = JSON.parse(localStorage.getItem('user'))
     if (userData) {
-      // console.log(userData)
       const customerId = `customer-${userData._id.slice(0, userData._id.length / 2)}`
       navigate(`/${customerId}`, { user: userData })
     }
@@ -72,17 +70,12 @@ function Login() {
       setUser(false)
     }
   }, 1000)
-  // }, [])
 
   useEffect(() => {
     if (showPassword && passwordRef.current) {
       passwordRef.current.focus(); // khi hiện thì focus
     }
   }, [showPassword])
-
-  useEffect(() => {
-    console.log(submitStatus)
-  }, [])
 
   if (user) {
     return (<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
