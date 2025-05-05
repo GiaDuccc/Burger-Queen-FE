@@ -1,15 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import HomePage from './pages/HomePage/HomePage'
+import HomePage from './pages/HomePage/HomePage_v2'
 import SignIn from './pages/SignIn/SignIn'
 import SignUp from './pages/SignUp/SignUp'
-import NikePage from './pages/NikePage/NikePage'
+import NikePage from './pages/NikePage/NikePage_v2'
 import AdidasPage from './pages/AdidasPage/AdidasPage'
 import NewBalance from './pages/NewBalancePage/NewBalance'
 import ConversePage from './pages/ConversePage/ConversePage'
 import PumaPage from './pages/PumaPage/PumaPage'
-import ProductPage from './pages/ProductPage/ProductPage'
+// import ProductPage from '~/pages/ProductPage/ProductPage_v1'
+import ProductPage from './pages/ProductPage/ProducePage_v2'
 import BitisPage from './pages/BitisPage/BitisPage'
 import Dashboard from './pages/Dashboard/Dashboard'
+import Checkout from './pages/Checkout/Checkout'
 
 
 function App() {
@@ -17,6 +19,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<HomePage />} />
+        {/* <Route path='/product' element={<ProductPage />} /> */}
         <Route path='/product' element={<ProductPage />} />
         <Route path='/nike' element={<NikePage />} />
         <Route path='/adidas' element={<AdidasPage />} />
@@ -27,6 +30,7 @@ function App() {
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/:customerId' element={<Dashboard />} />
+        <Route path='/checkout' element={<Checkout />} />
       </Routes>
     </Router>
   )

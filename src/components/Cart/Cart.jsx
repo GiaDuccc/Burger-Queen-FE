@@ -1,17 +1,17 @@
 /* eslint-disable no-console */
-// ShoppingCart.js
 import Drawer from '@mui/material/Drawer'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import CloseIcon from '@mui/icons-material/Close'
-import { Link } from '@mui/material'
-import { addOrderToCustomer, fetchCreateOrder, fetchGetOrder, fetchGetProduct, increaseQuantityAPI, decreaseQuantityAPI, removeProductFromOrderAPI } from '~/apis'
+import Link from '@mui/material/Link'
+import { addOrderToCustomer, fetchCreateOrder, fetchGetOrder, increaseQuantityAPI, decreaseQuantityAPI, removeProductFromOrderAPI, fetchProductDetailsAPI } from '~/apis'
 import { useEffect, useState } from 'react'
 import removeIcon from '~/assets/minus.png'
 import addIcon from '~/assets/plus.png'
 import trashIcon from '~/assets/trash.png'
 import outOfStock from '~/assets/outOfStock.png'
 import deliveryIcon from '~/assets/delivery.png'
+import { useNavigate } from 'react-router-dom'
 
 
 function ShoppingCart({ open, toggleDrawer }) {
@@ -22,6 +22,8 @@ function ShoppingCart({ open, toggleDrawer }) {
   const [products, setProducts] = useState([])
   const [quantitySelect, setQuantitySelect] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+
+  const navigate = useNavigate()
 
   const getMaxQuantityByIdx = (idx) => {
     return products[idx].colors.find(c => c?.color === orderData.items[idx]?.color)
@@ -105,6 +107,10 @@ function ShoppingCart({ open, toggleDrawer }) {
     }
   }
 
+  const handleSubmit = () => {
+    navigate('/checkout')
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return
@@ -122,7 +128,7 @@ function ShoppingCart({ open, toggleDrawer }) {
         setOrderData(lastOrder)
 
         const productList = await Promise.all(
-          lastOrder.items.map(item => fetchGetProduct(item.productId))
+          lastOrder.items.map(item => fetchProductDetailsAPI(item.productId))
         )
         setProducts(productList)
         setQuantitySelect(lastOrder.items.map(item => item.quantity))
@@ -259,7 +265,7 @@ function ShoppingCart({ open, toggleDrawer }) {
       }}
       sx={{
         '& .MuiDrawer-paper': {
-          width: '40vw',
+          width: '45vw',
           bgcolor: 'white',
           overflow: 'hidden',
           borderRadius: '32px 0 0 32px',
@@ -497,25 +503,27 @@ function ShoppingCart({ open, toggleDrawer }) {
         </Box>
 
         {/* Button thanh toán */}
-        <Box sx={{
-          flex: 0.6,
-          bgcolor: 'rgba(0,0,0,.85)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: '50px',
-          cursor: 'pointer',
-          transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
-          '&:hover': {
-            transform: 'scale(1.02)',
-            transformOrigin: 'center'
-          },
-          '& p': {
-            color: 'white',
-            fontSize: '20px',
-            fontWeight: '600'
-          }
-        }}>
+        <Box
+          onClick={() => handleSubmit()}
+          sx={{
+            flex: 0.6,
+            bgcolor: 'rgba(0,0,0,.85)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '50px',
+            cursor: 'pointer',
+            transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
+            '&:hover': {
+              transform: 'scale(1.02)',
+              transformOrigin: 'center'
+            },
+            '& p': {
+              color: 'white',
+              fontSize: '20px',
+              fontWeight: '600'
+            }
+          }}>
           <Typography>Checkout</Typography>
         </Box>
       </Box>

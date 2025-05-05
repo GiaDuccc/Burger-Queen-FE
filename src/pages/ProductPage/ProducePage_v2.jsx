@@ -9,7 +9,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { fetchAllProductFilter, fetchAllProductPageAPI } from '~/apis'
+import { fetchAllProductAPI, fetchAllProductPageAPI } from '~/apis'
 import ProductList from './ProductList/ProductList'
 import Filter from './Filter/Filter'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
@@ -17,27 +17,27 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import '~/App.css'
 
 // bảng quy đổi từ màu -> mã màu
-function getColorHex(colorName) {
-  const colorMap = {
-    red: '#f54a4a',
-    blue: '#406dff',
-    green: '#90c890',
-    white: '#ffffff',
-    black: '#2b3035',
-    purple: '#b56fe9',
-    orange: '#ff8939',
-    brown: '#9b6d4e',
-    gray: '#a7a7a7',
-    yellow: '#ffeb00',
-    cream: '#fff8dc',
-    gold: '#FFD700',
-    pink: '#f188ff',
-    copper: '#B87333',
-    lightPink: '#FFB6C1',
-    darkPink: '#FF69B4'
-  }
-  return colorMap[colorName] || '#00e7c5'
-}
+// function getColorHex(colorName) {
+//   const colorMap = {
+//     red: '#f54a4a',
+//     blue: '#406dff',
+//     green: '#90c890',
+//     white: '#ffffff',
+//     black: '#2b3035',
+//     purple: '#b56fe9',
+//     orange: '#ff8939',
+//     brown: '#9b6d4e',
+//     gray: '#a7a7a7',
+//     yellow: '#ffeb00',
+//     cream: '#fff8dc',
+//     gold: '#FFD700',
+//     pink: '#f188ff',
+//     copper: '#B87333',
+//     lightPink: '#FFB6C1',
+//     darkPink: '#FF69B4'
+//   }
+//   return colorMap[colorName] || '#00e7c5'
+// }
 
 function ProductPage() {
   // state lưu danh sách sản phẩm
@@ -55,6 +55,7 @@ function ProductPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   // Lấy ra page ở trên URL, nếu chưa có thì mặc định là 1 khi vừa vào trang lần đầu
   const pageFromURL = parseInt(searchParams.get('page')) || 1
+  const [searchProduct, setSearchProduct] = useState(searchParams.get('search'))
 
   // set Current page bằng page trên param
   // const [currentPage, setCurrentPage] = useState(pageFromURL)
@@ -64,9 +65,14 @@ function ProductPage() {
   const [totalPages, setTotalPages] = useState(0)
 
   // State lưu filterOptions
-  const [filterOptions, setFilterOptions] = useState([])
+  // const [filterOptions, setFilterOptions] = useState([])
 
-  const [isApply, setIsApply] = useState(false)
+  const [brandFilter, setBrandFilter] = useState(null)
+  const [colorFilter, setColorFilter] = useState(null)
+  const [typeFilter, setTypeFilter] = useState(null)
+  const [stockFilter, setStockFilter] = useState(null)
+  const [sortFilter, setSortFilter] = useState(null)
+
 
   // Hàm handle khi next trang
   const handleNextPage = () => {
@@ -74,7 +80,6 @@ function ProductPage() {
       const currentParams = Object.fromEntries(searchParams.entries())
       currentParams.page = currentPage + 1
       setSearchParams(currentParams, { replace: false })
-      // setCurrentPage(prev => prev + 1)
     }
   }
 
@@ -87,39 +92,6 @@ function ProductPage() {
     }
   }
 
-  // UseEffect load Filter (Chỉ load lần đầu vì nó lấy hết dữ liệu)
-  useEffect(() => {
-    const brandSet = new Set()
-    const colorSet = new Set()
-    const typeSet = new Set()
-    const stockSet = (['Just in', 'Sold out'])
-    // const priceSet = (['Low-High', 'High-Low'])
-    const sortBy = (['Newest', 'Oldest', 'Low-High', 'High-Low'])
-
-    fetchAllProductFilter().then(data => {
-      data.forEach(product => {
-        brandSet.add(product.brand.toLowerCase())
-        product.colors.forEach(c => colorSet.add(c.color.toLowerCase()))
-        typeSet.add(product.type.toLowerCase())
-        // if (product.stock > 0) {
-        //   stockSet.add('Just in')
-        // }
-        // else {
-        //   stockSet.add('Sold out')
-        // }
-      })
-      setFilterOptions([
-        { Brand: Array.from(brandSet).sort() },
-        { Color: Array.from(colorSet).sort() },
-        { Type: Array.from(typeSet).sort() },
-        { Stock: Array.from(stockSet).sort() },
-        // { Price: Array.from(priceSet).sort() },
-        { Sort: sortBy.sort() }
-      ])
-    })
-
-  }, [isFirstLoad])
-
   // UseEffect load trang hiện tại
   useEffect(() => {
     setIsLoading(true)
@@ -127,8 +99,6 @@ function ProductPage() {
     const allParams = Object.fromEntries(searchParams.entries())
     const { page, limit, slug, ...filters } = allParams
     const cacheKey = searchParams.toString()
-
-    // if ( slug ) return
 
     if (productCache[cacheKey]) {
       setProductList(productCache[cacheKey])
@@ -144,7 +114,7 @@ function ProductPage() {
             imageDetail: color.imageDetail.map(image =>
               `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${image}`
             ),
-            size: color.sizes
+            sizes: color.sizes
           })),
           name: product.name,
           type: product.type,
@@ -165,7 +135,7 @@ function ProductPage() {
         setIsLoading(false)
       })
     }
-  }, [currentPage, isApply])
+  }, [currentPage, brandFilter, colorFilter, typeFilter, stockFilter, sortFilter, searchProduct])
 
   // UseEffect load trang kế tiếp (trang hiện tại + 1)
   useEffect(() => {
@@ -181,7 +151,7 @@ function ProductPage() {
             imageDetail: color.imageDetail.map(image =>
               `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${image}`
             ),
-            size: color.sizes
+            sizes: color.sizes
           })),
           name: product.name,
           type: product.type,
@@ -198,28 +168,36 @@ function ProductPage() {
         }))
       })
     }
-  }, [currentPage])
+  }, [currentPage, brandFilter, colorFilter, typeFilter, stockFilter, sortFilter])
 
   // UseEffect load lần load đầu tiên
   useEffect(() => {
-    const currentParams = Object.fromEntries(searchParams.entries())
-    currentParams.page = pageFromURL
-    setSearchParams(currentParams, { replace: false })
+    // const currentParams = Object.fromEntries(searchParams.entries())
+    // currentParams.page = pageFromURL
+    // setSearchParams(currentParams, { replace: false })
     setIsFirstLoad(false)
   }, []) // Chạy 1 lần duy nhất
 
   // Chạy khi đổi trang hoặc filter để scroll
   // Bug thay đổi filter chưa được áp hiệu ứng cuộn
   useEffect(() => {
-    if (!isFirstLoad && contentRef.current) {
-      contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (!isFirstLoad || searchProduct) {
+      setTimeout(() => {
+        contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 250)
     }
-  }, [currentPage, isApply])
+  }, [currentPage, brandFilter, colorFilter, typeFilter, stockFilter, sortFilter, searchProduct])
 
-  // useEffect(() => {
-  //   console.log(totalPages)
-  //   console.log(currentPage)
-  // })
+  useEffect(() => {
+    if (!isFirstLoad) {
+      setSearchProduct(searchParams.get('search'))
+      setBrandFilter(searchParams.get('brand'))
+      setColorFilter(searchParams.get('color'))
+      setTypeFilter(searchParams.get('type'))
+      setStockFilter(searchParams.get('stock'))
+      setSortFilter(searchParams.get('sort'))
+    }
+  }, [searchParams])
 
   return (
     <Container
@@ -245,10 +223,23 @@ function ProductPage() {
         }}
       >
         <Box>
-          <Typography sx={{ color: 'rgba(0,0,0,.85)', fontSize: '48px', fontWeight: '600', p: '24px 8px', display: 'inline-block' }} >
-            All products.
-          </Typography>
-          <Typography sx={{ display: 'inline-block', color: '#7e7e85', fontSize: '48px', fontWeight: '600' }} >Choose for you</Typography>
+          {searchProduct ? (
+            <Box>
+              <Typography sx={{ color: 'rgba(0,0,0,.85)', fontSize: '48px', fontWeight: '600', p: '24px 8px', display: 'inline-block' }} >
+                Search results for.
+              </Typography>
+              <Typography sx={{ display: 'inline-block', color: '#7e7e85', fontSize: '48px', fontWeight: '600' }} >
+                {searchProduct.length > 30 ? `${searchProduct.slice(0, 30)}...` : searchProduct}
+              </Typography>
+            </Box>
+          ) : (
+            <Box>
+              <Typography sx={{ color: 'rgba(0,0,0,.85)', fontSize: '48px', fontWeight: '600', p: '24px 8px', display: 'inline-block' }} >
+                All products.
+              </Typography>
+              <Typography sx={{ display: 'inline-block', color: '#7e7e85', fontSize: '48px', fontWeight: '600' }} >Choose for you</Typography>
+            </Box>
+          )}
         </Box>
 
         {isLoading ?
@@ -262,7 +253,8 @@ function ProductPage() {
             sx={{ display: 'flex', gap: 2, heigth: '100%' }}>
 
             {/* Filter */}
-            <Filter filterOptions={filterOptions} apply={() => setIsApply(!isApply)} />
+            {/* <Filter filterOptions={filterOptions} /> */}
+            <Filter currentPage={currentPage} />
 
             {/* Products list */}
             <Box
