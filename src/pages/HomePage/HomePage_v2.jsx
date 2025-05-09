@@ -1,4 +1,4 @@
-// import Box from '@mui/material/Box'
+import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 // import Header from '~/components/Header/Header'
 import Header from '~/components/Header/Header'
@@ -6,6 +6,7 @@ import Slogan from '~/components/Slogan/Slogan'
 import HeroSection from '~/components/HeroSection/HeroSection'
 import video1 from '~/assets/videoHeroSection/video1.mp4'
 import SliderUtilities from '~/components/SliderUtilities/SliderUtilities'
+import { useState } from 'react'
 
 const Utilities = [
   {
@@ -74,11 +75,24 @@ const Utilities = [
 ]
 
 function HomePage() {
+
+  const [isLoadingToPage, setIsLoadingToPage] = useState(true)
+
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+
+  setTimeout(() => {
+    setIsLoadingToPage(false)
+  }, 1000)
+
+  if (isLoadingToPage) {
+    return (<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <Box className='spinner-large'></Box>
+    </Box>)
   }
 
   return (

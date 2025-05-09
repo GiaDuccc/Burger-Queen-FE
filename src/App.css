@@ -50,7 +50,7 @@
 }
 
 .boom-small {
-  animation: boomSmall 0.4s ease-out forwards
+  animation: boomSmall 0.3s ease-out forwards
 }
 
 .slide-from-right {
@@ -58,7 +58,7 @@
 }
 
 .slide-from-left {
-  animation: slideFromLeft 0.4s ease-out forwards
+  animation: slideFromLeft 0.3s ease-out forwards
 }
 
 @keyframes fadeInUp {
@@ -106,13 +106,13 @@
 
 @keyframes slideFromLeft {
   0% {
-    transform: scaleX(0.1);
+    transform: scaleX(0.5);
     transform-origin: left;
     opacity: 1;
   }
 
   70% {
-    transform: scaleX(1.05);
+    transform: scaleX(1.1);
     transform-origin: left;
     opacity: 1;
   }

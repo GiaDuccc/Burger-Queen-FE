@@ -12,6 +12,7 @@ import ProductPage from './pages/ProductPage/ProducePage_v2'
 import BitisPage from './pages/BitisPage/BitisPage'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Checkout from './pages/Checkout/Checkout'
+import Admin from './pages/Admin/Admin'
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/:customerId' element={<Dashboard />} />
         <Route path='/checkout' element={<Checkout />} />
+        <Route path='/admin' element={<Admin />} />
       </Routes>
     </Router>
   )

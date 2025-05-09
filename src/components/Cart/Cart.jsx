@@ -124,6 +124,16 @@ function ShoppingCart({ open, toggleDrawer }) {
         setUser(updatedCustomer)
         setOrderData(order)
       } else {
+        if (user.orders[user.orders.length - 1].status !== 'cart') {
+          const order = await fetchCreateOrder()
+          const data = { orderId: order._id, status: order.status }
+          const updatedCustomer = await addOrderToCustomer(user._id, data)
+          localStorage.setItem('user', JSON.stringify(updatedCustomer))
+
+          setUser(updatedCustomer)
+          setOrderData(order)
+          return
+        }
         const lastOrder = await fetchGetOrder(user.orders[user.orders.length - 1].orderId)
         setOrderData(lastOrder)
 
@@ -144,10 +154,48 @@ function ShoppingCart({ open, toggleDrawer }) {
     }
   }, [open, user])
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user) return
+
+      if (!user.orders || user.orders.length === 0) {
+        const order = await fetchCreateOrder()
+        const data = { orderId: order._id, status: order.status }
+        const updatedCustomer = await addOrderToCustomer(user._id, data)
+        localStorage.setItem('user', JSON.stringify(updatedCustomer))
+
+        setUser(updatedCustomer)
+        setOrderData(order)
+      } else {
+        if (user.orders[user.orders.length - 1].status !== 'cart') {
+          const order = await fetchCreateOrder()
+          const data = { orderId: order._id, status: order.status }
+          const updatedCustomer = await addOrderToCustomer(user._id, data)
+          localStorage.setItem('user', JSON.stringify(updatedCustomer))
+
+          setUser(updatedCustomer)
+          setOrderData(order)
+          return
+        }
+        const lastOrder = await fetchGetOrder(user.orders[user.orders.length - 1].orderId)
+        setOrderData(lastOrder)
+
+        const productList = await Promise.all(
+          lastOrder.items.map(item => fetchProductDetailsAPI(item.productId))
+        )
+        setProducts(productList)
+        setQuantitySelect(lastOrder.items.map(item => item.quantity))
+      }
+    }
+    fetchData()
+  }, [])
+
 
   // useEffect(() => {
   //   console.log('orderData', orderData)
-  //   console.log('products', products)
+  //   if (products) {
+  //     console.log('products', products)
+  //   }
   //   console.log('quantitySelect', quantitySelect)
   // }, [orderData])
 
@@ -504,7 +552,7 @@ function ShoppingCart({ open, toggleDrawer }) {
 
         {/* Button thanh toán */}
         <Box
-          onClick={() => handleSubmit()}
+          onClick={() => products.length && handleSubmit()}
           sx={{
             flex: 0.6,
             bgcolor: 'rgba(0,0,0,.85)',
@@ -514,8 +562,9 @@ function ShoppingCart({ open, toggleDrawer }) {
             borderRadius: '50px',
             cursor: 'pointer',
             transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
+            opacity: products.length ? 1 : .6,
             '&:hover': {
-              transform: 'scale(1.02)',
+              transform: products.length && 'scale(1.02)',
               transformOrigin: 'center'
             },
             '& p': {

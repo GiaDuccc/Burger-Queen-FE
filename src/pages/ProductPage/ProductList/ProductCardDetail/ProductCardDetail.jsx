@@ -65,8 +65,12 @@ export default function ProductCardDetail({ product, open, onClose }) {
     const productData = {
       productId: product.id,
       color: activeProduct.color,
-      size: activeSize.split(':')[0].trim()
+      size: activeSize.split(':')[0].trim(),
+      name: product.name,
+      price: product.price.toString(),
+      image: activeProduct.imageDetail[0]
     }
+    // console.log(productData)
     // CHỜ 4s rồi thêm vào giỏ
     await new Promise(resolve => setTimeout(resolve, 800))
 

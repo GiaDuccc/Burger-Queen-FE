@@ -7,7 +7,7 @@ import nextButton from '~/assets/next.png'
 import { useEffect, useRef, useState } from 'react'
 import Link from '@mui/material/Link'
 import CallMadeOutlinedIcon from '@mui/icons-material/CallMadeOutlined'
-import Slide from '@mui/material/Slide'
+// import Slide from '@mui/material/Slide'
 import { fetchLoginAPI } from '~/apis'
 import { useNavigate } from 'react-router-dom'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
@@ -51,7 +51,7 @@ function Login() {
           }, 400)
           setTimeout(() => {
             navigate(`/${customerId}`)
-          }, 1200)
+          }, 900)
         })
         .catch(error => {
           setSubmitStatus('failed')
@@ -65,8 +65,7 @@ function Login() {
     if (userData) {
       const customerId = `customer-${userData._id.slice(0, userData._id.length / 2)}`
       navigate(`/${customerId}`, { user: userData })
-    }
-    else {
+    } else {
       setUser(false)
     }
   }, 1000)
@@ -192,81 +191,86 @@ function Login() {
               />
 
               {/* Password  */}
-              <Slide direction="right" in={showPassword} mountOnEnter unmountOnExit>
-                {/* <Fade in={showPassword} timeout={400}> */}
-                <TextField
-                  inputRef={passwordRef}
-                  value={passwordValue}
-                  onKeyUp={(e) => {
-                    e.key === 'Enter' && (passwordValue && handleSubmit())
-                  }}
-                  onChange={(e) => {
-                    showPassword ? setPasswordValue(e.target.value) : setPasswordValue('')
-                    setIsValid('')
-                    setSubmitStatus('idle')
-                  }}
-                  id="fieldPassword"
-                  label="Password"
-                  variant="filled"
-                  type='password'
-                  InputProps={{
-                    endAdornment: (
-                      submitStatus === 'idle' ? (
-                        <Box
-                          onClick={() => (passwordValue && !isValid) && handleSubmit()}
-                          sx={{
-                            display: 'flex',
-                            cursor: 'pointer'
-                          }}>
-                          <img
-                            src={nextButton}
-                            style={{
-                              width: '28px',
-                              opacity: passwordValue && !isValid ? '1' : '0.5',
-                              transition: 'opacity 0.5s cubic-bezier(0.42, 0, 0.58, 1)'
-                            }}
-                          />
-                        </Box>
-                      ) : submitStatus === 'loading' ? (
-                        <Box className='spinner-black'></Box>
-                      ) : submitStatus === 'success' ? (
-                        <Box sx={{ display: 'flex' }}>
-                          <img src={checkIcon} style={{ width: '28px' }} />
-                        </Box>
-                      ) : submitStatus === 'failed' ? (
-                        <Box sx={{ display: 'flex' }}>
-                          <img src={dangerIcon} style={{ width: '28px' }} />
-                        </Box>
-                      ) : null
-                    ),
-                    disableUnderline: true
-                  }}
-                  sx={{
-                    width: '55%',
-                    backgroundColor: 'white',
-                    transition: 'transform 0.2 cubic-bezier(0.42, 0, 0.58, 1)',
-                    '& .MuiFilledInput-root': {
+              {showPassword && (
+                <Box className='slide-from-left' sx={{ width: '55%' }}>
+                  {/* <Slide direction="right" in={showPassword} mountOnEnter unmountOnExit> */}
+                  {/* <Fade in={showPassword} timeout={400}> */}
+                  <TextField
+                    inputRef={passwordRef}
+                    value={passwordValue}
+                    onKeyUp={(e) => {
+                      e.key === 'Enter' && (passwordValue && handleSubmit())
+                    }}
+                    onChange={(e) => {
+                      showPassword ? setPasswordValue(e.target.value) : setPasswordValue('')
+                      setIsValid('')
+                      setSubmitStatus('idle')
+                    }}
+                    id="fieldPassword"
+                    label="Password"
+                    variant="filled"
+                    type='password'
+                    InputProps={{
+                      endAdornment: (
+                        submitStatus === 'idle' ? (
+                          <Box
+                            onClick={() => (passwordValue && !isValid) && handleSubmit()}
+                            sx={{
+                              display: 'flex',
+                              cursor: 'pointer'
+                            }}>
+                            <img
+                              src={nextButton}
+                              style={{
+                                width: '28px',
+                                opacity: passwordValue && !isValid ? '1' : '0.5',
+                                transition: 'opacity 0.5s cubic-bezier(0.42, 0, 0.58, 1)'
+                              }}
+                            />
+                          </Box>
+                        ) : submitStatus === 'loading' ? (
+                          <Box className='spinner-black'></Box>
+                        ) : submitStatus === 'success' ? (
+                          <Box sx={{ display: 'flex' }}>
+                            <img src={checkIcon} style={{ width: '28px' }} />
+                          </Box>
+                        ) : submitStatus === 'failed' ? (
+                          <Box sx={{ display: 'flex' }}>
+                            <img src={dangerIcon} style={{ width: '28px' }} />
+                          </Box>
+                        ) : null
+                      ),
+                      disableUnderline: true
+                    }}
+                    sx={{
+                      width: '100%',
                       backgroundColor: 'white',
-                      borderRadius: '16px',
-                      paddingRight: '10px',
-                      color: 'rgba(0, 0, 0, 0.85)',
-                      border: '2px solid rgb(170, 170, 170)',
-                      '&.Mui-focused': {
-                        border: '2px solid rgba(0, 0, 0, 0.65)',
+                      transition: 'transform 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
+                      '& .MuiFilledInput-root': {
+                        backgroundColor: 'white',
                         borderRadius: '16px',
-                        backgroundColor: 'white'
+                        paddingRight: '10px',
+                        color: 'rgba(0, 0, 0, 0.85)',
+                        border: '2px solid rgb(170, 170, 170)',
+                        '&.Mui-focused': {
+                          border: '2px solid rgba(0, 0, 0, 0.65)',
+                          borderRadius: '16px',
+                          backgroundColor: 'white'
+                        }
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: '#666'
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: inputValue ? 'rgba(0, 0, 0, 0.85)' : '#666'
                       }
-                    },
-                    '& .MuiInputLabel-root': {
-                      color: '#666'
-                    },
-                    '& .MuiInputLabel-root.Mui-focused': {
-                      color: inputValue ? 'rgba(0, 0, 0, 0.85)' : '#666'
-                    }
-                  }}
-                />
-                {/* </Fade> */}
-              </Slide>
+                    }}
+                  />
+                  {/* </Fade> */}
+                  {/* </Slide> */}
+                </Box>
+
+              )}
               {/* Error */}
               <Box
                 className={isValid ? 'shake' : ''}
