@@ -84,7 +84,7 @@ function Search({ open, toggleDrawer, productList }) {
       if (searchValue.length < 2) return false
       return product.name.toLowerCase().includes(searchValue.toLowerCase())
     })
-    setSearchProduct(searchProduct)
+    setSearchProduct(searchProduct.slice(0, 5))
   }, [searchValue])
 
   return (
@@ -311,7 +311,7 @@ function Search({ open, toggleDrawer, productList }) {
                 flexDirection: searchValue.length >= 2 ? 'row' : 'column',
                 width: '100%',
                 gap: 2,
-                overflowX: 'sroll',
+                // overflowX: 'scroll',
                 flex: 1
               }}>
                 {searchValue.length >= 2 ? (
