@@ -423,15 +423,15 @@ function NikePage() {
       <HeroSection
         video={nikeVideoHeroSection} title={'NIKE'} descTitle={'Luxury shoes,\n help your life comfortable.'}
       />
-      <Slider id='Products' title='Nike-Products' items={Products} name={'Products'} />
+      {/* <Slider id='Products' title='Nike-Products' items={Products} name={'Products'} />
       <Slider id='Sneaker' title='Nike-Sneaker' items={Sneaker} name={'Sneaker'} />
       <Slider id='Classic' title='Nike-Classic' items={Classic} name={'Classic'} />
       <Slider id='Running' title='Nike-Running' items={Running} name={'Running'} />
       <Slider id='Basketball' title='Nike-Basketball' items={Basketball} name={'Basketball'} />
       <Slider id='Football' title='Nike-Football' items={Football} name={'Football'} />
-      <Slider id='Boot' title='Nike-Boot' items={Boot} name={'Boot'} />
+      <Slider id='Boot' title='Nike-Boot' items={Boot} name={'Boot'} /> */}
 
-      <Footer />
+      {/* <Footer /> */}
     </Container>
   )
 }

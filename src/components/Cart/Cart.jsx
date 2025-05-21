@@ -2,7 +2,6 @@
 import Drawer from '@mui/material/Drawer'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import CloseIcon from '@mui/icons-material/Close'
 import Link from '@mui/material/Link'
 import { addOrderToCustomer, fetchCreateOrder, fetchGetOrder, increaseQuantityAPI, decreaseQuantityAPI, removeProductFromOrderAPI, fetchProductDetailsAPI } from '~/apis'
 import { useEffect, useState } from 'react'
@@ -12,6 +11,8 @@ import trashIcon from '~/assets/trash.png'
 import outOfStock from '~/assets/outOfStock.png'
 import deliveryIcon from '~/assets/delivery.png'
 import { useNavigate } from 'react-router-dom'
+import theme from '~/theme'
+import closeIcon from '~/assets/x-white.png'
 
 
 function ShoppingCart({ open, toggleDrawer }) {
@@ -188,16 +189,8 @@ function ShoppingCart({ open, toggleDrawer }) {
       }
     }
     fetchData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-
-  // useEffect(() => {
-  //   console.log('orderData', orderData)
-  //   if (products) {
-  //     console.log('products', products)
-  //   }
-  //   console.log('quantitySelect', quantitySelect)
-  // }, [orderData])
 
   if (!user) return (
     <Drawer
@@ -255,7 +248,7 @@ function ShoppingCart({ open, toggleDrawer }) {
           }}
           onClick={toggleDrawer}
         >
-          <CloseIcon sx={{ color: '#d6d6d7' }} />
+          <img src={closeIcon} style={{ width: '20px', height: '20px' }} />
         </Box>
         <Typography sx={{ fontSize: '36px', fontWeight: '600', lineHeight: '36px', flex: 1 }}>Your Cart</Typography>
         <Box sx={{
@@ -356,7 +349,7 @@ function ShoppingCart({ open, toggleDrawer }) {
           }}
           onClick={toggleDrawer}
         >
-          <CloseIcon sx={{ color: '#d6d6d7' }} />
+          <img src={closeIcon} style={{ width: '20px', height: '20px' }} />
         </Box>
         <Typography sx={{ fontSize: '36px', fontWeight: '600', lineHeight: '36px', flex: 0.8 }}>Your Cart</Typography>
         {/* Sản phẩm trong giỏ hàng */}
@@ -400,7 +393,7 @@ function ShoppingCart({ open, toggleDrawer }) {
                   }}
                 >
                   <img
-                    src={`/allProduct/${product.name}/${product.name}-${orderData.items[idx]?.color}/${product?.colors.find(c => c?.color === orderData.items[idx]?.color)?.imageDetail[0]}`}
+                    src={`${theme.API_ROOT}${product.colors[0].imageDetail[0]}`}
                     style={{ width: '110px', height: '110px', objectFit: 'cover', borderRadius: '8px' }}
                   />
                 </Box>

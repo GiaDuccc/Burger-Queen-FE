@@ -5,20 +5,34 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
 import settingsIcon from '~/assets/settings.png'
+import editIcon from '~/assets/edit.png'
 import logOutIcon from '~/assets/logout.png'
 import { useEffect, useState } from 'react'
 import { fetchGetOrder } from '~/apis'
+import OrderDetail from '~/components/OrderDetail/OrderDetail'
+import '~/App.css'
 
 function Dashboard() {
 
   const user = JSON.parse(localStorage.getItem('user'))
   const navigate = useNavigate()
 
+
   const [orders, setOrders] = useState([])
+  const [orderDetail, setOrderDetail] = useState(null)
+  const [isLoadingOrder, setIsLoadingOrder] = useState(false)
 
   function getCountryName(code) {
+    if (!code) return
     const regionNames = new Intl.DisplayNames(['en'], { type: 'region' })
     return regionNames.of(code.toUpperCase()) || code
+  }
+
+  const statusColors = {
+    pending: '#ffa706',
+    delivering: '#0066ff',
+    completed: '#4cd137',
+    canceled: '#ff4f4f'
   }
 
   const logOut = () => {
@@ -27,6 +41,8 @@ function Dashboard() {
   }
 
   useEffect(() => {
+    if (!user) navigate('/sign-in')
+    setIsLoadingOrder(true)
     const fetchOrders = async () => {
       let newOrders = []
       for (const order of user.orders) {
@@ -35,6 +51,7 @@ function Dashboard() {
           newOrders.push(data)
         }
       }
+      if (newOrders) setIsLoadingOrder(false)
       setOrders(newOrders.reverse())
     }
     fetchOrders()
@@ -44,17 +61,26 @@ function Dashboard() {
     <Container disableGutters maxWidth={false} sx={{
       bgcolor: 'white',
       width: '100%',
-      // height: 'fit-content',
-      height: '2000px',
+      height: 'fit-content',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      pb: '64px'
     }}>
       <Header />
       {/* Content */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%', mx: 'auto', mt: '20px' }}>
+      <Box
+        className='fade-in-up'
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '55%',
+          mx: 'auto',
+          mt: '20px'
+        }}
+      >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography sx={{ color: 'rgba(0,0,0,.85)', fontWeight: '600', fontSize: '32px' }}>
-            {`Customer - ${user.lastName} ${user.firstName}`}
+            {`Customer #${user?.phone}`}
           </Typography>
           <Box sx={{
             display: 'flex',
@@ -64,25 +90,33 @@ function Dashboard() {
               textDecoration: 'none',
               fontSize: '16px'
             },
-            '& p:hover': {
+            '& div:hover': {
               color: 'rgb(105, 105, 105)',
               textDecoration: 'underline',
               cursor: 'pointer'
             }
           }}>
             <Box
+              onClick={() => navigate('/admin')}
+              sx={{ display: (user?.role === 'admin' || user?.role === 'manager') ? 'flex' : 'none', alignItems: 'center', gap: 1 }}
+            >
+              <Typography>Admin</Typography>
+              {/* <SettingsIcon sx={{ fontSize: '16px' }} /> */}
+              <img src={settingsIcon} style={{ width: '16px', height: '16px', opacity: .6 }} />
+            </Box>
+            <Box
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
             >
-              <Typography>Settings</Typography>
+              <Typography>Edit</Typography>
               {/* <SettingsIcon sx={{ fontSize: '16px' }} /> */}
-              <img src={settingsIcon} style={{ width: '16px', height: '16px' }} />
+              <img src={editIcon} style={{ width: '16px', height: '16px', opacity: .6 }} />
             </Box>
             <Box
               onClick={() => logOut()}
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
             >
               <Typography>Log Out</Typography>
-              <img src={logOutIcon} style={{ width: '16px', height: '16px' }} />
+              <img src={logOutIcon} style={{ width: '16px', height: '16px', opacity: .5 }} />
             </Box>
           </Box>
         </Box>
@@ -96,44 +130,54 @@ function Dashboard() {
         <Box sx={{ display: 'flex', flexDirection: 'column', mt: '32px', gap: 3 }}>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Name:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{user.lastName + ' ' + user.firstName}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{user?.lastName + ' ' + user?.firstName}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Date of Birth:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{new Date(user.dob).toLocaleDateString('vi-VN')}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{new Date(user?.dob).toLocaleDateString('vi-VN')}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Email:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{user.email}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{user?.email}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Phone:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{user.phone}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{user?.phone}</Typography>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+            <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Address:</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{user?.address}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Country:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{`${getCountryName(user.country)}`}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{`${getCountryName(user?.country)}`}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Join date:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{new Date(user.createdAt).toLocaleDateString('vi-VN')}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{new Date(user?.createdAt).toLocaleDateString('vi-VN')}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Active:</Typography>
             <Box sx={{
               width: '14px',
               height: '14px',
-              bgcolor: user.isActive ? '#3dff4c' : '#ff3232',
+              bgcolor: user?.isActive ? '#3dff4c' : '#ff3232',
               border: '1px solid rgb(141, 141, 141)',
               borderRadius: '16px'
             }}></Box>
           </Box>
+          <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Orders History: </Typography>
+          {isLoadingOrder && (
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '32px' }}>
+              <Box className='spinner-large'></Box>
+            </Box>
+          )}
           {/* Order history */}
-          {orders.length > 0 && (
+          {(orders.length > 0 && !isLoadingOrder) && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Orders History: </Typography>
               {orders?.map((order, idx) => (
                 <Box
+                  onClick={() => setOrderDetail(order._id)}
                   className='fade-in-up'
                   key={idx}
                   sx={{
@@ -142,7 +186,13 @@ function Dashboard() {
                     gap: 2,
                     bgcolor: '#f6f6f6',
                     p: '20px',
-                    borderRadius: '16px'
+                    borderRadius: '16px',
+                    transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
+                    '&:hover': {
+                      cursor: 'pointer',
+                      transform: 'scale(1.02)',
+                      boxShadow: '3px 3px 15px #ddd'
+                    }
                   }}
                 >
                   {/* Img and quatity */}
@@ -183,7 +233,7 @@ function Dashboard() {
                     </Typography>
                     <Typography sx={{ fontSize: '16px', color: '#696969' }}>
                       {'Status: '}
-                      <span style={{ borderBottom: '1px solid black', paddingBottom: '0.5px', color: order.status === 'completed' && '#4cd137' }} >
+                      <span style={{ borderBottom: '1px solid black', paddingBottom: '0.5px', color: statusColors[order.status] }} >
                         {order.status}
                       </span>
                     </Typography>
@@ -228,6 +278,10 @@ function Dashboard() {
           )}
         </Box>
       </Box>
+
+      {orderDetail && (
+        <OrderDetail open={Boolean(orderDetail)} onClose={() => setOrderDetail(null)} orderId={orderDetail} />
+      )}
     </Container>
   )
 }

@@ -3,12 +3,12 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import CloseIcon from '@mui/icons-material/Close'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import closeIcon from '~/assets/x-white.png'
+import leftIcon from '~/assets/left.png'
+import rightIcon from '~/assets/right.png'
 import '~/App.css'
 import checkIcon from '~/assets/check.png'
+import heartIcon from '~/assets/heart-outline.png'
 import heartColorIcon from '~/assets/heart-color.png'
 import dingSound from '~/assets/ding-sound.mp3'
 import tapSound from '~/assets/tap-sound.mp3'
@@ -29,7 +29,6 @@ export default function ProductCardDetail({ product, open, onClose }) {
         id: index,
         color: color.color.toLowerCase(),
         colorHex: color.colorHex,
-        image: color.image,
         imageDetail: color.imageDetail,
         name: product.name,
         type: product.type,
@@ -45,7 +44,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
 
   const [activeSize, setActiveSize] = useState(null)
 
-  const [currentImage, setCurrentImage] = useState({ image: activeProduct.image, id: 0 })
+  const [currentImage, setCurrentImage] = useState({ image: activeProduct.imageDetail[0], id: 0 })
 
   const tickSound = new Audio(dingSound)
   const addFavouriteSound = new Audio(tapSound)
@@ -162,7 +161,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
             }}
             onClick={handleClose}
           >
-            <CloseIcon sx={{ color: '#d6d6d7' }} />
+            <img src={closeIcon} style={{ width: '22px', height: '22px' }} />
           </Box>
           {/* Content */}
           <Box sx={{
@@ -275,7 +274,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
                       }
                     }}
                   >
-                    <ChevronLeftIcon />
+                    <img src={leftIcon} style={{ width: '16px', height: '16px' }} />
                   </Box>
                   <Box
                     onClick={() => {
@@ -304,7 +303,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
                       }
                     }}
                   >
-                    <ChevronRightIcon />
+                    <img src={rightIcon} style={{ width: '16px', height: '16px' }} />
                   </Box>
                 </Box>
               </Box>
@@ -330,21 +329,17 @@ export default function ProductCardDetail({ product, open, onClose }) {
                   <Box
                     onClick={() => {
                       setActiveProduct(product)
-                      setCurrentImage({ image: product.image, id: 0 })
+                      setCurrentImage({ image: product.imageDetail[0], id: 0 })
                     }}
                     key={product.id}
                     sx={{
                       position: 'relative',
                       width: '70px',
                       height: '70px',
-                      borderRadius: '4px',
+                      borderRadius: '8px',
                       transition: 'all 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
                       opacity: product.stock > 0 ? '1' : '0.4',
                       border: activeProduct.id === product.id ? 'solid 1px #000' : 'solid 1px rgba(255,255,255, 0)',
-                      transform: activeProduct.id === product.id ? 'scale(1.02)' : 'none',
-                      // display: 'flex',
-                      // alignItems: 'center',
-                      // justifyContent: 'center',
                       '&:hover': {
                         transform: 'scale(1.02)',
                         transformOrigin: 'center',
@@ -353,12 +348,12 @@ export default function ProductCardDetail({ product, open, onClose }) {
                     }}
                   >
                     <img
-                      src={product.image}
+                      src={product.imageDetail[0]}
                       style={{
                         objectFit: 'cover',
                         width: '100%',
                         height: '100%',
-                        borderRadius: '4px',
+                        borderRadius: '8px',
                         boxShadow: '0.2px 0.2px 10px rgb(220, 220, 220)'
                       }}
                     />
@@ -424,7 +419,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
                   gap: 2,
                   mt: '32px',
                   transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
-                  '& div': {
+                  '& > div': {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -434,7 +429,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
                     borderRadius: '32px',
                     boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
                   },
-                  '& div:hover': {
+                  '& > div:hover': {
                     cursor: 'pointer',
                     boxShadow: '1px 1px 10px rgb(201, 200, 200)',
                     transform: 'scale(1.02)',
@@ -479,7 +474,13 @@ export default function ProductCardDetail({ product, open, onClose }) {
                   {addFavouriteStatus ? (
                     <img className='boom' src={heartColorIcon} style={{ width: '28px', height: '28px' }} />
                   ) : (
-                    <FavoriteBorderIcon className='fade-in' sx={{ mx: '2px' }} />
+                    <Box sx={{
+                      mx: '4px', display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}>
+                      <img className='fade-in' style={{ width: '20px', height: '20px' }} src={heartIcon} />
+                    </Box>
                   )}
                 </Box>
               </Box>

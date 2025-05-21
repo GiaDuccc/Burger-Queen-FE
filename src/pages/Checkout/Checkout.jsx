@@ -55,7 +55,7 @@ function Checkout() {
 
   const handleCheckout = async () => {
     setIsCheckout('loading')
-    await updatedOrderAPI(user.orders[user.orders.length - 1].orderId, getTotal())
+    await updatedOrderAPI(user.orders[user.orders.length - 1].orderId, getTotal(), Object.entries(paymentSelect).find(([, value]) => value)?.[0])
     await updateOrderInCustomer(user._id, user.orders[user.orders.length - 1].orderId).then(data => {
       localStorage.setItem('user', JSON.stringify(data))
       setTimeout(() => {
@@ -64,7 +64,7 @@ function Checkout() {
         setIsCheckout('success')
 
         setTimeout(() => {
-          navigate('/')
+          navigate('/profile')
         }, 1300)
       }, 500)
     })
@@ -84,7 +84,7 @@ function Checkout() {
 
 
   const handleUpdate = async () => {
-    if (address === 'Unknow' || !address) {
+    if (address === 'Unknown' || !address) {
       setAddress('address is required')
       return
     }
@@ -843,11 +843,11 @@ function Checkout() {
             </Box>
             <Box
               onClick={() =>
-                Object.values(paymentSelect).includes(true) && handleCheckout()
+                (Object.values(paymentSelect).includes(true) && address !== 'Unknown') && handleCheckout()
               }
               sx={{
                 bgcolor: '#000',
-                opacity: Object.values(paymentSelect).includes(true) ? 1 : .5
+                opacity: (Object.values(paymentSelect).includes(true) && address !== 'Unknown') ? 1 : .5
               }}>
               {isCheckout === 'idle' && (
                 <Typography sx={{ color: '#fff' }}>Checkout</Typography>

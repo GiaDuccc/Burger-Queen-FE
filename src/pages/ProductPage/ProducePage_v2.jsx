@@ -12,9 +12,10 @@ import { useSearchParams } from 'react-router-dom'
 import { fetchAllProductAPI, fetchAllProductPageAPI } from '~/apis'
 import ProductList from './ProductList/ProductList'
 import Filter from './Filter/Filter'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
+import leftIcon from '~/assets/left.png'
+import rightIcon from '~/assets/right.png'
 import '~/App.css'
+import theme from '~/theme'
 
 // bảng quy đổi từ màu -> mã màu
 // function getColorHex(colorName) {
@@ -110,9 +111,8 @@ function ProductPage() {
           colors: product.colors.map(color => ({
             color: color.color.toLowerCase(),
             colorHex: color.colorHex,
-            image: `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${color.imageDetail[0]}`,
             imageDetail: color.imageDetail.map(image =>
-              `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${image}`
+              `${theme.API_ROOT}${image}`
             ),
             sizes: color.sizes
           })),
@@ -147,9 +147,8 @@ function ProductPage() {
           colors: product.colors.map(color => ({
             color: color.color.toLowerCase(),
             colorHex: color.colorHex,
-            image: `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${color.imageDetail[0]}`,
             imageDetail: color.imageDetail.map(image =>
-              `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${image}`
+              `${theme.API_ROOT}${image}`
             ),
             sizes: color.sizes
           })),
@@ -250,7 +249,8 @@ function ProductPage() {
           (<Box
             // key={currentPage}
             className="ProductList_Filter"
-            sx={{ display: 'flex', gap: 2, heigth: '100%' }}>
+            sx={{ display: 'flex', gap: 2, height: '100%' }}
+          >
 
             {/* Filter */}
             {/* <Filter filterOptions={filterOptions} /> */}
@@ -265,6 +265,7 @@ function ProductPage() {
               }}
             >
               <ProductList products={productList} />
+              {/* button */}
               <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', alignItems: 'center' }}>
                 {currentPage === 1 || totalPages === 0 ?
                   (<Box sx={{ width: '40px', height: '40px', bgcolor: 'white' }}></Box>)
@@ -290,7 +291,7 @@ function ProductPage() {
                     }}
                     onClick={handlePrevPage}
                   >
-                    <KeyboardArrowLeftIcon />
+                    <img src={leftIcon} style={{ width: '16px', height: '16px' }} />
                   </Box>)
                 }
 
@@ -319,7 +320,7 @@ function ProductPage() {
                     }}
                     onClick={handleNextPage}
                   >
-                    <KeyboardArrowRightIcon />
+                    <img src={rightIcon} style={{ width: '16px', height: '16px' }} />
                   </Box>)
                 }
               </Box>

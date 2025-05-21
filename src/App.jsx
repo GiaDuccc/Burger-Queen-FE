@@ -10,12 +10,26 @@ import PumaPage from './pages/PumaPage/PumaPage'
 // import ProductPage from '~/pages/ProductPage/ProductPage_v1'
 import ProductPage from './pages/ProductPage/ProducePage_v2'
 import BitisPage from './pages/BitisPage/BitisPage'
-import Dashboard from './pages/Dashboard/Dashboard'
+import Profile from './pages/Profile/Profile'
 import Checkout from './pages/Checkout/Checkout'
 import Admin from './pages/Admin/Admin'
+import { fetchCustomerDetailAPI } from './apis'
+import { useEffect } from 'react'
 
 
 function App() {
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'))
+
+    const fetchCustomerDetail = async () => {
+      await fetchCustomerDetailAPI(user._id).then(data => {
+        if (data.role !== user.role) localStorage.removeItem('user')
+      })
+    }
+    fetchCustomerDetail()
+  }, [])
+
   return (
     <Router>
       <Routes>
@@ -30,7 +44,7 @@ function App() {
         <Route path='/bitis' element={<BitisPage />} />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
-        <Route path='/:customerId' element={<Dashboard />} />
+        <Route path='/profile' element={<Profile />} />
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/admin' element={<Admin />} />
       </Routes>
