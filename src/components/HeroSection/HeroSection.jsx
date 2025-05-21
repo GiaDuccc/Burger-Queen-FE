@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import PauseIcon from '@mui/icons-material/Pause'
-import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import playIcon from '~/assets/play-white.png'
+import pauseIcon from '~/assets/pause-white.png'
 
 
 export default function HeroSection({ video, title, descTitle }) {
@@ -164,9 +164,9 @@ export default function HeroSection({ video, title, descTitle }) {
           onClick={togglePlayVideo}
         >
           {playVideo ?
-            <PauseIcon sx={{ color: '#d6d6d7' }} />
+            <img src={pauseIcon} style={{ width: '16px', height: '16px' }} />
             :
-            <PlayArrowIcon sx={{ color: '#d6d6d7' }} />
+            <img src={playIcon} style={{ width: '16px', height: '16px' }} />
           }
         </Box>
       </Box>

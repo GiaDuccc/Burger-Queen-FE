@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import FilterItems from './FilterItems/FilterItems'
+import downIcon from '~/assets/down.png'
 
 function FilterOptions({ filterOptions }) {
 
@@ -81,14 +81,17 @@ function FilterOptions({ filterOptions }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: '36px',
-                '& svg': {
+                '& img': {
                   transition: 'all 0.4s cubic-bezier(0.42, 0, 0.58, 1)',
                   transform: openFilterOption[key.toLowerCase()] ? 'scaleY(-1)' : 'scaleY(1)',
                   transformOrigin: 'center',
-                  color: 'rgba(0,0,0,.5)'
+                  color: 'rgba(0,0,0,.5)',
+                  width: '14px',
+                  height: '14px',
+                  opacity: .3
                 }
               }}>
-                <KeyboardArrowDownIcon />
+                <img src={downIcon} />
               </Box>
             </Box>
             <FilterItems filterOption={filterOption} openFilterOption={openFilterOption} idx={key} />

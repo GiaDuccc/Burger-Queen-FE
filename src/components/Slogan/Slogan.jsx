@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import Typography from '@mui/material/Typography'
+import rightIcon from '~/assets/right.png'
 import '~/App.css'
 
 const slogan = 'Explore our exclusive collection of authentic sneakers from Nike, Adidas, Converse,...'
@@ -44,7 +44,7 @@ const ColorChangeSlogan = () => {
         }
       }}>
         <Typography sx={{ display: 'inline-block', color: colorSlogan.textColor, margin: '0 8px 0 0 ', transition: 'color 1.8s cubic-bezier(0.42, 0, 0.58, 1)' }} >{slogan}</Typography>
-        <Link href="#" >Learn more<ChevronRightIcon fontSize="small" /></Link>
+        <Link href="#" >Learn more</Link>
       </Box>
     </Box>
   )

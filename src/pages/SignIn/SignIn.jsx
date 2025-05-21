@@ -6,11 +6,9 @@ import TextField from '@mui/material/TextField'
 import nextButton from '~/assets/next.png'
 import { useEffect, useRef, useState } from 'react'
 import Link from '@mui/material/Link'
-import CallMadeOutlinedIcon from '@mui/icons-material/CallMadeOutlined'
-// import Slide from '@mui/material/Slide'
 import { fetchLoginAPI } from '~/apis'
 import { useNavigate } from 'react-router-dom'
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import warningIcon from '~/assets/danger.png'
 import checkIcon from '~/assets/check.png'
 import dangerIcon from '~/assets/danger.png'
 import dingSound from '~/assets/ding-sound.mp3'
@@ -42,7 +40,6 @@ function Login() {
     setTimeout(async () => {
       await fetchLoginAPI(user)
         .then(data => {
-          const customerId = `customer-${data._id.slice(0, data._id.length / 2)}`
           localStorage.setItem('user', JSON.stringify(data))
           tickSound.volume = 0.4
           tickSound.play()
@@ -50,7 +47,7 @@ function Login() {
             setSubmitStatus('success')
           }, 400)
           setTimeout(() => {
-            navigate(`/${customerId}`)
+            navigate('/profile')
           }, 900)
         })
         .catch(error => {
@@ -63,8 +60,7 @@ function Login() {
   setTimeout(() => {
     const userData = JSON.parse(localStorage.getItem('user'))
     if (userData) {
-      const customerId = `customer-${userData._id.slice(0, userData._id.length / 2)}`
-      navigate(`/${customerId}`, { user: userData })
+      navigate('/profile', { user: userData })
     } else {
       setUser(false)
     }
@@ -280,7 +276,7 @@ function Login() {
                   gap: 0.5,
                   color: 'rgb(184, 53, 53)'
                 }}>
-                <ErrorOutlineIcon sx={{ fontSize: '18px' }} />
+                <img src={warningIcon} style={{ width: '18px', height: '18px' }}/>
                 <Typography>{isValid}</Typography>
               </Box>
             </Box>
@@ -302,7 +298,7 @@ function Login() {
               }
             }}>
               <Link href="#" underline='none' >Forgot password?</Link>
-              <CallMadeOutlinedIcon sx={{ fontSize: '13px' }} />
+              {/* <CallMadeOutlinedIcon sx={{ fontSize: '13px' }} /> */}
             </Box>
 
             {/* Don't have account */}
@@ -327,7 +323,7 @@ function Login() {
                 }
               }}>
                 <Link href="/sign-up" underline='none' >Create Your Account</Link>
-                <CallMadeOutlinedIcon sx={{ fontSize: '13px' }} />
+                {/* <CallMadeOutlinedIcon sx={{ fontSize: '13px' }} /> */}
               </Box>
             </Box>
           </Box>

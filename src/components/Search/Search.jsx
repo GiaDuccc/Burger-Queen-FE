@@ -2,13 +2,15 @@ import Drawer from '@mui/material/Drawer'
 import Box from '@mui/material/Box'
 import searchIcon from '~/assets/search.png'
 import TextField from '@mui/material/TextField'
+import closeIcon from '~/assets/x-white.png'
+import closeIconBlack from '~/assets/x.png'
 import logoIcon from '~/assets/logo2.png'
-import CloseIcon from '@mui/icons-material/Close'
 import { useEffect, useState } from 'react'
 import Typography from '@mui/material/Typography'
 import ProductCardDetail from '~/pages/ProductPage/ProductList/ProductCardDetail/ProductCardDetail'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import '~/App.css'
+import theme from '~/theme'
 
 function Search({ open, toggleDrawer, productList }) {
 
@@ -18,6 +20,7 @@ function Search({ open, toggleDrawer, productList }) {
   const [searchRecent, setSearchRecent] = useState(JSON.parse(localStorage.getItem('searchRecent')) || [])
   const navigate = useNavigate()
   const location = useLocation()
+  // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams()
 
   const handleClick = (product) => {
@@ -46,7 +49,6 @@ function Search({ open, toggleDrawer, productList }) {
         )
       }))
     }
-    console.log('selectedProduct', selectedProduct)
     setSelectedProduct(selectedProduct)
     // navigate('/product')
   }
@@ -85,6 +87,7 @@ function Search({ open, toggleDrawer, productList }) {
       return product.name.toLowerCase().includes(searchValue.toLowerCase())
     })
     setSearchProduct(searchProduct.slice(0, 5))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue])
 
   return (
@@ -233,7 +236,7 @@ function Search({ open, toggleDrawer, productList }) {
                 }}
                 onClick={toggleDrawer}
               >
-                <CloseIcon sx={{ color: '#d6d6d7' }} />
+                <img src={closeIcon} style={{ width: '20px', height: '20px' }} />
               </Box>
             </Box>
           </Box>
@@ -286,18 +289,20 @@ function Search({ open, toggleDrawer, productList }) {
                       <Typography
                         onClick={() => setSearchValue(value)}
                       >{value}</Typography>
-                      <CloseIcon
-                        sx={{
-                          '&:hover': {
-                            cursor: 'pointer',
-                            opacity: .5
-                          }
-                        }}
+                      <img
                         onClick={() => {
                           const updatedRecent = [...searchRecent]
                           updatedRecent.splice(idx, 1)
                           localStorage.setItem('searchRecent', JSON.stringify(updatedRecent))
                           setSearchRecent(updatedRecent)
+                        }}
+                        src={closeIconBlack}
+                        style={{
+                          width: '20px', height: '20px',
+                          '&:hover': {
+                            cursor: 'pointer',
+                            opacity: .5
+                          }
                         }}
                       />
                     </Box>
@@ -349,7 +354,7 @@ function Search({ open, toggleDrawer, productList }) {
                         // flex: 1
                       }}>
                         <img
-                          src={`allProduct/${product.name}/${product.name}-${product.colors[0].color}/${product.colors[0].imageDetail[0]}`}
+                          src={`${theme.API_ROOT}${product.colors[0].imageDetail[0]}`}
                           style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
                         />
                       </Box>
@@ -428,18 +433,20 @@ function Search({ open, toggleDrawer, productList }) {
                           <Typography
                             onClick={() => setSearchValue(value)}
                           >{value}</Typography>
-                          <CloseIcon
-                            sx={{
-                              '&:hover': {
-                                cursor: 'pointer',
-                                opacity: .5
-                              }
-                            }}
+                          <img
                             onClick={() => {
                               const updatedRecent = [...searchRecent]
                               updatedRecent.splice(idx, 1)
                               localStorage.setItem('searchRecent', JSON.stringify(updatedRecent))
                               setSearchRecent(updatedRecent)
+                            }}
+                            src={closeIconBlack}
+                            style={{
+                              width: '20px', height: '20px',
+                              '&:hover': {
+                                cursor: 'pointer',
+                                opacity: .5
+                              }
                             }}
                           />
                         </Box>

@@ -1,9 +1,9 @@
 import { Checkbox, FormControlLabel, FormGroup, Radio } from '@mui/material'
-import DoneIcon from '@mui/icons-material/Done'
+import doneIcon from '~/assets/v-white.png'
 import Box from '@mui/material/Box'
 import { useSearchParams } from 'react-router-dom'
 
-function FilterItems ({ filterOption, openFilterOption, idx }) {
+function FilterItems({ filterOption, openFilterOption, idx }) {
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -95,12 +95,11 @@ function FilterItems ({ filterOption, openFilterOption, idx }) {
                       bgcolor: '#59c561',
                       borderRadius: '16px',
                       border: '0.5px solid white',
-                      color: 'white',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
-                      <DoneIcon sx={{ fontSize: '14px' }} />
+                      <img src={doneIcon} style={{ width: '14px', height: '14px' }} />
                     </Box>
                     }
                     sx={{
@@ -145,7 +144,7 @@ function FilterItems ({ filterOption, openFilterOption, idx }) {
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
-                      <DoneIcon sx={{ fontSize: '14px' }} />
+                      <img src={doneIcon} style={{ width: '14px', height: '14px' }} />
                     </Box>
                     }
                     sx={{

@@ -106,7 +106,7 @@ function HomePage() {
       <Header />
       <Slogan />
       <HeroSection video={video1} title={'Dynamic Hype Club'} descTitle={'Luxury shoes,\nhelp your foot comfortable'} />
-      <SliderUtilities id='Utilities' title='Utilities' items={Utilities} name={'Utilities'} />
+      {/* <SliderUtilities id='Utilities' title='Utilities' items={Utilities} name={'Utilities'} /> */}
 
     </Container>
   )

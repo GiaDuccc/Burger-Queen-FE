@@ -1,8 +1,10 @@
 import { extendTheme } from '@mui/material/styles'
+import { API_ROOT } from './utils/constants'
 
 const HEADER_HEIGHT = '46px'
 
-const theme = extendTheme ({
+const theme = extendTheme({
+  API_ROOT: API_ROOT,
   shop: {
     headerHeight: HEADER_HEIGHT
   },
@@ -23,11 +25,12 @@ const theme = extendTheme ({
       styleOverrides: {
         body: {
           scrollbarWidth: 'none', // Firefox
-          msOverflowStyle: 'none' // IE 10+
+          msOverflowStyle: 'none', // IE 10+
+          overflowY: 'scroll',
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          }
         }
-        // '&::-webkit-scrollbar': {
-        //   display: 'none' // Chrome, Safari
-        // }
       }
     },
     MuiFilledInput: {

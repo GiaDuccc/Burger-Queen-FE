@@ -4,14 +4,13 @@ import Typography from '@mui/material/Typography'
 import Header from '~/components/Header/Header'
 import TextField from '@mui/material/TextField'
 import { useEffect, useState } from 'react'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import '~/App.css'
 import Link from '@mui/material/Link'
-import CallMadeOutlinedIcon from '@mui/icons-material/CallMadeOutlined'
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import downIcon from '~/assets/down.png'
 import { selectValue } from './selectValue'
 import { fetchCreateCustomerAPI } from '~/apis'
 import { useNavigate } from 'react-router-dom'
+import warningIcon from '~/assets/danger.png'
 
 function SignUp() {
 
@@ -116,7 +115,7 @@ function SignUp() {
             age--;
           }
 
-          if (age <= 18) {
+          if (age < 18) {
             setValues(prev => ({
               ...prev,
               dob: {
@@ -242,12 +241,8 @@ function SignUp() {
       }
 
       await fetchCreateCustomerAPI(payload)
-        .then(data => {
-          // console.log('thanh cong')
-          // console.log('data', data)
-          const customerId = `customer-${data._id.slice(0, data._id.length / 2)}`
-          localStorage.setItem('user', JSON.stringify(data))
-          navigate(`/${customerId}`, { user: data })
+        .then(() => {
+          navigate('/sign-in')
         })
         .catch(errors => {
           // console.log('that bai')
@@ -391,7 +386,7 @@ function SignUp() {
                 }
               }}>
                 <Link href="/sign-in" underline='none' >Sign In</Link>
-                <CallMadeOutlinedIcon sx={{ fontSize: '16px' }} />
+                {/* <CallMadeOutlinedIcon sx={{ fontSize: '16px' }} /> */}
               </Box>
             </Box>
           </Box>
@@ -407,7 +402,7 @@ function SignUp() {
               id="filledLastName"
               label={
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {values.lastName.error && <ErrorOutlineIcon fontSize="small" />}
+                  {values.lastName.error && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
                   {values.lastName.error ? values.lastName.nameError : 'Last Name'}
                 </span>
               }
@@ -448,7 +443,7 @@ function SignUp() {
               id="filledFirstName"
               label={
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {values.firstName.error && <ErrorOutlineIcon fontSize="small" />}
+                  {values.firstName.error && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
                   {values.firstName.error ? values.firstName.nameError : 'First Name'}
                 </span>
               }
@@ -492,7 +487,7 @@ function SignUp() {
               select
               label={
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {values.country.error && <ErrorOutlineIcon fontSize="small" />}
+                  {values.country.error && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
                   {values.country.error ? values.country.nameError : 'Country/Region'}
                 </span>
               }
@@ -558,13 +553,14 @@ function SignUp() {
                 </option>
               ))}
             </TextField>
-            <KeyboardArrowDownIcon sx={{
-              color: 'black',
+            <img src={downIcon} style={{
               position: 'absolute',
               top: '50%',
               right: '15px',
               pointerEvents: 'none',
-              transform: 'translateY(-50%)'
+              transform: 'translateY(-50%)',
+              width: '12px', height: '12px',
+              opacity: .5
             }} />
           </Box>
           {/* Date */}
@@ -634,13 +630,14 @@ function SignUp() {
                     </option>
                   ))}
                 </TextField>
-                <KeyboardArrowDownIcon sx={{
-                  color: 'black',
+                <img src={downIcon} style={{
                   position: 'absolute',
                   top: '50%',
                   right: '15px',
                   pointerEvents: 'none',
-                  transform: 'translateY(-50%)'
+                  transform: 'translateY(-50%)',
+                  width: '12px', height: '12px',
+                  opacity: .5
                 }} />
               </Box>
               {/* Month */}
@@ -699,13 +696,14 @@ function SignUp() {
                     </option>
                   ))}
                 </TextField>
-                <KeyboardArrowDownIcon sx={{
-                  color: 'black',
+                <img src={downIcon} style={{
                   position: 'absolute',
                   top: '50%',
                   right: '15px',
                   pointerEvents: 'none',
-                  transform: 'translateY(-50%)'
+                  transform: 'translateY(-50%)',
+                  width: '12px', height: '12px',
+                  opacity: .5
                 }} />
               </Box>
               {/* Year */}
@@ -764,13 +762,14 @@ function SignUp() {
                     </option>
                   ))}
                 </TextField>
-                <KeyboardArrowDownIcon sx={{
-                  color: 'black',
+                <img src={downIcon} style={{
                   position: 'absolute',
                   top: '50%',
                   right: '15px',
                   pointerEvents: 'none',
-                  transform: 'translateY(-50%)'
+                  transform: 'translateY(-50%)',
+                  width: '12px', height: '12px',
+                  opacity: .5
                 }} />
               </Box>
             </Box>
@@ -780,7 +779,7 @@ function SignUp() {
               gap: 0.5,
               color: 'rgb(184, 53, 53)'
             }}>
-              <ErrorOutlineIcon sx={{ fontSize: '18px' }} />
+              <img src={warningIcon} style={{ width: '18px', height: '18px' }} />
               <Typography>{values.dob.nameError}</Typography>
             </Box>
           </Box>
@@ -797,7 +796,7 @@ function SignUp() {
               id="filledEmail"
               label={
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {values.email.error && <ErrorOutlineIcon fontSize="small" />}
+                  {values.email.error && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
                   {values.email.error ? values.email.nameError : 'Email'}
                 </span>}
               variant="filled"
@@ -839,7 +838,7 @@ function SignUp() {
               id="filledPhone"
               label={
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {values.phone.error && <ErrorOutlineIcon fontSize="small" />}
+                  {values.phone.error && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
                   {values.phone.error ? values.phone.nameError : 'Phone Number'}
                 </span>}
               variant="filled"
@@ -886,7 +885,7 @@ function SignUp() {
               id="filledPassword"
               label={
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {values.password.error && <ErrorOutlineIcon fontSize="small" />}
+                  {values.password.error && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
                   {values.password.error ? values.password.nameError : 'Password'}
                 </span>}
               variant="filled"
@@ -929,7 +928,7 @@ function SignUp() {
               id="filledConfirmPassword"
               label={
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {values.confirmPassword.error && <ErrorOutlineIcon fontSize="small" />}
+                  {values.confirmPassword.error && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
                   {values.confirmPassword.error ? values.confirmPassword.nameError : 'Confirm Password'}
                 </span>}
               variant="filled"
