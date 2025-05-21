@@ -6,13 +6,15 @@ import { useState } from 'react'
 import addImage from '~/assets/addImage.png'
 import addIcon from '~/assets/add.png'
 import '~/App.css'
-import { updateProductAPI, uploadImagesAPI } from '~/apis'
+import { updateProductAPI, uploadImagesAPI, uploadImageAPI } from '~/apis'
 import closeIcon from '~/assets/x-white.png'
 import theme from '~/theme'
 import successIcon from '~/assets/check.png'
 import errorIcon from '~/assets/error.png'
 import trashIcon from '~/assets/trash.png'
 import dingSound from '~/assets/ding-sound.mp3'
+
+const imageDetailLimit = 6
 
 export default function EditProduct({ product, open, onClose, refresh }) {
 
@@ -37,23 +39,28 @@ export default function EditProduct({ product, open, onClose, refresh }) {
   const handleUploadAdImage = async (e) => {
     const file = e.target.files[0]
     if (!file) return
-    const image = await uploadImagesAPI(file, productInfo.name)
+    const image = await uploadImageAPI(file, productInfo.name)
     setAdImage(image.filePath)
   }
 
   const handleUploadNavbarImage = async (e) => {
     const file = e.target.files[0]
     if (!file) return
-    const image = await uploadImagesAPI(file, productInfo.name)
+    const image = await uploadImageAPI(file, productInfo.name)
     setNavbarImage(image.filePath)
   }
 
-  const handleUploadImageDetail = async (e, color, idx) => {
-    const file = e.target.files[0]
-    if (!file || !color) return
-    const image = await uploadImagesAPI(file, productInfo.name, color)
+  const handleUploadImageDetails = async (e, color, idx) => {
+    const files = Array.from(e.target.files)
+    if (files.length === 0 || !color) return
+    const image = await uploadImagesAPI(files, productInfo.name, color)
     setProductColors(prev => prev.map((item, id) =>
-      id === idx ? { ...item, imageDetail: [...item.imageDetail, image.filePath] } : item
+      id === idx ?
+        {
+          ...item,
+          imageDetail: [...item.imageDetail, ...image.filePaths.slice(0, imageDetailLimit - item.imageDetail.length)]
+        }
+        : item
     ))
   }
 
@@ -63,7 +70,7 @@ export default function EditProduct({ product, open, onClose, refresh }) {
       ...productInfo,
       adImage: adImage,
       navbarImage: navbarImage,
-      colors: productColors.map(color => ({
+      colors: productColors.map(({ image, ...color }) => ({
         ...color,
         // eslint-disable-next-line no-unused-vars
         sizes: color.sizes.map(({ id, ...rest }) => rest) // bỏ id, giữ lại phần còn lại
@@ -991,7 +998,8 @@ export default function EditProduct({ product, open, onClose, refresh }) {
                               <input
                                 type="file"
                                 accept="image/*"
-                                onChange={(e) => handleUploadImageDetail(e, product.color, idx)}
+                                multiple
+                                onChange={(e) => handleUploadImageDetails(e, product.color, idx)}
                                 style={{ display: 'none' }}
                                 id={`upload-imageDetails${idx}`}
                               />

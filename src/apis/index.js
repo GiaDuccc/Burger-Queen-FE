@@ -28,11 +28,25 @@ export const fetchAllProductPageAPI = async (page, limit, filter = {}) => {
   return response
 }
 
-export const uploadImagesAPI = async (image, productName, productColor='') => {
+export const uploadImageAPI = async (image, productName, productColor = '') => {
   const formData = new FormData()
   formData.append('file', image)
   const queryParams = new URLSearchParams({ productName, productColor }).toString()
-  const response = await axios.post(`${API_ROOT}/v1/products/upload?${queryParams}`, formData, {
+  const response = await axios.post(`${API_ROOT}/v1/products/uploadSingle?${queryParams}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  return response.data
+}
+
+export const uploadImagesAPI = async (images, productName, productColor) => {
+  const formData = new FormData()
+  images.forEach(image => {
+    formData.append('files', image)
+  })
+  const queryParams = new URLSearchParams({ productName, productColor }).toString()
+  const response = await axios.post(`${API_ROOT}/v1/products/uploadArray?${queryParams}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
