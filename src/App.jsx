@@ -22,19 +22,21 @@ function App() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'))
 
-    const fetchCustomerDetail = async () => {
-      await fetchCustomerDetailAPI(user._id).then(data => {
-        if (data.role !== user.role) localStorage.removeItem('user')
-      })
+    if (user) {
+      const fetchCustomerDetail = async () => {
+        await fetchCustomerDetailAPI(user._id).then(data => {
+          if (data.role !== user.role) localStorage.removeItem('user')
+        })
+      }
+      fetchCustomerDetail()
     }
-    fetchCustomerDetail()
+
   }, [])
 
   return (
     <Router>
       <Routes>
         <Route path='/' element={<HomePage />} />
-        {/* <Route path='/product' element={<ProductPage />} /> */}
         <Route path='/product' element={<ProductPage />} />
         <Route path='/nike' element={<NikePage />} />
         <Route path='/adidas' element={<AdidasPage />} />
