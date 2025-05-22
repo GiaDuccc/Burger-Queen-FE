@@ -490,13 +490,13 @@ export default function ProductCardDetail({ product, open, onClose }) {
                 {activeProduct.highLight && (
                   <Box sx={{
                     display: 'flex',
-                    textAlign: 'center',
+                    bgcolor: '#f5f5f5',
+                    alignItems: 'center', justifyContent: 'center',
                     mt: '48px'
                   }}>
                     <Typography sx={{
                       py: '24px',
                       px: '32px',
-                      bgcolor: '#f5f5f5',
                       fontSize: '16px'
                     }}>
                       {activeProduct.highLight}

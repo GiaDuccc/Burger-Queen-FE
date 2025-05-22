@@ -17,7 +17,7 @@ import discoverLogo from '~/assets/discoverLogo.jpg'
 import { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import '~/App.css'
-import { addInformationToOrderAPI, fetchGetOrder, updatedOrderAPI, updateOrderInCustomer } from '~/apis'
+import { addInformationToOrderAPI, fetchGetOrder, updatedOrderAPI, updateOrderInCustomer, updateQuantitySold } from '~/apis'
 import { useNavigate } from 'react-router-dom'
 import dingSound from '~/assets/ding-sound.mp3'
 
@@ -55,6 +55,13 @@ function Checkout() {
 
   const handleCheckout = async () => {
     setIsCheckout('loading')
+    console.log(itemsToBuy)
+    await Promise.all(
+      itemsToBuy.map((product) =>
+        updateQuantitySold(product.productId, product.quantity)
+          .then(() => console.log('update thành công'))
+      )
+    )
     await updatedOrderAPI(user.orders[user.orders.length - 1].orderId, getTotal(), Object.entries(paymentSelect).find(([, value]) => value)?.[0])
     await updateOrderInCustomer(user._id, user.orders[user.orders.length - 1].orderId).then(data => {
       localStorage.setItem('user', JSON.stringify(data))
@@ -119,11 +126,11 @@ function Checkout() {
       }
       setItemsToBuy(order.items)
 
-      await addInformationToOrderAPI(user.orders[user.orders.length - 1].orderId, newData).then(data => {
-        setName(data.name)
-        setPhone(data.phone)
-        setAddress(data.address)
-      })
+      // await addInformationToOrderAPI(user.orders[user.orders.length - 1].orderId, newData).then(data => {
+      //   setName(data.name)
+      //   setPhone(data.phone)
+      //   setAddress(data.address)
+      // })
     }
     updateData()
     setTimeout(() => {
