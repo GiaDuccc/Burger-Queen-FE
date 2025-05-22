@@ -13,6 +13,9 @@ import { fetchAllProductAPI } from '~/apis'
 const headerHeight = (theme) => theme.shop.headerHeight
 
 function Header() {
+
+  const user = JSON.parse(localStorage.getItem('user'))
+
   const [openCart, setOpenCart] = useState(false)
   const [openSearch, setOpenSearch] = useState(false)
   const [productList, setProductList] = useState([])
@@ -132,7 +135,8 @@ function Header() {
           <img src={shoppingBagIcon} alt="cart" style={{ height: '17px' }} />
         </Box>
         <Cart open={openCart} toggleDrawer={() => setOpenCart(!openCart)} />
-        <Link href="/sign-in" sx={{ height: headerHeight, display: 'flex', alignItems: 'center' }} >
+        <Link href={user ? '/profile' : '/sign-in'}
+          sx={{ height: headerHeight, display: 'flex', alignItems: 'center' }} >
           <img src={signInIcon} alt="sign-in" style={{ height: '17px' }} />
         </Link>
       </Box>

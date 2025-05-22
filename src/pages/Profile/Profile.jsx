@@ -8,7 +8,7 @@ import settingsIcon from '~/assets/settings.png'
 import editIcon from '~/assets/edit.png'
 import logOutIcon from '~/assets/logout.png'
 import { useEffect, useState } from 'react'
-import { fetchGetOrder } from '~/apis'
+import { fetchCustomerDetailAPI, fetchGetOrder } from '~/apis'
 import OrderDetail from '~/components/OrderDetail/OrderDetail'
 import '~/App.css'
 
@@ -19,6 +19,7 @@ function Dashboard() {
 
 
   const [orders, setOrders] = useState([])
+  const [customer, setCustomer] = useState({})
   const [orderDetail, setOrderDetail] = useState(null)
   const [isLoadingOrder, setIsLoadingOrder] = useState(false)
 
@@ -44,8 +45,10 @@ function Dashboard() {
     if (!user) navigate('/sign-in')
     setIsLoadingOrder(true)
     const fetchOrders = async () => {
+      const customer = await fetchCustomerDetailAPI(user._id)
+      setCustomer(customer)
       let newOrders = []
-      for (const order of user.orders) {
+      for (const order of customer.orders) {
         if (order.status !== 'cart') {
           const data = await fetchGetOrder(order.orderId)
           newOrders.push(data)
@@ -80,7 +83,7 @@ function Dashboard() {
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography sx={{ color: 'rgba(0,0,0,.85)', fontWeight: '600', fontSize: '32px' }}>
-            {`Customer #${user?.phone}`}
+            {`Customer #${customer?.phone}`}
           </Typography>
           <Box sx={{
             display: 'flex',
@@ -98,7 +101,7 @@ function Dashboard() {
           }}>
             <Box
               onClick={() => navigate('/admin')}
-              sx={{ display: (user?.role === 'admin' || user?.role === 'manager') ? 'flex' : 'none', alignItems: 'center', gap: 1 }}
+              sx={{ display: (customer?.role === 'admin' || customer?.role === 'manager') ? 'flex' : 'none', alignItems: 'center', gap: 1 }}
             >
               <Typography>Admin</Typography>
               {/* <SettingsIcon sx={{ fontSize: '16px' }} /> */}
@@ -130,38 +133,38 @@ function Dashboard() {
         <Box sx={{ display: 'flex', flexDirection: 'column', mt: '32px', gap: 3 }}>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Name:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{user?.lastName + ' ' + user?.firstName}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{customer?.lastName + ' ' + customer?.firstName}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Date of Birth:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{new Date(user?.dob).toLocaleDateString('vi-VN')}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{new Date(customer?.dob).toLocaleDateString('vi-VN')}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Email:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{user?.email}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{customer?.email}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Phone:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{user?.phone}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{customer?.phone}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Address:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{user?.address}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{customer?.address}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Country:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{`${getCountryName(user?.country)}`}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{`${getCountryName(customer?.country)}`}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Join date:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{new Date(user?.createdAt).toLocaleDateString('vi-VN')}</Typography>
+            <Typography sx={{ fontSize: '16px' }}>{new Date(customer?.createdAt).toLocaleDateString('vi-VN')}</Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Active:</Typography>
             <Box sx={{
               width: '14px',
               height: '14px',
-              bgcolor: user?.isActive ? '#3dff4c' : '#ff3232',
+              bgcolor: customer?.isActive ? '#3dff4c' : '#ff3232',
               border: '1px solid rgb(141, 141, 141)',
               borderRadius: '16px'
             }}></Box>

@@ -40,11 +40,14 @@ function Admin() {
     setTimeout(() => {
       setIsLoadingPage(false)
     }, 400)
-    if (!user) navigate('/sign-in')
-    if (user.role !== 'admin' && user.role !== 'manager') setIsAdmin(false)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (!user) navigate('/sign-in')
+    else if (user.role !== 'admin' && user.role !== 'manager') setIsAdmin(false)
+  }, [user, navigate])
 
   if (!isAdmin) return (
     <Box
@@ -234,7 +237,7 @@ function Admin() {
         {/* Content */}
         <Box sx={{
           flex: 9,
-          height: 'fit-content',
+          height: '100vh',
           p: '32px'
         }}>
           {openPage === 'dashboard' && (<Dashboard />)}

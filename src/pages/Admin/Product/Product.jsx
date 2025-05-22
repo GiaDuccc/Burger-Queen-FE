@@ -210,7 +210,6 @@ function Product() {
                   }}
                 >
                   <img
-                    // src={`/allProduct/${product.name}/${product.name}-${product.colors[0].color}/${product.colors[0].imageDetail[0]}`}
                     src={`${theme.API_ROOT}${product.colors[0].imageDetail[0]}`}
                     style={{ width: '110px', height: '110px', objectFit: 'cover', borderRadius: '8px' }}
                   />

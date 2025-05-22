@@ -58,13 +58,8 @@ function Login() {
   }
 
   setTimeout(() => {
-    const userData = JSON.parse(localStorage.getItem('user'))
-    if (userData) {
-      navigate('/profile', { user: userData })
-    } else {
-      setUser(false)
-    }
-  }, 1000)
+    setUser(false)
+  }, 700)
 
   useEffect(() => {
     if (showPassword && passwordRef.current) {
@@ -276,7 +271,7 @@ function Login() {
                   gap: 0.5,
                   color: 'rgb(184, 53, 53)'
                 }}>
-                <img src={warningIcon} style={{ width: '18px', height: '18px' }}/>
+                <img src={warningIcon} style={{ width: '18px', height: '18px' }} />
                 <Typography>{isValid}</Typography>
               </Box>
             </Box>

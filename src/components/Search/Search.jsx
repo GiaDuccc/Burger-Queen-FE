@@ -40,14 +40,13 @@ function Search({ open, toggleDrawer, productList }) {
 
     const selectedProduct = {
       ...product,
-      id: product._id,
       colors: product.colors.map(color => ({
         ...color,
-        image: `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${color.imageDetail[0]}`,
         imageDetail: color.imageDetail.map(image =>
-          `/allProduct/${product.name}/${product.name}-${color.color.toLowerCase()}/${image}`
+          `${theme.API_ROOT}${image}`
         )
-      }))
+      })),
+      id: product._id
     }
     setSelectedProduct(selectedProduct)
     // navigate('/product')

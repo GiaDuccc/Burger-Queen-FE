@@ -39,6 +39,7 @@ export default function CustomerDetail({ customerId, open, onClose }) {
 
   useEffect(() => {
     fetchCustomer()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

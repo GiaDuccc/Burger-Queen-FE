@@ -64,6 +64,21 @@ export const updateProductAPI = async (id, properties) => {
   return response.data
 }
 
+export const updateQuantitySold = async (productId, quantity) => {
+  const response = await axios.put(`${API_ROOT}/v1/products/${productId}/quantitySold`, { quantity })
+  return response.data
+}
+
+export const getAllProductQuantityAPI = async () => {
+  const response = await axios.get(`${API_ROOT}/v1/products/allProductQuantity`)
+  return response.data
+}
+
+export const getTopBestSeller = async () => {
+  const response = await axios.get(`${API_ROOT}/v1/products/topBestSeller`)
+  return response.data
+}
+
 // Customer
 export const fetchGetAllCustomerPageAPI = async (page, limit, filters = {}) => {
   const response = await axios.get(`${API_ROOT}/v1/customers/`, {
@@ -114,6 +129,22 @@ export const updateOrderInCustomer = async (customerId, orderId, status = 'pendi
   const response = await axios.put(`${API_ROOT}/v1/customers/${customerId}/update-order`, { orderId, status })
   return response.data
 }
+
+export const getAllCustomerQuantityAPI = async () => {
+  const response = await axios.get(`${API_ROOT}/v1/customers/allCustomerQuantity`)
+  return response.data
+}
+
+export const getCustomerChartByDay = async () => {
+  const response = await axios.get(`${API_ROOT}/v1/customers/customerChartByDay`)
+  return response.data
+}
+
+export const getCustomerChartByYear = async () => {
+  const response = await axios.get(`${API_ROOT}/v1/customers/customerChartByYear`)
+  return response.data
+}
+
 // Order
 
 export const fetchGetAllOrderPageAPI = async (page, limit, filters = {}) => {
@@ -177,3 +208,20 @@ export const addInformationToOrderAPI = async (orderId, data) => {
   const response = await axios.put(`${API_ROOT}/v1/orders/${orderId}/add-information`, data)
   return response.data
 }
+
+export const getQuantityAndProfitAPI = async () => {
+  const response = await axios.get(`${API_ROOT}/v1/orders/quantityAndProfit`)
+  return response.data
+}
+
+export const getOrderChartByDay = async () => {
+  const response = await axios.get(`${API_ROOT}/v1/orders/orderChartByDay`)
+  return response.data
+}
+
+export const getOrderChartByYear = async () => {
+  const response = await axios.get(`${API_ROOT}/v1/orders/orderAndProductSoldChartByYear`)
+  return response.data
+}
+
+
