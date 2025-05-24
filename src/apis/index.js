@@ -118,6 +118,11 @@ export const fetchCreateCustomerAPI = async (payload) => {
   }
 }
 
+export const updateCustomer = async (customerId, properties) => {
+  const response = await axios.put(`${API_ROOT}/v1/customers/${customerId}/updateCustomer`, { properties })
+  return response.data
+}
+
 export const changeRoleCustomerAPI = async (id, role) => {
   const response = await axios.put(`${API_ROOT}/v1/customers/${id}/changeRole`, { role })
   return response.data

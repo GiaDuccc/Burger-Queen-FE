@@ -176,7 +176,14 @@ function Checkout() {
           flexDirection: 'column',
           gap: 2,
           mt: '32px',
-          mb: '12px'
+          mb: '12px',
+          height: '550px',
+          overflowY: 'scroll',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          }
         }}>
           {itemsToBuy?.map((product, idx) => (
             <Box
@@ -253,33 +260,33 @@ function Checkout() {
             </Box>
           ))}
           {/* Subtotal */}
-          <Box sx={{
-            display: 'flex',
-            flex: 1,
-            justifyContent: 'space-between',
-            mx: '20px',
-            '& p': {
-              fontSize: '20px',
-              fontWeight: '600'
-            }
-          }}>
-            <Typography>Subtotal</Typography>
-            <Typography>{getTotal().toLocaleString('vi-VN')}đ</Typography>
-          </Box>
-          <Box sx={{
-            display: 'flex',
-            flex: 1,
-            justifyContent: 'space-between',
-            mx: '20px',
-            '& p': {
-              color: 'rgba(0,0,0,.5)',
-              fontSize: '20px',
-              fontWeight: '600'
-            }
-          }}>
-            <Typography>Delivery</Typography>
-            <Typography>Free</Typography>
-          </Box>
+        </Box>
+        <Box sx={{
+          display: 'flex',
+          flex: 1,
+          justifyContent: 'space-between',
+          mx: '20px',
+          '& p': {
+            fontSize: '20px',
+            fontWeight: '600'
+          }
+        }}>
+          <Typography>Subtotal</Typography>
+          <Typography>{getTotal().toLocaleString('vi-VN')}đ</Typography>
+        </Box>
+        <Box sx={{
+          display: 'flex',
+          flex: 1,
+          justifyContent: 'space-between',
+          m: '12px 20px',
+          '& p': {
+            color: 'rgba(0,0,0,.5)',
+            fontSize: '20px',
+            fontWeight: '600'
+          }
+        }}>
+          <Typography>Delivery</Typography>
+          <Typography>Free</Typography>
         </Box>
 
         <hr style={{

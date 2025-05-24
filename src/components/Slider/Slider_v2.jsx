@@ -96,7 +96,7 @@ function Slider({ id, name, type, brand }) {
           </Box>
         ))}
       </Box>
-      {products.lenght > 3 && (
+      {products.length > 3 && (
         <Box sx={{ display: 'flex', gap: 2, p: '16px 32px', justifyContent: 'right' }}>
           <Box
             sx={{
@@ -115,7 +115,7 @@ function Slider({ id, name, type, brand }) {
             }}
             onClick={sliderPrevItem}
           >
-            <img src={leftIcon} style={{ width: '20px' }} />
+            <img src={leftIcon} style={{ width: '20px', userSelect: 'none' }} />
           </Box>
           <Box
             sx={{
@@ -134,7 +134,7 @@ function Slider({ id, name, type, brand }) {
             }}
             onClick={sliderNextItem}
           >
-            <img src={rightIcon} style={{ width: '20px' }} />
+            <img src={rightIcon} style={{ width: '20px', userSelect: 'none' }} />
           </Box>
         </Box>
       )}

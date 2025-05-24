@@ -88,7 +88,8 @@ function FilterOptions({ filterOptions }) {
                   color: 'rgba(0,0,0,.5)',
                   width: '14px',
                   height: '14px',
-                  opacity: .3
+                  opacity: .3,
+                  userSelect: 'none'
                 }
               }}>
                 <img src={downIcon} />

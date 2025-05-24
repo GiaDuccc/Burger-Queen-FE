@@ -128,9 +128,6 @@ function ProductPage() {
 
   // UseEffect load lần load đầu tiên
   useEffect(() => {
-    // const currentParams = Object.fromEntries(searchParams.entries())
-    // currentParams.page = pageFromURL
-    // setSearchParams(currentParams, { replace: false })
     setIsFirstLoad(false)
   }, []) // Chạy 1 lần duy nhất
 
@@ -167,7 +164,7 @@ function ProductPage() {
     >
       <Header />
       <Slogan />
-      <HeroSection video={productHeroSection} title={'My product.'} descTitle={'More Than Just Shoes.'} />
+      <HeroSection video={productHeroSection} title={'My product'} descTitle={'More Than Just Shoes.'} />
       {/* Product list & Filter */}
       <Box
         ref={contentRef}

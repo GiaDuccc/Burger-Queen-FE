@@ -31,12 +31,12 @@ function VansPage() {
       scrollBehavior: 'smooth'
     }}>
       <Header />
-      <Box className='slide-from-right' sx={{
+      {/* <Box className='slide-from-right' sx={{
         transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
         minHeight: types ? '150px' : 0
-      }}>
-        <NavBar brand={brand} scrollToSection={(id) => scrollToSection(id)} setTypes={(types) => setTypes(types)} />
-      </Box>
+      }}> */}
+      <NavBar brand={brand} scrollToSection={(id) => scrollToSection(id)} setTypes={(types) => setTypes(types)} />
+      {/* </Box> */}
       <Slogan />
       <HeroSection
         video={nikeVideoHeroSection} title={'VANS'} descTitle={'Off The Wall.'}
