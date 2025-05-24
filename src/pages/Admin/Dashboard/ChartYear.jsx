@@ -39,15 +39,15 @@ function ChartYear() {
     <Box className='chart' sx={{ width: '100%', display: 'flex', alignItems: 'center', height: '100%', pb: '8px' }}>
       {/* <Bar
         data={{
-          labels: orderData.map(data => data.hour),
+          labels: allMonth.map(data => data),
           datasets: [
             {
               label: 'Customer',
-              data: customerData.map(data => data.count)
+              data: customerData.map(data => data.totalCustomers)
             },
             {
               label: 'Order',
-              data: orderData.map(data => data.count)
+              data: orderData.map(data => data.totalOrders)
             }
           ]
         }}

@@ -3,6 +3,7 @@ import ProductCard from './ProductCard/ProductCard'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductCardDetail from './ProductCardDetail/ProductCardDetail'
+import '~/App.css'
 
 function ProductList({ products }) {
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -22,14 +23,16 @@ function ProductList({ products }) {
   }, [searchParams, products])
 
   return (
-    <Box sx={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-      color: 'black',
-      gap: 2.5,
-      height: '100%',
-      py: '24px'
-    }}>
+    <Box
+      className='fade-in-up'
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+        color: 'black',
+        gap: 2.5,
+        height: '100%',
+        py: '24px'
+      }}>
       {products?.map((product, index) => (
         <ProductCard
           key={index}

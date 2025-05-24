@@ -61,10 +61,11 @@ function Header() {
         <Link href="/product" underline="none" >Product</Link>
         <Link href="/nike" underline="none" >Nike</Link>
         <Link href="/adidas" underline="none" >Adidas</Link>
-        <Link href="/bitis" underline="none" >Biti&apos;s</Link>
+        {/* <Link href="/biti's" underline="none" >Biti&apos;s</Link> */}
         <Link href="/puma" underline="none" >Puma</Link>
         <Link href="/newbalance" underline="none" >NewBalance</Link>
-        <Link href="/converse" underline="none" >Converse</Link>
+        <Link href="/vans" underline="none" >Vans</Link>
+        <Link href="/balenciaga" underline="none" >Balenciaga</Link>
       </Box>
 
       <Box sx={{

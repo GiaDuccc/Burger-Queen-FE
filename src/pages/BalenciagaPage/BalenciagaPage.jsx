@@ -5,12 +5,12 @@ import nikeVideoHeroSection from '~/assets/videoHeroSection/Nike. Just Do It. Ni
 import Container from '@mui/material/Container'
 import NavBar from '~/components/NavBar/NavBar'
 import Slider from '~/components/Slider/Slider_v2'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Footer from '~/components/Footer/Footer'
 import Box from '@mui/material/Box'
 import '~/App.css'
 
-function NikePage() {
+function BalenciagaPage() {
   const brand = window.location.pathname.slice(1)
   const [types, setTypes] = useState([])
 
@@ -20,10 +20,6 @@ function NikePage() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   }
-
-  useEffect(() => {
-    console.log('chay')
-  }, [types])
 
   return (
     <Container disableGutters maxWidth={false} sx={{
@@ -43,7 +39,7 @@ function NikePage() {
       </Box>
       <Slogan />
       <HeroSection
-        video={nikeVideoHeroSection} title={'NIKE'} descTitle={'Just do it.'}
+        video={nikeVideoHeroSection} title={'BALENCIAGA'} descTitle={'It\'s Different.'}
       />
 
       {types?.map((type, idx) => (
@@ -55,4 +51,4 @@ function NikePage() {
   )
 }
 
-export default NikePage
+export default BalenciagaPage

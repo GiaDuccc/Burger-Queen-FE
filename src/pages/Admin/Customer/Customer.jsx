@@ -156,7 +156,7 @@ function Customer() {
 
   return (
     <Box sx={{
-      display: 'flex', flexDirection: 'column'
+      display: 'flex', flexDirection: 'column', p: '32px'
     }}>
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, height: '40px', mr: '44px' }}>
@@ -480,6 +480,9 @@ function Customer() {
                       bgcolor: 'rgba(0,0,0,.85)',
                       cursor: 'pointer',
                       boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
+                    },
+                    '&:hover img': {
+                      filter: 'invert(100%)'
                     }
                   }}
                   onClick={handlePrevPage}
@@ -509,6 +512,9 @@ function Customer() {
                       bgcolor: 'rgba(0,0,0,.85)',
                       cursor: 'pointer',
                       boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
+                    },
+                    '&:hover img': {
+                      filter: 'invert(100%)'
                     }
                   }}
                   onClick={handleNextPage}

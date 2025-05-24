@@ -1,13 +1,16 @@
 import Header from '~/components/Header/Header'
-import HeroSection from '~/components/HeroSection/HeroSection'
 import Slogan from '~/components/Slogan/Slogan'
+import HeroSection from '~/components/HeroSection/HeroSection'
+import nikeVideoHeroSection from '~/assets/videoHeroSection/Nike. Just Do It. Nike VN.mp4'
 import Container from '@mui/material/Container'
-import { useState } from 'react'
 import NavBar from '~/components/NavBar/NavBar'
-import Footer from '~/components/Footer/Footer'
 import Slider from '~/components/Slider/Slider_v2'
+import { useState } from 'react'
+import Footer from '~/components/Footer/Footer'
+import Box from '@mui/material/Box'
+import '~/App.css'
 
-function PumaPage() {
+function VansPage() {
   const brand = window.location.pathname.slice(1)
   const [types, setTypes] = useState([])
 
@@ -28,15 +31,24 @@ function PumaPage() {
       scrollBehavior: 'smooth'
     }}>
       <Header />
-      <NavBar brand={brand} scrollToSection={(id) => scrollToSection(id)} setTypes={(types) => setTypes(types)} />
+      <Box className='slide-from-right' sx={{
+        transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
+        minHeight: types ? '150px' : 0
+      }}>
+        <NavBar brand={brand} scrollToSection={(id) => scrollToSection(id)} setTypes={(types) => setTypes(types)} />
+      </Box>
       <Slogan />
-      <HeroSection title={'Puma'} descTitle={'Forever Faster.'} />
+      <HeroSection
+        video={nikeVideoHeroSection} title={'VANS'} descTitle={'Off The Wall.'}
+      />
+
       {types?.map((type, idx) => (
-        <Slider brand={brand} key={idx} id={type} name={type.slice(0, 1).toUpperCase() + type.slice(1)} type={type} />
+        <Slider key={idx} brand={brand} id={type} name={type.slice(0, 1).toUpperCase() + type.slice(1)} type={type} />
       ))}
+
       <Footer />
     </Container>
   )
 }
 
-export default PumaPage
+export default VansPage

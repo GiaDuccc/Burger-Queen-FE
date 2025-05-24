@@ -18,6 +18,7 @@ import OrderDetail from '~/components/OrderDetail/OrderDetail'
 import leftIcon from '~/assets/left.png'
 import rightIcon from '~/assets/right.png'
 import '~/App.css'
+import theme from '~/theme'
 
 function Order() {
 
@@ -146,7 +147,7 @@ function Order() {
 
   return (
     <Box sx={{
-      display: 'flex', flexDirection: 'column'
+      display: 'flex', flexDirection: 'column', p: '32px'
     }}>
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, height: '40px', mr: '44px' }}>
@@ -259,7 +260,7 @@ function Order() {
                         {order.items.length <= 4 && order.items.slice(0, 4).map((product, idx) => (
                           <img
                             key={idx}
-                            src={product.image}
+                            src={`${theme.API_ROOT}${product.image}`}
                             style={{
                               width: order.items.length === 1 ? '100%' : '55px',
                               height: order.items.length === 1 ? '100%' : '55px',
@@ -287,7 +288,7 @@ function Order() {
                           ) : (
                             <img
                               key={idx}
-                              src={product.image}
+                              src={`${theme.API_ROOT}${product.image}`}
                               style={{
                                 width: order.items.length === 1 ? '100%' : '55px',
                                 height: order.items.length === 1 ? '100%' : '55px',
@@ -476,6 +477,9 @@ function Order() {
                       bgcolor: 'rgba(0,0,0,.85)',
                       cursor: 'pointer',
                       boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
+                    },
+                    '&:hover img': {
+                      filter: 'invert(100%)'
                     }
                   }}
                   onClick={handlePrevPage}
@@ -505,6 +509,9 @@ function Order() {
                       bgcolor: 'rgba(0,0,0,.85)',
                       cursor: 'pointer',
                       boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
+                    },
+                    '&:hover img': {
+                      filter: 'invert(100%)'
                     }
                   }}
                   onClick={handleNextPage}

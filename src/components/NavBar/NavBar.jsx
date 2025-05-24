@@ -1,34 +1,57 @@
 import Box from '@mui/material/Box'
+import { useEffect, useState } from 'react'
+import { getTypeAndNavbarImageFromBrand } from '~/apis'
+import theme from '~/theme'
 
-const categories = [
-  { image: '/allProduct/Air Jordan 1 Low/Air Jordan 1 Low-blue.png', title: 'sneaker' },
-  { image: '/allProduct/Nike Air Max 1/Nike Air Max 1-white.png', title: 'classic' },
-  { image: '/allProduct/Nike Air Max 1/Nike Air Max 1-brown.png', title: 'running' },
-  { image: '/allProduct/Nike Sabrina 2 EP/Nike Sabrina 2 EP-0.avif', title: 'basketball' },
-  { image: '/allProduct/Nike Sabrina 2 EP/Nike Sabrina 2 EP-0.avif', title: 'football' },
-  { image: '/allProduct/Nike Sabrina 2 EP/Nike Sabrina 2 EP-0.avif', title: 'boot' }
-];
+function NavBar({ scrollToSection, setTypes, brand }) {
 
-function NavBar() {
+
+  const [typesAndNavbarImages, setTypesAndNavbarImages] = useState([])
+
+  const fetchTypeAndNavbarImage = async () => {
+    await getTypeAndNavbarImageFromBrand(brand).then(data => {
+      setTypesAndNavbarImages(data.sort())
+      setTypes(data.map(type => type.type))
+    })
+  }
+
+  useEffect(() => {
+    fetchTypeAndNavbarImage()
+  }, [])
+
   return (
-    <Box sx={{
-      display: 'flex',
-      gap: 10,
-      justifyContent: 'center',
-      width: '100%',
-      height: '100px',
-      background: '#fafafc',
-      position: 'relative',
-      padding: '16px 0 24px'
-    }}>
-      {categories.map((item, index) => (
-        <Box key={index} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <a href='#'></a>
-          <img
-            src={item.image}
-            style={{ width: '50px' }}
-          />
-          <span>{item.title}</span>
+    <Box
+      className='fade-in-up'
+      sx={{
+        display: 'flex',
+        gap: 10,
+        justifyContent: 'center',
+        width: '100%',
+        background: '#fafafc',
+        position: 'relative',
+        padding: '16px 0'
+      }}
+    >
+      {typesAndNavbarImages.map((item, index) => (
+        <Box
+          onClick={() => scrollToSection(item.type)}
+          key={index} sx={{
+            display: 'flex',
+            flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            transition: 'all 0.15s cubic-bezier(0.42, 0, 0.58, 1)',
+            cursor: 'pointer',
+            '&:hover div ': {
+              transform: 'scale(1.1)',
+              transformOrigin: 'center'
+            }
+          }}>
+          <Box sx={{ mb: '8px', transition: 'all 0.2s cubic-bezier(0.42, 0, 0.58, 1)' }}>
+            <img
+              src={`${theme.API_ROOT}${item.navbarImage}`}
+              style={{ width: '70px' }}
+            />
+          </Box>
+          <span style={{ color: '#000' }} >{item.type.slice(0, 1).toUpperCase() + item.type.slice(1)}</span>
         </Box>
       ))}
     </Box>

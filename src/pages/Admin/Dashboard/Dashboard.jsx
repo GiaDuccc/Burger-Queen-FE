@@ -77,48 +77,10 @@ function Dashboard() {
           display: 'flex',
           flexDirection: 'column',
           height: '100%', width: '100%',
-          gap: 1
+          gap: 1,
+          p: '32px'
         }}
       >
-        {/* Choose day, month, year, all */}
-        {/* <Box sx={{
-          flex: 0.5,
-          height: 'fit-content', width: '100%'
-        }}>
-          <Box sx={{
-            display: 'flex',
-            bgcolor: '#f6f6f6',
-            width: 'fit-content',
-            borderRadius: '16px'
-          }}>
-
-            {time.map((item, idx) => (
-              <Typography
-                onClick={() => {
-                  searchParams.set('time', item.toLowerCase())
-                  setSearchParams(searchParams)
-                  setTimeFilter(item)
-                }}
-                key={idx}
-                sx={{
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  p: '12px 24px',
-                  transition: 'all 0.25s cubic-bezier(0.42, 0, 0.58, 1)',
-                  bgcolor: timeFilter === item.toLowerCase() && '#000000c4',
-                  color: timeFilter === item.toLowerCase() && '#fff',
-                  borderRadius:
-                    idx === 0 ? '16px 0 0 16px' : idx === time.length - 1 ? '0 16px 16px 0' : 'none',
-                  '&:hover': {
-                    bgcolor: timeFilter === item.toLowerCase() ? 'none' : '#000000c4',
-                    color: '#fff',
-                    cursor: 'pointer'
-                  }
-                }}
-              >{item.slice(0, 1).toUpperCase() + item.slice(1)}</Typography>
-            ))}
-          </Box>
-        </Box> */}
         {/* Content */}
         <Box sx={{
           // flex: 11,
@@ -303,7 +265,7 @@ function Dashboard() {
                     >
                       <img
                         src={`${theme.API_ROOT}${product.colors[0].imageDetail[0]}`}
-                        style={{ width: '95px', height: '95px', objectFit: 'cover', borderRadius: '8px' }}
+                        style={{ width: '115px', height: '115px', objectFit: 'cover', borderRadius: '8px' }}
                       />
                     </Box>
                     {/* Name */}
@@ -348,7 +310,7 @@ function Dashboard() {
               </Box>
             </Box>
             {/* Profit */}
-            <Box sx={{ flex: 2.5 }}>
+            <Box className='boom-small' sx={{ flex: 2.5 }}>
               <Box sx={{
                 p: '12px 24px',
                 borderRadius: '20px',

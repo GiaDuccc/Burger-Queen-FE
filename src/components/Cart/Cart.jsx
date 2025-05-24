@@ -125,7 +125,7 @@ function ShoppingCart({ open, toggleDrawer }) {
         setUser(updatedCustomer)
         setOrderData(order)
       } else {
-        if (user.orders[user.orders.length - 1].status !== 'cart') {
+        if (user.orders[user.orders.length - 1]?.status !== 'cart') {
           const order = await fetchCreateOrder()
           const data = { orderId: order._id, status: order.status }
           const updatedCustomer = await addOrderToCustomer(user._id, data)
@@ -168,7 +168,7 @@ function ShoppingCart({ open, toggleDrawer }) {
         setUser(updatedCustomer)
         setOrderData(order)
       } else {
-        if (user.orders[user.orders.length - 1].status !== 'cart') {
+        if (user.orders[user.orders.length - 1]?.status !== 'cart') {
           const order = await fetchCreateOrder()
           const data = { orderId: order._id, status: order.status }
           const updatedCustomer = await addOrderToCustomer(user._id, data)
@@ -393,7 +393,7 @@ function ShoppingCart({ open, toggleDrawer }) {
                   }}
                 >
                   <img
-                    src={`${theme.API_ROOT}${product.colors[0].imageDetail[0]}`}
+                    src={`${theme.API_ROOT}${product.colors.find(item => item.color === orderData.items[idx].color)?.imageDetail[0]}`}
                     style={{ width: '110px', height: '110px', objectFit: 'cover', borderRadius: '8px' }}
                   />
                 </Box>

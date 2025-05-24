@@ -5,16 +5,16 @@ import SignUp from './pages/SignUp/SignUp'
 import NikePage from './pages/NikePage/NikePage_v2'
 import AdidasPage from './pages/AdidasPage/AdidasPage'
 import NewBalance from './pages/NewBalancePage/NewBalance'
-import ConversePage from './pages/ConversePage/ConversePage'
 import PumaPage from './pages/PumaPage/PumaPage'
 // import ProductPage from '~/pages/ProductPage/ProductPage_v1'
 import ProductPage from './pages/ProductPage/ProducePage_v2'
-import BitisPage from './pages/BitisPage/BitisPage'
 import Profile from './pages/Profile/Profile'
 import Checkout from './pages/Checkout/Checkout'
 import Admin from './pages/Admin/Admin'
 import { fetchCustomerDetailAPI } from './apis'
 import { useEffect } from 'react'
+import VansPage from './pages/VansPage/VansPage'
+import BalenciagaPage from './pages/BalenciagaPage/BalenciagaPage'
 
 
 function App() {
@@ -42,8 +42,8 @@ function App() {
         <Route path='/adidas' element={<AdidasPage />} />
         <Route path='/puma' element={<PumaPage />} />
         <Route path='/newbalance' element={<NewBalance />} />
-        <Route path='/converse' element={<ConversePage />} />
-        <Route path='/bitis' element={<BitisPage />} />
+        <Route path='/vans' element={<VansPage />} />
+        <Route path='/balenciaga' element={<BalenciagaPage />} />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/profile' element={<Profile />} />

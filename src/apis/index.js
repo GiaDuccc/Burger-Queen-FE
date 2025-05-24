@@ -79,6 +79,19 @@ export const getTopBestSeller = async () => {
   return response.data
 }
 
+export const fetchLimitedProductsAPI = async (brand, type) => {
+  const response = await axios.get(`${API_ROOT}/v1/products/sliderType`, {
+    params: { brand, type }
+  })
+  return response.data
+}
+
+export const getTypeAndNavbarImageFromBrand = async (brand) => {
+  const response = await axios.get(`${API_ROOT}/v1/products/typeAndNavbarImageFromBrand`, {
+    params: { brand }
+  })
+  return response.data
+}
 // Customer
 export const fetchGetAllCustomerPageAPI = async (page, limit, filters = {}) => {
   const response = await axios.get(`${API_ROOT}/v1/customers/`, {
@@ -224,4 +237,8 @@ export const getOrderChartByYear = async () => {
   return response.data
 }
 
-
+// Chatbot
+export const chatbot = async (message) => {
+  const response = await axios.post(`${API_ROOT}/v1/chat/`, { message })
+  return response.data
+}
