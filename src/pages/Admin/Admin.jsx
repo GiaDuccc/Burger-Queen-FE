@@ -236,9 +236,7 @@ function Admin() {
         <Box sx={{ width: '300px' }}></Box>
         {/* Content */}
         <Box sx={{
-          flex: 9,
-          // height: 'fit-content',
-          // p: '32px'
+          flex: 9
         }}>
           {openPage === 'dashboard' && (<Dashboard />)}
           {openPage === 'product' && (<Product />)}

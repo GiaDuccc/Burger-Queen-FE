@@ -67,8 +67,6 @@ function Customer() {
   }
 
   const handleUpdateRole = async (customerId, role) => {
-    console.log(user)
-    console.log(customerId, role)
     setCustomerList(prev =>
       prev.map((customer, idx) =>
         idx === roleSelected.idx
@@ -77,14 +75,10 @@ function Customer() {
       )
     )
     setRoleSelected(null)
-    await changeRoleCustomerAPI(customerId, role).then(data => {
-      console.log(data)
-    })
+    await changeRoleCustomerAPI(customerId, role).then(() => console.log('Change role success'))
   }
 
   useEffect(() => {
-    console.log('userRole', user.role)
-    console.log('customerList', customerList)
   }, [customerList])
 
   const fetchCustomer = async () => {
@@ -149,10 +143,6 @@ function Customer() {
     }
     fetchCustomer()
   }, [searchParams, customerToDelete])
-
-  // useEffect(() => {
-  //   console.log(customerDetail)
-  // }, [customerDetail])
 
   return (
     <Box sx={{
@@ -249,7 +239,8 @@ function Customer() {
                         display: 'flex',
                         height: 'fit-content',
                         gap: 4,
-                        background: customer.role === 'manager' ? 'linear-gradient(40deg,rgb(255, 173, 97), #ffba00, rgb(255, 238, 0),rgb(255, 123, 0))' : '#f6f6f6',
+                        background:
+                          customer.role === 'manager' ? 'linear-gradient(40deg,rgb(243, 142, 47), rgb(255, 238, 0))' : '#f6f6f6',
                         p: '16px 28px',
                         borderRadius: '16px',
                         flex: 1

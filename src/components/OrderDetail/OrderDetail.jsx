@@ -4,13 +4,14 @@ import Typography from '@mui/material/Typography'
 import { useEffect, useState } from 'react'
 import closeIcon from '~/assets/x-white.png'
 import '~/App.css'
-import { fetchGetOrder } from '~/apis'
+import { fetchGetOrder, fetchProductDetailsAPI } from '~/apis'
 import theme from '~/theme'
 
 
 export default function OrderDetail({ orderId, open, onClose }) {
 
   const [order, setOrder] = useState({})
+  const [products, setProducts] = useState({})
   const [isLoadingOrder, setIsLoadingOrder] = useState(false)
 
   const statusColors = {
@@ -31,17 +32,23 @@ export default function OrderDetail({ orderId, open, onClose }) {
 
   const fetchOrder = async () => {
     setIsLoadingOrder(true)
-    await fetchGetOrder(orderId).then(data => {
-      setTimeout(() => {
-        setIsLoadingOrder(false)
-      }, 300)
-      setOrder(data)
-    })
+    const orders = await fetchGetOrder(orderId)
+    console.log(orders)
+    setOrder(orders)
+    const products = await Promise.all(
+      orders.items.map(order => fetchProductDetailsAPI(order.productId)) // truyền đúng ID
+    )
+    if (products) {
+      setIsLoadingOrder(false)
+      setProducts(products)
+    }
+    console.log(products)
   }
 
   useEffect(() => {
     fetchOrder()
   }, [])
+
 
   return (
     <Modal
@@ -205,7 +212,10 @@ export default function OrderDetail({ orderId, open, onClose }) {
                       {/* <Typography sx={{ fontSize: '16px', color: '#696969' }}>{product.type.slice(0, 1).toUpperCase() + product.type.slice(1)}</Typography> */}
                       <Typography sx={{ fontSize: '16px', color: '#696969' }}>
                         {'Color: '}
-                        <span style={{ borderBottom: '1px solid black', paddingBottom: '0.5px', color: 'black' }} >
+                        <span style={{
+                          borderBottom: '1px solid black', paddingBottom: '0.5px',
+                          color: products[idx].colors.find(item => item.color === product.color).colorHex
+                        }} >
                           {product.color}
                         </span>
                       </Typography>

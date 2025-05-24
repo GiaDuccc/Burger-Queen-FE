@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import TextField from '@mui/material/TextField'
-// import Header from '~/components/Header/Header'
 import Header from '~/components/Header/Header'
 import Slogan from '~/components/Slogan/Slogan'
 import HeroSection from '~/components/HeroSection/HeroSection'
@@ -12,28 +11,16 @@ import { Typography } from '@mui/material'
 
 function HomePage() {
 
-  const [isLoadingToPage, setIsLoadingToPage] = useState(true)
-
   const scrollToSection = (id) => {
-    const element = document.getElementById(id);
+    const element = document.getElementById(id)
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
   const [res, setRes] = useState('')
   const handleChatbot = async (message) => {
     await chatbot(message).then(data => setRes(data.reply))
-  }
-
-  setTimeout(() => {
-    setIsLoadingToPage(false)
-  }, 1000)
-
-  if (isLoadingToPage) {
-    return (<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-      <Box className='spinner-large'></Box>
-    </Box>)
   }
 
   return (
@@ -46,7 +33,7 @@ function HomePage() {
     }}>
       <Header />
       <Slogan />
-      <HeroSection video={video1} title={'Dynamic Hype Club'} descTitle={'Luxury shoes,\nhelp your foot comfortable'} />
+      <HeroSection video={video1} title={'ABC'} descTitle={'Every Step, Handled with Care.'} />
       {/* <SliderUtilities id='Utilities' title='Utilities' items={Utilities} name={'Utilities'} /> */}
       {/* <Box>
         <TextField

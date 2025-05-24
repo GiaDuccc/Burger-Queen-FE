@@ -275,7 +275,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
                       }
                     }}
                   >
-                    <img src={leftIcon} style={{ width: '16px', height: '16px' }} />
+                    <img src={leftIcon} style={{ width: '20px', height: '20px', userSelect: 'none' }} />
                   </Box>
                   <Box
                     onClick={() => {
@@ -304,7 +304,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
                       }
                     }}
                   >
-                    <img src={rightIcon} style={{ width: '16px', height: '16px' }} />
+                    <img src={rightIcon} style={{ width: '20px', height: '20px', userSelect: 'none' }} />
                   </Box>
                 </Box>
               </Box>
@@ -473,14 +473,14 @@ export default function ProductCardDetail({ product, open, onClose }) {
                 >
                   <Typography>Add Favourite</Typography>
                   {addFavouriteStatus ? (
-                    <img className='boom' src={heartColorIcon} style={{ width: '28px', height: '28px' }} />
+                    <img className='boom' src={heartColorIcon} style={{ width: '28px', height: '28px', userSelect: 'none' }} />
                   ) : (
                     <Box sx={{
                       mx: '4px', display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center'
                     }}>
-                      <img className='fade-in' style={{ width: '20px', height: '20px' }} src={heartIcon} />
+                      <img className='fade-in' style={{ width: '20px', height: '20px', userSelect: 'none' }} src={heartIcon} />
                     </Box>
                   )}
                 </Box>

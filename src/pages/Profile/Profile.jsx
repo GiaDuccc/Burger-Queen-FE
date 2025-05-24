@@ -2,27 +2,45 @@
 import Header from '~/components/Header/Header'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
 import settingsIcon from '~/assets/settings.png'
 import editIcon from '~/assets/edit.png'
 import logOutIcon from '~/assets/logout.png'
 import { useEffect, useState } from 'react'
-import { fetchCustomerDetailAPI, fetchGetOrder } from '~/apis'
+import { fetchCustomerDetailAPI, fetchGetOrder, updateCustomer } from '~/apis'
 import OrderDetail from '~/components/OrderDetail/OrderDetail'
 import '~/App.css'
 import theme from '~/theme'
+import warningIcon from '~/assets/danger.png'
 
 function Dashboard() {
 
   const user = JSON.parse(localStorage.getItem('user'))
   const navigate = useNavigate()
 
-
   const [orders, setOrders] = useState([])
   const [customer, setCustomer] = useState({})
   const [orderDetail, setOrderDetail] = useState(null)
   const [isLoadingOrder, setIsLoadingOrder] = useState(false)
+  const [editInfo, setEditInfo] = useState({})
+  const [errorInfo, setErrorInfo] = useState({})
+  const [isEdit, setIsEdit] = useState(false)
+
+  const fetchOrders = async () => {
+    const customer = await fetchCustomerDetailAPI(user._id)
+    setCustomer(customer)
+    let newOrders = []
+    for (const order of customer.orders) {
+      if (order.status !== 'cart') {
+        const data = await fetchGetOrder(order.orderId)
+        newOrders.push(data)
+      }
+    }
+    if (newOrders) setIsLoadingOrder(false)
+    setOrders(newOrders.reverse())
+  }
 
   function getCountryName(code) {
     if (!code) return
@@ -42,22 +60,33 @@ function Dashboard() {
     navigate('/sign-in')
   }
 
+  const handleUpdateInfo = async () => {
+    console.log(editInfo)
+
+    await updateCustomer(customer._id, editInfo)
+      .then(() => {
+        setIsEdit(false)
+        fetchOrders()
+      })
+      .catch(data => {
+        console.log(data.response.data)
+        if (data.response.data.message.includes('lastName')) setErrorInfo(prev => ({ ...prev, lastName: 'Last Name is not allow empty' }))
+        if (data.response.data.message.includes('firstName')) setErrorInfo(prev => ({ ...prev, firstName: 'First Name is not allow empty' }))
+        if (data.response.data.message.includes('email')) setErrorInfo(prev => ({ ...prev, email: 'Email is not allow empty' }))
+        if (data.response.data.message.includes('phone')) setErrorInfo(prev => ({ ...prev, phone: 'Phone is not allow empty' }))
+        if (data.response.data.message.includes('address')) setErrorInfo(prev => ({ ...prev, address: 'Address is not allow empty' }))
+        if (data.response.data.errors.email) setErrorInfo(prev => ({ ...prev, email: 'Email is exist' }))
+        if (data.response.data.errors.phone) setErrorInfo(prev => ({ ...prev, phone: 'Phone is exist' }))
+      })
+  }
+
+  // useEffect(() => {
+  //   console.log(errorInfo)
+  // }, [errorInfo])
+
   useEffect(() => {
     if (!user) navigate('/sign-in')
     setIsLoadingOrder(true)
-    const fetchOrders = async () => {
-      const customer = await fetchCustomerDetailAPI(user._id)
-      setCustomer(customer)
-      let newOrders = []
-      for (const order of customer.orders) {
-        if (order.status !== 'cart') {
-          const data = await fetchGetOrder(order.orderId)
-          newOrders.push(data)
-        }
-      }
-      if (newOrders) setIsLoadingOrder(false)
-      setOrders(newOrders.reverse())
-    }
     fetchOrders()
   }, [])
 
@@ -109,11 +138,32 @@ function Dashboard() {
               <img src={settingsIcon} style={{ width: '16px', height: '16px', opacity: .6 }} />
             </Box>
             <Box
-              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+              onClick={() => {
+                setIsEdit(!isEdit)
+                setErrorInfo({})
+                setEditInfo({})
+              }}
+              sx={{ display: 'flex', alignItems: 'center', gap: 1, userSelect: 'none' }}
             >
-              <Typography>Edit</Typography>
+              <Typography>{isEdit ? 'Cancel' : 'Edit'}</Typography>
               {/* <SettingsIcon sx={{ fontSize: '16px' }} /> */}
-              <img src={editIcon} style={{ width: '16px', height: '16px', opacity: .6 }} />
+              <Box sx={{ width: '18px', height: '18px', position: 'relative' }}>
+                <img src={editIcon} style={{ width: '100%', height: '100%', opacity: .6 }} />
+                {isEdit && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 9,
+                      left: -2,
+                      width: '22px',
+                      height: '1px',
+                      backgroundColor: 'red',
+                      transform: 'rotate(45deg)',
+                      // transformOrigin: 'top left'
+                    }}
+                  />
+                )}
+              </Box>
             </Box>
             <Box
               onClick={() => logOut()}
@@ -131,45 +181,316 @@ function Dashboard() {
           margin: '4px auto'
         }} />
         {/* User Detail */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', mt: '32px', gap: 3 }}>
-          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-            <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Name:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{customer?.lastName + ' ' + customer?.firstName}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-            <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Date of Birth:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{new Date(customer?.dob).toLocaleDateString('vi-VN')}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-            <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Email:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{customer?.email}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-            <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Phone:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{customer?.phone}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-            <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Address:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{customer?.address}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-            <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Country:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{`${getCountryName(customer?.country)}`}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-            <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Join date:</Typography>
-            <Typography sx={{ fontSize: '16px' }}>{new Date(customer?.createdAt).toLocaleDateString('vi-VN')}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-            <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Active:</Typography>
-            <Box sx={{
-              width: '14px',
-              height: '14px',
-              bgcolor: customer?.isActive ? '#3dff4c' : '#ff3232',
-              border: '1px solid rgb(141, 141, 141)',
-              borderRadius: '16px'
-            }}></Box>
-          </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', mt: '32px', gap: 3, width: '100%' }}>
+          {isEdit ? (
+            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'end' }}>
+              <TextField
+                onClick={(e) => e.target.value = ''}
+                onChange={(e) => {
+                  setEditInfo(prev => ({ ...prev, lastName: e.target.value }))
+                  setErrorInfo(prev => ({ ...prev, lastName: '' }))
+                }}
+                onBlur={(e) => {
+                  if (e.target.value === '') e.target.value = customer.lastName
+                }}
+                id="filledLastName"
+                className={errorInfo.lastName ? 'shake' : ''}
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {errorInfo.lastName && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
+                    {errorInfo.lastName ? errorInfo.lastName : 'Last Name'}
+                  </span>
+                }
+                variant="filled"
+                defaultValue={customer.lastName}
+                // value={editInfo.lastName ? editInfo.lastName : customer.lastName}
+                InputProps={{
+                  disableUnderline: true
+                }}
+                sx={{
+                  flex: 1,
+                  backgroundColor: 'white',
+                  width: '100%',
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: 'white',
+                    borderRadius: '16px',
+                    color: 'rgba(0, 0, 0, 0.85)',
+                    border: errorInfo.lastName ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
+                    '&.Mui-focused': {
+                      border: errorInfo.lastName ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
+                      borderRadius: '16px',
+                      backgroundColor: 'white'
+                    },
+                    '& input:-webkit-autofill': {
+                      borderRadius: '16px'
+                    }
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: errorInfo.lastName ? 'rgb(184, 53, 53)' : '#666'
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: errorInfo.lastName ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                  }
+                }}
+              />
+              <TextField
+                onClick={(e) => e.target.value = ''}
+                onChange={(e) => {
+                  setEditInfo(prev => ({ ...prev, firstName: e.target.value }))
+                  setErrorInfo(prev => ({ ...prev, firstName: '' }))
+                }}
+                onBlur={(e) => {
+                  if (e.target.value === '') e.target.value = customer.firstName
+                }}
+                id="filledLastName"
+                className={errorInfo.firstName ? 'shake' : ''}
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {errorInfo.firstName && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
+                    {errorInfo.firstName ? errorInfo.firstName : 'First Name'}
+                  </span>
+                }
+                variant="filled"
+                defaultValue={customer.firstName}
+                InputProps={{
+                  disableUnderline: true
+                }}
+                sx={{
+                  flex: 1,
+                  backgroundColor: 'white',
+                  width: '100%',
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: 'white',
+                    borderRadius: '16px',
+                    color: 'rgba(0, 0, 0, 0.85)',
+                    border: errorInfo.firstName ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
+                    '&.Mui-focused': {
+                      border: errorInfo.firstName ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
+                      borderRadius: '16px',
+                      backgroundColor: 'white'
+                    },
+                    '& input:-webkit-autofill': {
+                      borderRadius: '16px'
+                    }
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: errorInfo.firstName ? 'rgb(184, 53, 53)' : '#666'
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: errorInfo.firstName ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                  }
+                }}
+              />
+              <TextField
+                onClick={(e) => e.target.value = ''}
+                onChange={(e) => {
+                  setEditInfo(prev => ({ ...prev, email: e.target.value }))
+                  setErrorInfo(prev => ({ ...prev, email: '' }))
+                }}
+                onBlur={(e) => {
+                  if (e.target.value === '') e.target.value = customer.email
+                }}
+                id="filledLastName"
+                className={errorInfo.email ? 'shake' : ''}
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {errorInfo.email && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
+                    {errorInfo.email ? errorInfo.email : 'Email'}
+                  </span>
+                }
+                variant="filled"
+                defaultValue={customer.email}
+                InputProps={{
+                  disableUnderline: true
+                }}
+                sx={{
+                  flex: 1,
+                  backgroundColor: 'white',
+                  width: '100%',
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: 'white',
+                    borderRadius: '16px',
+                    color: 'rgba(0, 0, 0, 0.85)',
+                    border: errorInfo.email ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
+                    '&.Mui-focused': {
+                      border: errorInfo.email ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
+                      borderRadius: '16px',
+                      backgroundColor: 'white'
+                    },
+                    '& input:-webkit-autofill': {
+                      borderRadius: '16px'
+                    }
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: errorInfo.email ? 'rgb(184, 53, 53)' : '#666'
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: errorInfo.email ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                  }
+                }}
+              />
+              <TextField
+                onClick={(e) => e.target.value = ''}
+                onChange={(e) => {
+                  setEditInfo(prev => ({ ...prev, phone: e.target.value }))
+                  setErrorInfo(prev => ({ ...prev, phone: '' }))
+                }}
+                onBlur={(e) => {
+                  if (e.target.value === '') e.target.value = customer.phone
+                }}
+                id="filledPhone"
+                className={errorInfo.phone ? 'shake' : ''}
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {errorInfo.phone && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
+                    {errorInfo.phone ? errorInfo.phone : 'Phone'}
+                  </span>
+                }
+                variant="filled"
+                defaultValue={customer.phone}
+                InputProps={{
+                  disableUnderline: true
+                }}
+                sx={{
+                  flex: 1,
+                  backgroundColor: 'white',
+                  width: '100%',
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: 'white',
+                    borderRadius: '16px',
+                    color: 'rgba(0, 0, 0, 0.85)',
+                    border: errorInfo.phone ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
+                    '&.Mui-focused': {
+                      border: errorInfo.phone ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
+                      borderRadius: '16px',
+                      backgroundColor: 'white'
+                    },
+                    '& input:-webkit-autofill': {
+                      borderRadius: '16px'
+                    }
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: errorInfo.phone ? 'rgb(184, 53, 53)' : '#666'
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: errorInfo.phone ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                  }
+                }}
+              />
+              <TextField
+                onClick={(e) => e.target.value = ''}
+                onChange={(e) => {
+                  setEditInfo(prev => ({ ...prev, address: e.target.value }))
+                  setErrorInfo(prev => ({ ...prev, address: '' }))
+                }}
+                onBlur={(e) => {
+                  if (e.target.value === '') e.target.value = customer.address
+                }}
+                id="filledLastName"
+                className={errorInfo.address ? 'shake' : ''}
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {errorInfo.address && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
+                    {errorInfo.address ? errorInfo.address : 'Address'}
+                  </span>
+                }
+                variant="filled"
+                defaultValue={customer.address}
+                InputProps={{
+                  disableUnderline: true
+                }}
+                sx={{
+                  flex: 1,
+                  backgroundColor: 'white',
+                  width: '100%',
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: 'white',
+                    borderRadius: '16px',
+                    color: 'rgba(0, 0, 0, 0.85)',
+                    border: errorInfo.address ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
+                    '&.Mui-focused': {
+                      border: errorInfo.address ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
+                      borderRadius: '16px',
+                      backgroundColor: 'white'
+                    },
+                    '& input:-webkit-autofill': {
+                      borderRadius: '16px'
+                    }
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: errorInfo.address ? 'rgb(184, 53, 53)' : '#666'
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: errorInfo.address ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                  }
+                }}
+              />
+              <Box
+                onClick={() => {
+                  if (Object.values(errorInfo).some(value => value) || Object.keys(editInfo).length === 0) return
+                  handleUpdateInfo()
+                }}
+                sx={{
+                  width: '100%', height: '40px',
+                  bgcolor: 'rgba(0,0,0, .85)',
+                  borderRadius: '12px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: Object.values(errorInfo).some(value => value) || Object.keys(editInfo).length === 0 ? 'default' : 'pointer',
+                  transition: 'all 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
+                  opacity: Object.values(errorInfo).some(value => value) || Object.keys(editInfo).length === 0 && .4,
+                  '& p': {
+                    color: '#fff', fontSize: '18px', fontWeight: '600'
+                  },
+                  '&:hover': {
+                    transform: !Object.values(errorInfo).some(value => value) || Object.keys(editInfo).length === 0 && 'scaleX(1.02)',
+                    opacity: !Object.values(errorInfo).some(value => value) || Object.keys(editInfo).length === 0 && .8
+                  }
+                }}>
+                <Typography>Update</Typography>
+              </Box>
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Name:</Typography>
+                <Typography sx={{ fontSize: '16px' }}>{customer?.lastName + ' ' + customer?.firstName}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Date of Birth:</Typography>
+                <Typography sx={{ fontSize: '16px' }}>{new Date(customer?.dob).toLocaleDateString('vi-VN')}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Email:</Typography>
+                <Typography sx={{ fontSize: '16px' }}>{customer?.email}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Phone:</Typography>
+                <Typography sx={{ fontSize: '16px' }}>{customer?.phone}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Address:</Typography>
+                <Typography sx={{ fontSize: '16px' }}>{customer?.address}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Country:</Typography>
+                <Typography sx={{ fontSize: '16px' }}>{`${getCountryName(customer?.country)}`}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Join date:</Typography>
+                <Typography sx={{ fontSize: '16px' }}>{new Date(customer?.createdAt).toLocaleDateString('vi-VN')}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Active:</Typography>
+                <Box sx={{
+                  width: '14px',
+                  height: '14px',
+                  bgcolor: customer?.isActive ? '#3dff4c' : '#ff3232',
+                  border: '1px solid rgb(141, 141, 141)',
+                  borderRadius: '16px'
+                }}></Box>
+              </Box>
+            </Box>
+          )}
           <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Orders History: </Typography>
           {isLoadingOrder && (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '32px' }}>
