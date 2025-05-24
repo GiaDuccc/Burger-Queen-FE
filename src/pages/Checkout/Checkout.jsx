@@ -17,20 +17,21 @@ import discoverLogo from '~/assets/discoverLogo.jpg'
 import { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import '~/App.css'
-import { addInformationToOrderAPI, fetchGetOrder, updatedOrderAPI, updateOrderInCustomer, updateQuantitySold } from '~/apis'
+import { addInformationToOrderAPI, fetchCustomerDetailAPI, fetchGetOrder, updatedOrderAPI, updateOrderInCustomer, updateQuantitySold } from '~/apis'
 import { useNavigate } from 'react-router-dom'
 import dingSound from '~/assets/ding-sound.mp3'
+import theme from '~/theme'
 
 function Checkout() {
 
-  const user = JSON.parse(localStorage.getItem('user'))
+  const [customer, setCustomer] = useState(null)
   const navigate = useNavigate()
   const [isLoadingToPage, setIsLoadingToPage] = useState(true)
   const [isEdit, setIsEdit] = useState(false)
 
-  const [name, setName] = useState(`${user.lastName} ${user.firstName}`)
-  const [phone, setPhone] = useState(`${user.phone}`)
-  const [address, setAddress] = useState(`${user.address}`)
+  const [name, setName] = useState(null)
+  const [phone, setPhone] = useState(null)
+  const [address, setAddress] = useState(null)
   const [itemsToBuy, setItemsToBuy] = useState([])
   const [isCheckout, setIsCheckout] = useState('idle')
   const tickSound = new Audio(dingSound)
@@ -53,17 +54,44 @@ function Checkout() {
     return sum
   }
 
+  const fetchCustomer = async () => {
+    const customerId = JSON.parse(localStorage.getItem('user'))
+    const customer = await fetchCustomerDetailAPI(customerId._id)
+    setCustomer(customer)
+    setName(`${customer?.lastName} ${customer?.firstName}`)
+    setPhone(`${customer?.phone}`)
+    setAddress(`${customer?.address}`)
+
+    const updateData = async () => {
+      let newData = {
+        name: `${customer?.lastName} ${customer?.firstName}`,
+        phone: `${customer?.phone}`,
+        address: `${customer?.address}`
+      }
+
+      const order = await fetchGetOrder(customer?.orders[customer?.orders.length - 1].orderId)
+
+      setItemsToBuy(order.items)
+
+      await addInformationToOrderAPI(customer?.orders[customer?.orders.length - 1].orderId, newData).then(data => {
+        setName(data.name)
+        setPhone(data.phone)
+        setAddress(data.address)
+      })
+    }
+    updateData()
+  }
+
   const handleCheckout = async () => {
     setIsCheckout('loading')
-    console.log(itemsToBuy)
     await Promise.all(
       itemsToBuy.map((product) =>
         updateQuantitySold(product.productId, product.quantity)
           .then(() => console.log('update thành công'))
       )
     )
-    await updatedOrderAPI(user.orders[user.orders.length - 1].orderId, getTotal(), Object.entries(paymentSelect).find(([, value]) => value)?.[0])
-    await updateOrderInCustomer(user._id, user.orders[user.orders.length - 1].orderId).then(data => {
+    await updatedOrderAPI(customer.orders[customer.orders.length - 1].orderId, getTotal(), Object.entries(paymentSelect).find(([, value]) => value)?.[0])
+    await updateOrderInCustomer(customer._id, customer.orders[customer.orders.length - 1].orderId).then(data => {
       localStorage.setItem('user', JSON.stringify(data))
       setTimeout(() => {
         tickSound.volume = 0.4
@@ -100,7 +128,7 @@ function Checkout() {
       phone: phone,
       address: address
     }
-    await addInformationToOrderAPI(user.orders[user.orders.length - 1].orderId, data).then(data => {
+    await addInformationToOrderAPI(customer.orders[customer.orders.length - 1].orderId, data).then(data => {
       setName(data.name)
       setPhone(data.phone)
       setAddress(data.address)
@@ -109,30 +137,7 @@ function Checkout() {
   }
 
   useEffect(() => {
-    const updateData = async () => {
-      let newData = {
-        name: name,
-        phone: phone,
-        address: address
-      }
-
-
-      const order = await fetchGetOrder(user.orders[user.orders.length - 1].orderId)
-
-      newData = {
-        name: order.name || name,
-        phone: order.phone || phone,
-        address: order.address || address
-      }
-      setItemsToBuy(order.items)
-
-      // await addInformationToOrderAPI(user.orders[user.orders.length - 1].orderId, newData).then(data => {
-      //   setName(data.name)
-      //   setPhone(data.phone)
-      //   setAddress(data.address)
-      // })
-    }
-    updateData()
+    fetchCustomer()
     setTimeout(() => {
       setIsLoadingToPage(false)
     }, 700)
@@ -156,7 +161,7 @@ function Checkout() {
       <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%', mx: 'auto', mt: '20px' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography sx={{ color: 'rgba(0,0,0,.85)', fontWeight: '600', fontSize: '32px' }}>
-            {`Order #${user.orders[user.orders.length - 1].orderId.slice(0, user.orders[user.orders.length - 1].orderId.length / 2)}`}
+            {`Order #${customer?.orders[customer?.orders.length - 1].orderId.slice(0, customer?.orders[customer?.orders.length - 1].orderId.length / 2)}`}
           </Typography>
         </Box>
         <hr style={{
@@ -197,7 +202,7 @@ function Checkout() {
                 }}
               >
                 <img
-                  src={product.image}
+                  src={`${theme.API_ROOT}${product.image}`}
                   style={{ width: '110px', height: '110px', objectFit: 'cover', borderRadius: '8px' }}
                 />
               </Box>

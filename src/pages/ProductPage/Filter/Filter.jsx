@@ -4,6 +4,7 @@ import FilterOptions from './FilterOptions/FilterOptions'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { fetchAllProductAPI, fetchAllProductPageAPI } from '~/apis'
+import '~/App.css'
 
 function Filter({ currentPage }) {
 
@@ -61,7 +62,7 @@ function Filter({ currentPage }) {
 
   return (
     <Box
-      className="Filter"
+      className="Filter fade-in-up"
       sx={{
         position: 'sticky',
         top: 0,

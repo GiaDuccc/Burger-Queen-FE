@@ -108,8 +108,8 @@ export default function HeroSection({ video, title, descTitle }) {
   return (
     <Box sx={{ width: '100%' }} >
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'rgba(0,0,0,.85)', p: '64px 92px ' }} >
-        <Typography variant='h1' sx={{ fontSize: '72px', fontWeight: '600' }}>{title}</Typography>
-        <Typography variant='h5' sx={{ fontSize: '28px', fontWeight: 'bold', lineHeight: '1.1428571429', whiteSpace: 'pre-line' }} >{descTitle}</Typography>
+        <Typography variant='h1' sx={{ fontSize: '52px', fontWeight: '650' }}>{title.toUpperCase()}</Typography>
+        <Typography variant='h1' sx={{ fontSize: '52px', fontWeight: '600' }} >{descTitle}</Typography>
       </Box>
       <Box
         sx={{

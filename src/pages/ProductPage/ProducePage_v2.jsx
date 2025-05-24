@@ -17,29 +17,6 @@ import rightIcon from '~/assets/right.png'
 import '~/App.css'
 import theme from '~/theme'
 
-// bảng quy đổi từ màu -> mã màu
-// function getColorHex(colorName) {
-//   const colorMap = {
-//     red: '#f54a4a',
-//     blue: '#406dff',
-//     green: '#90c890',
-//     white: '#ffffff',
-//     black: '#2b3035',
-//     purple: '#b56fe9',
-//     orange: '#ff8939',
-//     brown: '#9b6d4e',
-//     gray: '#a7a7a7',
-//     yellow: '#ffeb00',
-//     cream: '#fff8dc',
-//     gold: '#FFD700',
-//     pink: '#f188ff',
-//     copper: '#B87333',
-//     lightPink: '#FFB6C1',
-//     darkPink: '#FF69B4'
-//   }
-//   return colorMap[colorName] || '#00e7c5'
-// }
-
 function ProductPage() {
   // state lưu danh sách sản phẩm
   const [productList, setProductList] = useState([])
@@ -109,21 +86,11 @@ function ProductPage() {
       fetchAllProductPageAPI(currentPage, 12, filters).then(data => {
         const products = data.data.products.map(product => ({
           colors: product.colors.map(color => ({
-            color: color.color.toLowerCase(),
-            colorHex: color.colorHex,
-            imageDetail: color.imageDetail.map(image =>
-              `${theme.API_ROOT}${image}`
-            ),
-            sizes: color.sizes
+            ...color,
+            color: color.color.toLowerCase()
           })),
-          name: product.name,
-          type: product.type,
-          stock: product.stock,
-          price: product.price,
-          highLight: product.highLight,
-          desc: product.desc,
-          slug: product.slug,
-          id: product._id
+          id: product._id,
+          ...product
         }))
 
         setProductList(products)
@@ -145,21 +112,11 @@ function ProductPage() {
       fetchAllProductPageAPI(currentPage + 1, 12, filters).then(data => {
         const nextProducts = data.data.products.map(product => ({
           colors: product.colors.map(color => ({
-            color: color.color.toLowerCase(),
-            colorHex: color.colorHex,
-            imageDetail: color.imageDetail.map(image =>
-              `${theme.API_ROOT}${image}`
-            ),
-            sizes: color.sizes
+            ...color,
+            color: color.color.toLowerCase()
           })),
-          name: product.name,
-          type: product.type,
-          stock: product.stock,
-          price: product.price,
-          highLight: product.highLight,
-          desc: product.desc,
-          slug: product.slug,
-          id: product._id
+          id: product._id,
+          ...product
         }))
         setProductCache(prev => ({
           ...prev,
@@ -210,7 +167,7 @@ function ProductPage() {
     >
       <Header />
       <Slogan />
-      <HeroSection video={productHeroSection} title={'My product.'} descTitle={'Connects you to your\nevery adventure.'} />
+      <HeroSection video={productHeroSection} title={'My product.'} descTitle={'More Than Just Shoes.'} />
       {/* Product list & Filter */}
       <Box
         ref={contentRef}
@@ -287,6 +244,9 @@ function ProductPage() {
                         bgcolor: 'rgba(0,0,0,.85)',
                         cursor: 'pointer',
                         boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
+                      },
+                      '&:hover img': {
+                        filter: 'invert(100%)'
                       }
                     }}
                     onClick={handlePrevPage}
@@ -316,6 +276,9 @@ function ProductPage() {
                         bgcolor: 'rgba(0,0,0,.85)',
                         cursor: 'pointer',
                         boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
+                      },
+                      '&:hover img': {
+                        filter: 'invert(100%)'
                       }
                     }}
                     onClick={handleNextPage}

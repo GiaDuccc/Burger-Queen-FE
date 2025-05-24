@@ -73,6 +73,7 @@ export default function AddProduct({ open, onClose, refresh }) {
       navbarImage: navbarImage,
       colors: productColors.map(color => ({
         ...color,
+        color: color.color.toLowerCase(),
         // eslint-disable-next-line no-unused-vars
         sizes: color.sizes.map(({ id, ...rest }) => rest) // bỏ id, giữ lại phần còn lại
       }))

@@ -4,7 +4,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import { useEffect, useState } from 'react'
-import { fetchAllProductPageAPI, updateProductAPI } from '~/apis'
+import { fetchAllProductPageAPI, deleteProductAPI } from '~/apis'
 import editIcon from '~/assets/edit.png'
 import trashIcon from '~/assets/trash.png'
 import searchIcon from '~/assets/search.png'
@@ -72,7 +72,7 @@ function Product() {
   }
 
   const handleDelete = async () => {
-    await updateProductAPI(productToDelete).then(() => {
+    await deleteProductAPI(productToDelete).then(() => {
       setIsLoadingProducts(true)
       setTimeout(() => {
         setIsLoadingProducts(false)
@@ -103,7 +103,8 @@ function Product() {
     <Box sx={{
       display: 'flex',
       flexDirection: 'column',
-      gap: 2
+      gap: 2,
+      p: '32px'
     }}>
       {/* hearder */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, height: '40px', mr: '44px' }}>
@@ -316,10 +317,13 @@ function Product() {
                   transformOrigin: 'center',
                   color: 'rgba(0,0,0,.5)',
                   '&:hover': {
-                    color: 'white',
+                    color: '#fff',
                     bgcolor: 'rgba(0,0,0,.85)',
                     cursor: 'pointer',
                     boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
+                  },
+                  '&:hover img': {
+                    filter: 'invert(100%)'
                   }
                 }}
                 onClick={handlePrevPage}
@@ -349,6 +353,9 @@ function Product() {
                     bgcolor: 'rgba(0,0,0,.85)',
                     cursor: 'pointer',
                     boxShadow: '0.5px 0.5px 10px rgb(220, 220, 220)'
+                  },
+                  '&:hover img': {
+                    filter: 'invert(100%)'
                   }
                 }}
                 onClick={handleNextPage}
@@ -359,10 +366,12 @@ function Product() {
           </Box>
         </Box>
       )}
-      <ModalWarning open={showWarning} onClose={() => setShowWarning(false)} cancel={() => setShowWarning(false)} handleDelete={() => {
-        handleDelete()
-        setShowWarning(false)
-      }} />
+      {showWarning && (
+        <ModalWarning open={showWarning} onClose={() => setShowWarning(false)} cancel={() => setShowWarning(false)} handleDelete={() => {
+          handleDelete()
+          setShowWarning(false)
+        }} />
+      )}
       {productToEdit && (
         <EditProduct open={Boolean(productToEdit)} onClose={() => setProductToEdit(null)} product={productToEdit} refresh={() => {
           setIsLoadingProducts(true)
