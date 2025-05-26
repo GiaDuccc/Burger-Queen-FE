@@ -17,6 +17,7 @@ function NavBar({ scrollToSection, setTypes, brand }) {
 
   useEffect(() => {
     fetchTypeAndNavbarImage()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

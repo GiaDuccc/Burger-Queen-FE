@@ -12,14 +12,15 @@ function Slider({ id, name, type, brand }) {
   const [products, setProducts] = useState([])
   const sliderRef = useRef(null)
   const [productSelected, setProductSelected] = useState(null)
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [, setSearchParams] = useSearchParams()
 
   useEffect(() => {
     (async () => {
       const data = await fetchLimitedProductsAPI(brand, type)
       setProducts(data)
-      console.log(data)
+      // console.log(data)
     })()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]) // Gọi lại nếu type thay đổi
 
   const sliderNextItem = () => {

@@ -30,7 +30,7 @@ function NewBalance() {
       <Header />
       <NavBar brand={brand} scrollToSection={(id) => scrollToSection(id)} setTypes={(types) => setTypes(types)} />
       <Slogan />
-      <HeroSection title={'NewBalance'} descTitle={'We Got Now.'} />
+      <HeroSection title={'New Balance'} descTitle={'We Got Now.'} />
       {types?.map((type, idx) => (
         <Slider brand={brand} key={idx} id={type} name={type.slice(0, 1).toUpperCase() + type.slice(1)} type={type} />
       ))}

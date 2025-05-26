@@ -1,9 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import crownIcon from '~/assets/crown.png'
-import crown1Icon from '~/assets/crown1.png'
-import crown2Icon from '~/assets/crown2.png'
-import crown3Icon from '~/assets/crown3.png'
 import { useEffect, useState } from 'react'
 import { getAllCustomerQuantityAPI, getAllProductQuantityAPI, getQuantityAndProfitAPI, getTopBestSeller } from '~/apis'
 import theme from '~/theme'
@@ -15,7 +12,6 @@ const time = ['day', 'month', 'year']
 const fontSizeTitle = '24px'
 const fontSizeStat = '48px'
 const fontSizeSub = '16px'
-const crown = [crown1Icon, crown2Icon, crown3Icon]
 
 function Dashboard() {
 
@@ -51,13 +47,10 @@ function Dashboard() {
         }, 500)
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Lỗi khi fetch dữ liệu:', error);
     }
   }
-
-  // useEffect(() => {
-  //   fetchData()
-  // }, [allProduct, allCustomer, orderQuantity, profit])
 
   useEffect(() => {
     setIsLoadingPage(true)
@@ -283,15 +276,6 @@ function Dashboard() {
                         }}
                       >
                         <Typography sx={{ fontSize: '20px', fontWeight: '600' }}>{product.name}</Typography>
-                        {/* <Box
-                        sx={{
-                          flex: 1,
-                          display: 'flex',
-                          alignItems: 'center'
-                        }}>
-                        <Typography sx={{ fontSize: '20px', fontWeight: '600' }}>{product.quantitySold}</Typography>
-                        <Typography sx={{ fontSize: '20px', fontWeight: '600' }}>sold</Typography>
-                      </Box> */}
                       </Box>
                       <Box sx={{ flex: 1, display: 'flex', justifyContent: 'end', alignItems: 'end', gap: 1.5 }}>
                         <Typography sx={{

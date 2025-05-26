@@ -40,8 +40,6 @@ function Admin() {
     setTimeout(() => {
       setIsLoadingPage(false)
     }, 400)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

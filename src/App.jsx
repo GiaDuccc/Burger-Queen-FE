@@ -15,6 +15,7 @@ import { fetchCustomerDetailAPI } from './apis'
 import { useEffect } from 'react'
 import VansPage from './pages/VansPage/VansPage'
 import BalenciagaPage from './pages/BalenciagaPage/BalenciagaPage'
+import Chatbot from './components/Chatbot/Chatbot'
 
 
 function App() {
@@ -35,13 +36,14 @@ function App() {
 
   return (
     <Router>
+      <Chatbot />
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/product' element={<ProductPage />} />
         <Route path='/nike' element={<NikePage />} />
         <Route path='/adidas' element={<AdidasPage />} />
         <Route path='/puma' element={<PumaPage />} />
-        <Route path='/newbalance' element={<NewBalance />} />
+        <Route path='/new-balance' element={<NewBalance />} />
         <Route path='/vans' element={<VansPage />} />
         <Route path='/balenciaga' element={<BalenciagaPage />} />
         <Route path='/sign-in' element={<SignIn />} />
