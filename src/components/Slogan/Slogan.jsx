@@ -2,7 +2,6 @@ import Box from '@mui/material/Box'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Typography from '@mui/material/Typography'
-import rightIcon from '~/assets/right.png'
 import '~/App.css'
 
 const slogan = 'Explore our exclusive collection of authentic sneakers from Nike, Adidas, Converse,...'

@@ -7,7 +7,6 @@ import NavBar from '~/components/NavBar/NavBar'
 import Slider from '~/components/Slider/Slider_v2'
 import { useState } from 'react'
 import Footer from '~/components/Footer/Footer'
-import Box from '@mui/material/Box'
 import '~/App.css'
 
 function BalenciagaPage() {

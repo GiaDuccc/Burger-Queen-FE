@@ -75,6 +75,7 @@ function Customer() {
       )
     )
     setRoleSelected(null)
+    // eslint-disable-next-line no-console
     await changeRoleCustomerAPI(customerId, role).then(() => console.log('Change role success'))
   }
 
@@ -83,6 +84,7 @@ function Customer() {
 
   const fetchCustomer = async () => {
     const allParams = Object.fromEntries(searchParams.entries())
+    // eslint-disable-next-line no-unused-vars
     const { page, section, ...filters } = allParams
     await fetchGetAllCustomerPageAPI(currentPage, 12, filters).then(data => {
       setCustomerList(data.customers)
@@ -139,7 +141,6 @@ function Customer() {
     if (!customerToDelete) {
       setIsLoadingOrders(true)
       fetchCustomer()
-      console.log('chay')
     }
     fetchCustomer()
   }, [searchParams, customerToDelete])

@@ -5,9 +5,8 @@ import nikeVideoHeroSection from '~/assets/videoHeroSection/Nike. Just Do It. Ni
 import Container from '@mui/material/Container'
 import NavBar from '~/components/NavBar/NavBar'
 import Slider from '~/components/Slider/Slider_v2'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Footer from '~/components/Footer/Footer'
-import Box from '@mui/material/Box'
 import '~/App.css'
 
 function NikePage() {
@@ -20,10 +19,6 @@ function NikePage() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   }
-
-  useEffect(() => {
-    console.log('chay')
-  }, [types])
 
   return (
     <Container disableGutters maxWidth={false} sx={{

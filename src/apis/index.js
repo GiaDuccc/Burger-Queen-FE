@@ -243,7 +243,7 @@ export const getOrderChartByYear = async () => {
 }
 
 // Chatbot
-export const chatbot = async (message) => {
-  const response = await axios.post(`${API_ROOT}/v1/chat/`, { message })
+export const chatbot = async (message, conversation) => {
+  const response = await axios.post(`${API_ROOT}/v1/chat/`, { message, conversation })
   return response.data
 }

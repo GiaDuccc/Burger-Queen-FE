@@ -33,7 +33,7 @@ export default function OrderDetail({ orderId, open, onClose }) {
   const fetchOrder = async () => {
     setIsLoadingOrder(true)
     const orders = await fetchGetOrder(orderId)
-    console.log(orders)
+    // console.log(orders)
     setOrder(orders)
     const products = await Promise.all(
       orders.items.map(order => fetchProductDetailsAPI(order.productId)) // truyền đúng ID
@@ -42,11 +42,12 @@ export default function OrderDetail({ orderId, open, onClose }) {
       setIsLoadingOrder(false)
       setProducts(products)
     }
-    console.log(products)
+    // console.log(products)
   }
 
   useEffect(() => {
     fetchOrder()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 

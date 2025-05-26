@@ -1,7 +1,8 @@
 import { Box } from '@mui/material';
+// eslint-disable-next-line no-unused-vars
 import { Chart as ChartJS, defaults } from 'chart.js/auto'
 import { useEffect, useState } from 'react';
-import { Bar, Doughnut, Line } from 'react-chartjs-2'
+import { Line } from 'react-chartjs-2'
 import { getCustomerChartByYear, getOrderChartByYear } from '~/apis'
 
 defaults.maintainAspectRatio = false

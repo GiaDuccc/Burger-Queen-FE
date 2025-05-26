@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -87,6 +86,7 @@ function Checkout() {
     await Promise.all(
       itemsToBuy.map((product) =>
         updateQuantitySold(product.productId, product.quantity)
+          // eslint-disable-next-line no-console
           .then(() => console.log('update thành công'))
       )
     )

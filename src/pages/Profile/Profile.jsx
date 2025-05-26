@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import Header from '~/components/Header/Header'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
@@ -61,7 +60,6 @@ function Dashboard() {
   }
 
   const handleUpdateInfo = async () => {
-    console.log(editInfo)
 
     await updateCustomer(customer._id, editInfo)
       .then(() => {
@@ -69,7 +67,6 @@ function Dashboard() {
         fetchOrders()
       })
       .catch(data => {
-        console.log(data.response.data)
         if (data.response.data.message.includes('lastName')) setErrorInfo(prev => ({ ...prev, lastName: 'Last Name is not allow empty' }))
         if (data.response.data.message.includes('firstName')) setErrorInfo(prev => ({ ...prev, firstName: 'First Name is not allow empty' }))
         if (data.response.data.message.includes('email')) setErrorInfo(prev => ({ ...prev, email: 'Email is not allow empty' }))
@@ -80,14 +77,11 @@ function Dashboard() {
       })
   }
 
-  // useEffect(() => {
-  //   console.log(errorInfo)
-  // }, [errorInfo])
-
   useEffect(() => {
     if (!user) navigate('/sign-in')
     setIsLoadingOrder(true)
     fetchOrders()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -158,7 +152,7 @@ function Dashboard() {
                       width: '22px',
                       height: '1px',
                       backgroundColor: 'red',
-                      transform: 'rotate(45deg)',
+                      transform: 'rotate(45deg)'
                       // transformOrigin: 'top left'
                     }}
                   />

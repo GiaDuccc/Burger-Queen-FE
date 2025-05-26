@@ -70,6 +70,7 @@ export default function EditProduct({ product, open, onClose, refresh }) {
       ...productInfo,
       adImage: adImage,
       navbarImage: navbarImage,
+      // eslint-disable-next-line no-unused-vars
       colors: productColors.map(({ image, ...color }) => ({
         ...color,
         color: color.color.toLowerCase(),
@@ -271,7 +272,7 @@ export default function EditProduct({ product, open, onClose, refresh }) {
                     >
                       Brand
                     </option>
-                    {['nike', 'adidas', 'puma', 'newbalance', 'converse', 'biti\'s'].map((brand, idx) => (
+                    {['nike', 'adidas', 'puma', 'new balance', 'vans', 'balenciaga'].map((brand, idx) => (
                       <option key={idx} value={brand} style={{
                         backgroundColor: 'white',
                         color: 'black'

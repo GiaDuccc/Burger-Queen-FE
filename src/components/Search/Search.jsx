@@ -43,7 +43,7 @@ function Search({ open, toggleDrawer, productList }) {
       colors: product.colors.map(color => ({
         ...color,
         imageDetail: color.imageDetail.map(image =>
-          `${theme.API_ROOT}${image}`
+          `${image}`
         )
       })),
       id: product._id

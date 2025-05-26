@@ -272,7 +272,7 @@ export default function AddProduct({ open, onClose, refresh }) {
                     >
                       Brand
                     </option>
-                    {['nike', 'adidas', 'puma', 'newbalance', 'converse', 'biti\'s'].map((brand, idx) => (
+                    {['nike', 'adidas', 'puma', 'new balance', 'vans', 'balenciaga'].map((brand, idx) => (
                       <option key={idx} value={brand} style={{
                         backgroundColor: 'white',
                         color: 'black'
