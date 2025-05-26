@@ -2,7 +2,6 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useEffect, useRef, useState } from 'react'
 import { fetchLimitedProductsAPI } from '~/apis'
-import theme from '~/theme'
 import rightIcon from '~/assets/right.png'
 import leftIcon from '~/assets/left.png'
 import ProductCardDetail from '~/pages/ProductPage/ProductList/ProductCardDetail/ProductCardDetail'
@@ -74,7 +73,7 @@ function Slider({ id, name, type, brand }) {
               display: 'flex',
               fontWeight: 'bold',
               transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
-              backgroundImage: `url("${theme.API_ROOT}${item.adImage}")`,
+              backgroundImage: `${item.adImage}`,
               backgroundSize: 'cover',
               boxShadow: '1px 1px 10px rgb(220, 220, 220)',
               mb: products.length > 3 ? '0' : '52px',

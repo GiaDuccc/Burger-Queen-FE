@@ -11,7 +11,6 @@ import trashIcon from '~/assets/trash.png'
 import outOfStock from '~/assets/outOfStock.png'
 import deliveryIcon from '~/assets/delivery.png'
 import { useNavigate } from 'react-router-dom'
-import theme from '~/theme'
 import closeIcon from '~/assets/x-white.png'
 
 
@@ -393,7 +392,7 @@ function ShoppingCart({ open, toggleDrawer }) {
                   }}
                 >
                   <img
-                    src={`${theme.API_ROOT}${product.colors.find(item => item.color === orderData.items[idx].color)?.imageDetail[0]}`}
+                    src={product.colors.find(item => item.color === orderData.items[idx].color)?.imageDetail[0]}
                     style={{ width: '110px', height: '110px', objectFit: 'cover', borderRadius: '8px' }}
                   />
                 </Box>

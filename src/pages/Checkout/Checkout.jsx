@@ -19,7 +19,6 @@ import '~/App.css'
 import { addInformationToOrderAPI, fetchCustomerDetailAPI, fetchGetOrder, updatedOrderAPI, updateOrderInCustomer, updateQuantitySold } from '~/apis'
 import { useNavigate } from 'react-router-dom'
 import dingSound from '~/assets/ding-sound.mp3'
-import theme from '~/theme'
 
 function Checkout() {
 
@@ -177,7 +176,8 @@ function Checkout() {
           gap: 2,
           mt: '32px',
           mb: '12px',
-          height: '550px',
+          maxHeight: '550px',
+          height: 'fit-content',
           overflowY: 'scroll',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
@@ -209,7 +209,7 @@ function Checkout() {
                 }}
               >
                 <img
-                  src={`${theme.API_ROOT}${product.image}`}
+                  src={product.image}
                   style={{ width: '110px', height: '110px', objectFit: 'cover', borderRadius: '8px' }}
                 />
               </Box>

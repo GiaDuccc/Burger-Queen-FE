@@ -18,7 +18,6 @@ import OrderDetail from '~/components/OrderDetail/OrderDetail'
 import leftIcon from '~/assets/left.png'
 import rightIcon from '~/assets/right.png'
 import '~/App.css'
-import theme from '~/theme'
 
 function Order() {
 
@@ -260,7 +259,7 @@ function Order() {
                         {order.items.length <= 4 && order.items.slice(0, 4).map((product, idx) => (
                           <img
                             key={idx}
-                            src={`${theme.API_ROOT}${product.image}`}
+                            src={product.image}
                             style={{
                               width: order.items.length === 1 ? '100%' : '55px',
                               height: order.items.length === 1 ? '100%' : '55px',
@@ -288,7 +287,7 @@ function Order() {
                           ) : (
                             <img
                               key={idx}
-                              src={`${theme.API_ROOT}${product.image}`}
+                              src={product.image}
                               style={{
                                 width: order.items.length === 1 ? '100%' : '55px',
                                 height: order.items.length === 1 ? '100%' : '55px',

@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import { useEffect, useState } from 'react'
 import { getTypeAndNavbarImageFromBrand } from '~/apis'
-import theme from '~/theme'
 
 function NavBar({ scrollToSection, setTypes, brand }) {
 
@@ -48,7 +47,7 @@ function NavBar({ scrollToSection, setTypes, brand }) {
           }}>
           <Box sx={{ mb: '8px', transition: 'all 0.2s cubic-bezier(0.42, 0, 0.58, 1)' }}>
             <img
-              src={`${theme.API_ROOT}${item.navbarImage}`}
+              src={item.navbarImage}
               style={{ width: '70px' }}
             />
           </Box>

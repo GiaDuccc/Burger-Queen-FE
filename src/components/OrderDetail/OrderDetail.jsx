@@ -5,8 +5,6 @@ import { useEffect, useState } from 'react'
 import closeIcon from '~/assets/x-white.png'
 import '~/App.css'
 import { fetchGetOrder, fetchProductDetailsAPI } from '~/apis'
-import theme from '~/theme'
-
 
 export default function OrderDetail({ orderId, open, onClose }) {
 
@@ -196,7 +194,7 @@ export default function OrderDetail({ orderId, open, onClose }) {
                       }}
                     >
                       <img
-                        src={`${theme.API_ROOT}${product.image}`}
+                        src={product.image}
                         style={{ width: '110px', height: '110px', objectFit: 'cover', borderRadius: '8px' }}
                       />
                     </Box>

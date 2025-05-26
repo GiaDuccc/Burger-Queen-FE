@@ -8,7 +8,6 @@ import addIcon from '~/assets/add.png'
 import closeIcon from '~/assets/x-white.png'
 import '~/App.css'
 import { addProductAPI, uploadImageAPI, uploadImagesAPI } from '~/apis'
-import theme from '~/theme'
 import successIcon from '~/assets/check.png'
 import trashIcon from '~/assets/trash.png'
 import dingSound from '~/assets/ding-sound.mp3'
@@ -509,7 +508,7 @@ export default function AddProduct({ open, onClose, refresh }) {
                       {adImage ? (
                         <img
                           className='slide-from-right'
-                          src={`${theme.API_ROOT}${adImage}`}
+                          src={adImage}
                           style={{ width: '100%', height: '100%', borderRadius: '8px', objectFit: 'cover' }}
                         />
                       ) : (
@@ -594,7 +593,7 @@ export default function AddProduct({ open, onClose, refresh }) {
                       {navbarImage ? (
                         <img
                           className='slide-from-right'
-                          src={`${theme.API_ROOT}${navbarImage}`}
+                          src={navbarImage}
                           style={{ width: '100%', height: '100%', borderRadius: '8px', objectFit: 'cover' }}
                         />
                       ) : (
@@ -967,7 +966,7 @@ export default function AddProduct({ open, onClose, refresh }) {
                                     }
                                   }}
                                 >
-                                  <img src={`${theme.API_ROOT}${image}`}
+                                  <img src={image}
                                     style={{ width: '100%', height: '100%', borderRadius: '8px', objectFit: 'cover' }}
                                   />
                                   <input

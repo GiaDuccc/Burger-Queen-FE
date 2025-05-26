@@ -42,9 +42,13 @@ export const uploadImageAPI = async (image, productName, productColor = '') => {
 
 export const uploadImagesAPI = async (images, productName, productColor) => {
   const formData = new FormData()
-  images.forEach(image => {
-    formData.append('files', image)
-  })
+  if (Array.isArray(images)) {
+    images.forEach(image => {
+      formData.append('files', image)
+    })
+  } else {
+    formData.append('files', images)
+  }
   const queryParams = new URLSearchParams({ productName, productColor }).toString()
   const response = await axios.post(`${API_ROOT}/v1/products/uploadArray?${queryParams}`, formData, {
     headers: {

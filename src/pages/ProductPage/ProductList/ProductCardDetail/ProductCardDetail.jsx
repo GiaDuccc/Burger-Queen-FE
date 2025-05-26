@@ -13,7 +13,6 @@ import heartColorIcon from '~/assets/heart-color.png'
 import dingSound from '~/assets/ding-sound.mp3'
 import tapSound from '~/assets/tap-sound.mp3'
 import { addProductToOrder } from '~/apis'
-import theme from '~/theme'
 
 
 export default function ProductCardDetail({ product, open, onClose }) {
@@ -201,7 +200,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
                   }}
                 >
                   <img
-                    src={`${theme.API_ROOT}${image}`}
+                    src={image}
                     style={{
                       width: '100%',
                       height: '100%',
@@ -231,7 +230,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
                 }}
               >
                 <img
-                  src={`${theme.API_ROOT}${currentImage.image}`}
+                  src={currentImage.image}
                   style={{
                     width: '100%',
                     borderRadius: '12px',
@@ -349,7 +348,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
                     }}
                   >
                     <img
-                      src={`${theme.API_ROOT}${product.imageDetail[0]}`}
+                      src={product.imageDetail[0]}
                       style={{
                         objectFit: 'cover',
                         width: '100%',

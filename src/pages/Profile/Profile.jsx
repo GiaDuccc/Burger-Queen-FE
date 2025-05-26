@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react'
 import { fetchCustomerDetailAPI, fetchGetOrder, updateCustomer } from '~/apis'
 import OrderDetail from '~/components/OrderDetail/OrderDetail'
 import '~/App.css'
-import theme from '~/theme'
 import warningIcon from '~/assets/danger.png'
 
 function Dashboard() {
@@ -528,7 +527,7 @@ function Dashboard() {
                     {order.items.slice(0, 4).map((product, idx) => (
                       <img
                         key={idx}
-                        src={product.image.slice(0, 4) !== '/all' ? `${product.image}` : `${theme.API_ROOT}${product.image}`}
+                        src={product.image}
                         style={{
                           width: order.items.length === 1 ? '100%' : '50px',
                           height: order.items.length === 1 ? '100%' : '50px',

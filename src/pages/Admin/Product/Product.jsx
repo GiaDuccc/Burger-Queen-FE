@@ -211,7 +211,7 @@ function Product() {
                   }}
                 >
                   <img
-                    src={`${theme.API_ROOT}${product.colors[0].imageDetail[0]}`}
+                    src={product.colors[0].imageDetail[0]}
                     style={{ width: '110px', height: '110px', objectFit: 'cover', borderRadius: '8px' }}
                   />
                 </Box>

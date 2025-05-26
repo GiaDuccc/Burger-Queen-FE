@@ -3,7 +3,6 @@ import Typography from '@mui/material/Typography'
 import crownIcon from '~/assets/crown.png'
 import { useEffect, useState } from 'react'
 import { getAllCustomerQuantityAPI, getAllProductQuantityAPI, getQuantityAndProfitAPI, getTopBestSeller } from '~/apis'
-import theme from '~/theme'
 import ChartYear from './ChartYear'
 import { useSearchParams } from 'react-router-dom'
 import '~/App.css'
@@ -257,7 +256,7 @@ function Dashboard() {
                       }}
                     >
                       <img
-                        src={`${theme.API_ROOT}${product.colors[0].imageDetail[0]}`}
+                        src={product.colors[0].imageDetail[0]}
                         style={{ width: '115px', height: '115px', objectFit: 'cover', borderRadius: '8px' }}
                       />
                     </Box>

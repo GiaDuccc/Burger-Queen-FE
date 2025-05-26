@@ -8,7 +8,6 @@ import addIcon from '~/assets/add.png'
 import '~/App.css'
 import { updateProductAPI, uploadImagesAPI, uploadImageAPI } from '~/apis'
 import closeIcon from '~/assets/x-white.png'
-import theme from '~/theme'
 import successIcon from '~/assets/check.png'
 import errorIcon from '~/assets/error.png'
 import trashIcon from '~/assets/trash.png'
@@ -35,6 +34,8 @@ export default function EditProduct({ product, open, onClose, refresh }) {
   const [isLoadingAdd, setIsLoadingAdd] = useState('idle')
   const [showSizeTrash, setShowSizeTrash] = useState(false)
   const [showImageTrash, setShowImageTrash] = useState(null)
+  const [showAdImageTrash, setShowAdImageTrash] = useState(null)
+  const [showNavbarImageTrash, setShowNavbarImageTrash] = useState(null)
 
   const handleUploadAdImage = async (e) => {
     const file = e.target.files[0]
@@ -78,6 +79,7 @@ export default function EditProduct({ product, open, onClose, refresh }) {
         sizes: color.sizes.map(({ id, ...rest }) => rest) // bỏ id, giữ lại phần còn lại
       }))
     }
+
     await updateProductAPI(product._id, updateProduct)
       .then(() => {
         tickSound.volume = 0.25
@@ -477,115 +479,179 @@ export default function EditProduct({ product, open, onClose, refresh }) {
             {/* adImage & navbarImage */}
             <Box sx={{
               display: productInfo.name ? 'flex' : 'none',
-              gap: 6,
+              gap: 10,
               height: 'fit-content',
               '& > div': {
                 width: '200px'
               }
             }}>
               {/* Ad */}
-              <Box className='boom-small' >
+              <Box
+                className='boom-small'
+                onMouseEnter={() => setShowAdImageTrash(true)}
+                onMouseLeave={() => setShowAdImageTrash(false)}
+              >
                 <Typography sx={{ fontSize: '18px', fontWeight: '600', mb: '8px' }}>Ad Image:</Typography>
-                <label htmlFor='upload-adImage' >
+                <Box sx={{
+                  width: 'fit-content', height: '200px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2
+                }}>
+                  <label htmlFor='upload-adImage' style={{ width: '200px', height: '200px' }} >
+                    <Box
+                      sx={{
+                        height: '200px',
+                        width: '100%',
+                        borderRadius: '8px',
+                        border: 'dashed 2px #ccc',
+                        transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
+                        bgcolor: '#f7f7f7',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        '&:hover': {
+                          transform: 'scale(1.02)',
+                          transformOrigin: 'center',
+                          cursor: 'pointer'
+                        }
+                      }}
+                    >
+                      {adImage ? (
+                        <img
+                          className='slide-from-right'
+                          src={adImage}
+                          style={{ width: '100%', height: '100%', borderRadius: '8px', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <Box
+                          component='img'
+                          src={addImage}
+                          sx={{
+                            width: '28px',
+                            height: '28px',
+                            opacity: .6
+                          }}
+                        />
+                      )}
+
+                    </Box>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        handleUploadAdImage(e)
+                      }}
+                      style={{ display: 'none' }}
+                      id="upload-adImage"
+                    />
+                  </label>
                   <Box
+                    className='boom-small'
+                    onClick={() => setAdImage(null)}
                     sx={{
-                      height: '200px',
-                      width: '100%',
-                      borderRadius: '8px',
-                      border: 'dashed 2px #ccc',
-                      transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
-                      bgcolor: '#f7f7f7',
-                      display: 'flex',
-                      justifyContent: 'center',
+                      height: '36px',
+                      width: '36px',
+                      p: '2px 5px',
+                      display: showAdImageTrash && adImage ? 'flex' : 'none',
                       alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '30px',
+                      bgcolor: '#fff',
+                      transition: 'all 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
                       '&:hover': {
-                        transform: 'scale(1.02)',
-                        transformOrigin: 'center',
+                        bgcolor: '#ccc',
                         cursor: 'pointer'
                       }
-                    }}
-                  >
-                    {adImage ? (
-                      <img
-                        className='slide-from-right'
-                        src={`${theme.API_ROOT}${adImage}`}
-                        style={{ width: '100%', height: '100%', borderRadius: '8px', objectFit: 'cover' }}
-                      />
-                    ) : (
-                      <Box
-                        component='img'
-                        src={addImage}
-                        sx={{
-                          width: '28px',
-                          height: '28px',
-                          opacity: .6
-                        }}
-                      />
-                    )}
-
+                    }}>
+                    <img src={trashIcon} style={{ width: '18px', height: '18px' }} />
                   </Box>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      handleUploadAdImage(e)
-                    }}
-                    style={{ display: 'none' }}
-                    id="upload-adImage"
-                  />
-                </label>
+                </Box>
               </Box>
               {/* Navbar */}
-              <Box className='boom-small' >
+              <Box
+                className='boom-small'
+                onMouseEnter={() => setShowNavbarImageTrash(true)}
+                onMouseLeave={() => setShowNavbarImageTrash(false)}
+              >
                 <Typography sx={{ fontSize: '18px', fontWeight: '600', mb: '8px' }}>Navbar Image:</Typography>
-                <label htmlFor='upload-navbarImage' >
+                <Box
+                  sx={{
+                    width: 'fit-content', height: '200px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2
+                  }}
+                >
+                  <label htmlFor='upload-navbarImage' style={{ width: '200px', height: '200px' }} >
+                    <Box
+                      sx={{
+                        height: '200px',
+                        width: '100%',
+                        borderRadius: '8px',
+                        border: 'dashed 2px #ccc',
+                        transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
+                        bgcolor: '#f7f7f7',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        '&:hover': {
+                          transform: 'scale(1.02)',
+                          transformOrigin: 'center',
+                          cursor: 'pointer'
+                        }
+                      }}
+                    >
+                      {navbarImage ? (
+                        <img
+                          className='slide-from-right'
+                          src={navbarImage}
+                          style={{ width: '100%', height: '100%', borderRadius: '8px', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <Box
+                          component='img'
+                          src={addImage}
+                          sx={{
+                            width: '28px',
+                            height: '28px',
+                            opacity: .6
+                          }}
+                        />
+                      )}
+
+                    </Box>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        handleUploadNavbarImage(e)
+                      }}
+                      style={{ display: 'none' }}
+                      id="upload-navbarImage"
+                    />
+                  </label>
                   <Box
+                    className='boom-small'
+                    onClick={() => setNavbarImage(null)}
                     sx={{
-                      height: '200px',
-                      width: '100%',
-                      borderRadius: '8px',
-                      border: 'dashed 2px #ccc',
-                      transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
-                      bgcolor: '#f7f7f7',
-                      display: 'flex',
-                      justifyContent: 'center',
+                      height: '36px',
+                      width: '36px',
+                      p: '2px 5px',
+                      display: showNavbarImageTrash && navbarImage ? 'flex' : 'none',
                       alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '30px',
+                      bgcolor: '#fff',
+                      transition: 'all 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
                       '&:hover': {
-                        transform: 'scale(1.02)',
-                        transformOrigin: 'center',
+                        bgcolor: '#ccc',
                         cursor: 'pointer'
                       }
-                    }}
-                  >
-                    {navbarImage ? (
-                      <img
-                        className='slide-from-right'
-                        src={`${theme.API_ROOT}${navbarImage}`}
-                        style={{ width: '100%', height: '100%', borderRadius: '8px', objectFit: 'cover' }}
-                      />
-                    ) : (
-                      <Box
-                        component='img'
-                        src={addImage}
-                        sx={{
-                          width: '28px',
-                          height: '28px',
-                          opacity: .6
-                        }}
-                      />
-                    )}
-
+                    }}>
+                    <img src={trashIcon} style={{ width: '18px', height: '18px' }} />
                   </Box>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      handleUploadNavbarImage(e)
-                    }}
-                    style={{ display: 'none' }}
-                    id="upload-navbarImage"
-                  />
-                </label>
+                </Box>
               </Box>
             </Box>
 
@@ -918,8 +984,8 @@ export default function EditProduct({ product, open, onClose, refresh }) {
                                     }
                                   }}
                                 >
-                                  <img src={`${theme.API_ROOT}${image}`}
-                                    style={{ width: '100%', height: '100%', borderRadius: '8px', objectFit: 'cover' }}
+                                  <img src={image}
+                                    style={{ width: '100%', height: '100%', borderRadius: '8px', objectFit: 'cover', userSelect: 'none' }}
                                   />
                                   <input
                                     type="file"
@@ -927,7 +993,7 @@ export default function EditProduct({ product, open, onClose, refresh }) {
                                     onChange={async (e) => {
                                       const file = e.target.files[0]
                                       if (!file) return
-                                      const image = await uploadImagesAPI(file, productInfo.name, product.color)
+                                      const image = await uploadImageAPI(file, productInfo.name, product.color)
                                       setProductColors(prev => prev.map((color, i) =>
                                         idx === i ? {
                                           ...color, imageDetail: color.imageDetail.map((img, j) => j === id ? image.filePath : img
@@ -960,7 +1026,7 @@ export default function EditProduct({ product, open, onClose, refresh }) {
                                     cursor: 'pointer'
                                   }
                                 }}>
-                                <img src={trashIcon} style={{ width: '18px', height: '18px' }} />
+                                <img src={trashIcon} style={{ width: '18px', height: '18px', userSelect: 'none' }} />
                               </Box>
                             )}
                           </Box>
@@ -993,7 +1059,8 @@ export default function EditProduct({ product, open, onClose, refresh }) {
                                   sx={{
                                     width: '28px',
                                     height: '28px',
-                                    opacity: .6
+                                    opacity: .6,
+                                    userSelect:'none'
                                   }}
                                 />
                               </Box>

@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography'
 import ProductCardDetail from '~/pages/ProductPage/ProductList/ProductCardDetail/ProductCardDetail'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import '~/App.css'
-import theme from '~/theme'
 
 function Search({ open, toggleDrawer, productList }) {
 
@@ -353,7 +352,7 @@ function Search({ open, toggleDrawer, productList }) {
                         // flex: 1
                       }}>
                         <img
-                          src={`${theme.API_ROOT}${product.colors[0].imageDetail[0]}`}
+                          src={product.colors[0].imageDetail[0]}
                           style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
                         />
                       </Box>
