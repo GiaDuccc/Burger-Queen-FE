@@ -346,6 +346,7 @@ function Order() {
                               <Typography
                                 sx={{
                                   fontSize: '16px',
+                                  userSelect: 'none',
                                   borderBottom: '1px solid black',
                                   color: (statusSelected && idx === statusSelected.idx) ? statusColors[statusSelected.status] : statusColors[order.status]
                                 }} >

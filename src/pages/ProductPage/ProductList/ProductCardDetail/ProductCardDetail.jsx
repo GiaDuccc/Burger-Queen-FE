@@ -62,24 +62,22 @@ export default function ProductCardDetail({ product, open, onClose }) {
     setAddProductStatus('loading')
     if (!user) navigate('/sign-in')
     const productData = {
-      productId: product.id,
+      productId: product._id,
       color: activeProduct.color,
       size: activeSize.split(':')[0].trim(),
       name: product.name,
       price: product.price.toString(),
       image: activeProduct.imageDetail[0]
     }
-    // console.log(productData)
-    // CHỜ 4s rồi thêm vào giỏ
-    await new Promise(resolve => setTimeout(resolve, 800))
 
     try {
-      await addProductToOrder(user.orders[user.orders.length - 1].orderId, productData)
-      tickSound.volume = 0.25
-      tickSound.play()
-      setTimeout(() => {
-        setAddProductStatus('success')
-      }, 250)
+      await addProductToOrder(user.orders[user.orders.length - 1].orderId, productData).then(() => {
+        tickSound.volume = 0.25
+        tickSound.play()
+        setTimeout(() => {
+          setAddProductStatus('success')
+        }, 250)
+      })
 
       // CHỜ 3s rồi quay lại idle
       setTimeout(() => {

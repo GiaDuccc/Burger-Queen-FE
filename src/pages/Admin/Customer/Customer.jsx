@@ -383,7 +383,7 @@ function Customer() {
                             )}
                             <Typography
                               onClick={() => handleChangeRole(customer.role, idx)}
-                              sx={{ fontSize: '20px', fontWeight: '600', color: customer.role === 'manager' && '#fff' }}>
+                              sx={{ fontSize: '20px', fontWeight: '600', color: customer.role === 'manager' && '#fff', userSelect: 'none' }}>
                               {(roleSelected && idx === roleSelected.idx)
                                 ?
                                 roleSelected.role.slice(0, 1).toUpperCase() + roleSelected.role.slice(1)

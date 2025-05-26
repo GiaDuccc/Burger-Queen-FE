@@ -73,7 +73,7 @@ function Slider({ id, name, type, brand }) {
               display: 'flex',
               fontWeight: 'bold',
               transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
-              backgroundImage: `${item.adImage}`,
+              backgroundImage: `url("${item.adImage}")`,
               backgroundSize: 'cover',
               boxShadow: '1px 1px 10px rgb(220, 220, 220)',
               mb: products.length > 3 ? '0' : '52px',

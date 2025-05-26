@@ -188,7 +188,7 @@ function ShoppingCart({ open, toggleDrawer }) {
       }
     }
     fetchData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (!user) return (
@@ -376,7 +376,7 @@ function ShoppingCart({ open, toggleDrawer }) {
                   display: 'flex',
                   height: 'fit-content',
                   gap: 2,
-                  bgcolor: '#f6f6f6',
+                  bgcolor: '#f1f1f1',
                   p: '20px',
                   borderRadius: '16px'
                 }}
@@ -409,7 +409,10 @@ function ShoppingCart({ open, toggleDrawer }) {
                   <Typography sx={{ fontSize: '16px', color: '#696969' }}>{product.type.slice(0, 1).toUpperCase() + product.type.slice(1)}</Typography>
                   <Typography sx={{ fontSize: '16px', color: '#696969' }}>
                     {'Color: '}
-                    <span style={{ borderBottom: '1px solid black', paddingBottom: '0.5px', color: 'black' }} >
+                    <span style={{
+                      borderBottom: '1px solid black', paddingBottom: '0.5px',
+                      color: product.colors.find(color => color.color === orderData.items[idx].color).colorHex
+                    }} >
                       {orderData.items[idx]?.color.slice(0, 1).toUpperCase() + orderData.items[idx]?.color.slice(1)}
                     </span>
                   </Typography>

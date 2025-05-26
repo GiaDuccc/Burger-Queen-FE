@@ -36,7 +36,7 @@ function Dashboard() {
         newOrders.push(data)
       }
     }
-    if (newOrders) setIsLoadingOrder(false)
+    setIsLoadingOrder(false)
     setOrders(newOrders.reverse())
   }
 

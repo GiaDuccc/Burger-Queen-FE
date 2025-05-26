@@ -11,14 +11,19 @@ import { selectValue } from './selectValue'
 import { fetchCreateCustomerAPI } from '~/apis'
 import { useNavigate } from 'react-router-dom'
 import warningIcon from '~/assets/danger.png'
+import dingSound from '~/assets/ding-sound.mp3'
+import checkIcon from '~/assets/check.png'
+import errorIcon from '~/assets/error.png'
+
 
 function SignUp() {
 
-  const [isSubmit, setIsSubmit] = useState(false)
+  const [isSubmit, setIsSubmit] = useState('idle')
 
   const navigate = useNavigate()
 
   const [formError, setFormError] = useState(true)
+  const tickSound = new Audio(dingSound)
 
   const [values, setValues] = useState({
     lastName: {
@@ -227,7 +232,7 @@ function SignUp() {
   }
 
   const handleSubmit = async () => {
-    setIsSubmit(true)
+    setIsSubmit('loading')
 
     if (!formError) {
       const payload = {
@@ -242,11 +247,17 @@ function SignUp() {
 
       await fetchCreateCustomerAPI(payload)
         .then(() => {
-          navigate('/sign-in')
+          tickSound.volume = 0.25
+          tickSound.play()
+          setTimeout(() => {
+            setIsSubmit('success')
+            setTimeout(() => {
+              navigate('/sign-in')
+            }, 700)
+          }, 200)
         })
         .catch(errors => {
-          // console.log('that bai')
-          // console.log('errors', errors)
+          setIsSubmit('failed')
           Object.entries(errors).forEach(([key, field]) => {
             setValues(prev => ({
               ...prev,
@@ -258,9 +269,11 @@ function SignUp() {
             }))
           })
         })
-        .finally(() => setIsSubmit(false))
+      // .finally(() => setIsSubmit(false))
     }
-    setIsSubmit(false)
+    setTimeout(() => {
+      setIsSubmit('idle')
+    }, 1500)
   }
 
   useEffect(() => {
@@ -969,22 +982,21 @@ function SignUp() {
             sx={{
               bgcolor: 'rgba(0,0,0,.85)',
               width: '100%',
-              p: '12px',
               borderRadius: '12px',
               transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
               opacity: !formError ? '1' : '0.6',
+              height: '50px',
+              display: 'flex', justifyContent: 'center', alignItems: 'center',
               '&:hover': {
                 transform: !formError ? 'scale(1.02)' : 'none',
                 transformOrigin: 'center',
                 cursor: !formError ? 'pointer' : 'not-allowed'
               }
             }} >
-            {isSubmit ? (
-              <Box className='spinner-white'></Box>
-            ) : (
-              <Typography sx={{ fontSize: '16px', fontWeight: '600', color: 'white' }}>Continue</Typography>
-
-            )}
+            {isSubmit === 'idle' && (<Typography className='fade-in-up' sx={{ fontSize: '16px', fontWeight: '600', color: 'white' }}>Sign up</Typography>)}
+            {isSubmit === 'loading' && (<Box className='spinner-white'></Box>)}
+            {isSubmit === 'success' && (<img className='boom-small' src={checkIcon} style={{ width: '30px' }} />)}
+            {isSubmit === 'failed' && (<img className='fade-in' src={errorIcon} style={{ width: '30px' }} />)}
           </Box>
         </Box>
       </Box>
