@@ -37,7 +37,7 @@ function Chatbot() {
   }
 
   useEffect(() => {
-    const text = 'This is just a test version. Syntax must include brand, name, color, size'
+    const text = 'Đây chỉ là bản thử nghiệm. Dùng để kiểm tra sản phẩm đang có ở store. Cú pháp cần bao gồm hãng, tên, màu sắc, kích thước'
     if (isExpand && !conversation.length) {
       setTimeout(() => {
         setConversation([{ text: text, time: new Date(), sender: 'chatbot' }])
