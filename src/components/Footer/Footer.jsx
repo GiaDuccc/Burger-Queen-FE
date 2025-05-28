@@ -22,7 +22,7 @@ function Footer() {
         }}>
           <Box>
             <Box>
-              <Typography variant='h2' sx={{ fontWeight: 'bold', fontSize: '48px' }}>Dynamic Hype Club</Typography>
+              <Typography variant='h2' sx={{ fontWeight: 'bold', fontSize: '48px' }}>Nice Store</Typography>
             </Box>
             <Box>
               <Typography sx={{ fontSize: '13px', marginTop: '1rem', fontWeight: 'bold' }}>Luxury shoes help your foot comfortable</Typography>
