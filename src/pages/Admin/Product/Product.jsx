@@ -19,6 +19,8 @@ import AddProduct from './AddProduct/AddProduct'
 import theme from '~/theme'
 
 function Product() {
+
+  const user = JSON.parse(localStorage.getItem('user'))
   // set param trên URL
   const [searchParams, setSearchParams] = useSearchParams()
   const currentPage = parseInt(searchParams.get('page')) || 1
@@ -366,19 +368,19 @@ function Product() {
           </Box>
         </Box>
       )}
-      {showWarning && (
+      {showWarning && user.role === 'manager' && (
         <ModalWarning open={showWarning} onClose={() => setShowWarning(false)} cancel={() => setShowWarning(false)} handleDelete={() => {
           handleDelete()
           setShowWarning(false)
         }} />
       )}
-      {productToEdit && (
+      {productToEdit && user.role === 'manager' && (
         <EditProduct open={Boolean(productToEdit)} onClose={() => setProductToEdit(null)} product={productToEdit} refresh={() => {
           setIsLoadingProducts(true)
           fetchProducts()
         }} />
       )}
-      {isAddProduct && (
+      {isAddProduct && user.role === 'manager' && (
         <AddProduct open={Boolean(isAddProduct)} onClose={() => setIsAddProduct(false)} refresh={() => {
           setIsLoadingProducts(true)
           fetchProducts()

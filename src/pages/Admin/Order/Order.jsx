@@ -21,6 +21,8 @@ import '~/App.css'
 
 function Order() {
 
+  const user = JSON.parse(localStorage.getItem('user'))
+
   const [searchParams, setSearchParams] = useSearchParams()
   const [orderList, setOrderList] = useState([])
 
@@ -523,10 +525,12 @@ function Order() {
           </Box>
         )}
       </Box>
-      <ModalWarning open={showWarning} onClose={() => setShowWarning(false)} cancel={() => setShowWarning(false)} handleDelete={() => {
-        handleDelete()
-        setShowWarning(false)
-      }} />
+      {showWarning && user.role === 'manager' && (
+        <ModalWarning open={showWarning} onClose={() => setShowWarning(false)} cancel={() => setShowWarning(false)} handleDelete={() => {
+          handleDelete()
+          setShowWarning(false)
+        }} />
+      )}
       {orderDetail && (
         <OrderDetail open={Boolean(orderDetail)} onClose={() => setOrderDetail(null)} orderId={orderDetail} />
       )}

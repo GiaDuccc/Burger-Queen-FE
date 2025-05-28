@@ -65,6 +65,9 @@ export default function AddProduct({ open, onClose, refresh }) {
   }
 
   const handleAddProduct = async () => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    if (user.role !== 'manager') return
+
     setIsLoadingAdd('loading')
     const product = {
       ...productInfo,
