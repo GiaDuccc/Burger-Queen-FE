@@ -1,96 +1,85 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import tiktokIcon from '~/assets/tiktokIcon.jpeg'
+import facebookIcon from '~/assets/facebookIcon.png'
+import igIcon from '~/assets/ig.webp'
+import xIcon from '~/assets/xIcon.png'
+
+const socialMedia = [
+  { name: 'tiktok', icon: tiktokIcon, link: '#' },
+  { name: 'facebook', icon: facebookIcon, link: 'https://www.facebook.com/gia.duc.nguyenw?locale=vi_VN' },
+  { name: 'instagram', icon: igIcon, link: 'https://www.instagram.com/gia.duc.nguyenw/' },
+  { name: 'x', icon: xIcon, link: '#' }
+]
 
 function Footer() {
   return (
-    <Box>
-      <hr style={{
-        border: 'none',
-        borderTop: '1px solid #ccc',
-        width: '90%'
-      }} />
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: '44px' }}>
       <Box sx={{
         paddingTop: '2rem',
         height: 'auto',
-        width: '100%',
-        backgroundColor: 'white'
+        width: '90%',
+        backgroundColor: 'white',
+        borderTop: '1px solid #ccc'
       }}>
         <Box sx={{
           display: 'flex',
-          justifyContent: 'center',
-          gap: 20
+          justifyContent: 'space-between'
         }}>
           <Box>
             <Box>
-              <Typography variant='h2' sx={{ fontWeight: 'bold', fontSize: '48px' }}>Nice Store</Typography>
-            </Box>
-            <Box>
-              <Typography sx={{ fontSize: '13px', marginTop: '1rem', fontWeight: 'bold' }}>Luxury shoes help your foot comfortable</Typography>
+              <Typography variant='h2' sx={{ fontWeight: 'bold', fontSize: '48px' }}>NICE STORE</Typography>
             </Box>
           </Box>
 
           <Box>
             <Box>
-              <Typography sx={{ marginBottom: '1rem', fontWeight: 'bold' }}>Navigation</Typography>
+              <Typography sx={{ marginBottom: '8px', fontWeight: 'bold', fontSize: '16px' }}>Navigation</Typography>
             </Box>
-            <Box sx={{ maginBottom: '0.5rem', display: 'block' }}>
-              <Typography>Home</Typography>
-              <Typography>About Us</Typography>
-              <Typography>Services</Typography>
-              <Typography>Features</Typography>
-            </Box>
-          </Box>
-
-          <Box>
-            <Box>
-              <Typography sx={{ marginBottom: '1rem', fontWeight: 'bold' }}>Information</Typography>
-            </Box>
-            <Box sx={{ maginBottom: '0.5rem', display: 'block' }}>
-              <Typography>1900585801</Typography>
-              <Typography>DynamicHypeClub@gmail.com</Typography>
+            <Box sx={{
+              maginBottom: '0.5rem', display: 'flex', flexDirection: 'column',
+              '& a': {
+                color: '#000',
+                textDecoration: 'none',
+                fontSize: '14px',
+                mb: '4px'
+              }
+            }}>
+              <a href='/'>Home</a>
+              <a href='#'>About</a>
+              <a href='#'>Services</a>
+              <a href='#'>Features</a>
             </Box>
           </Box>
 
           <Box>
             <Box>
-              <Typography sx={{ marginBottom: '1rem', fontWeight: 'bold' }}>Opening Hours</Typography>
+              <Typography sx={{ marginBottom: '8px', fontWeight: 'bold', fontSize: '16px' }}>Information</Typography>
+            </Box>
+            <Box>
+              <Typography>(+84) 123456789</Typography>
+              <Typography>NiceStore@gmail.com</Typography>
+            </Box>
+          </Box>
+
+          <Box>
+            <Box>
+              <Typography sx={{ marginBottom: '8px', fontWeight: 'bold', fontSize: '16px' }}>Opening Hours</Typography>
             </Box>
             <Box sx={{ maginBottom: '0.5rem', display: 'block' }}>
-              <Typography>MonDay - Thusday: 9.00-21.00</Typography>
-              <Typography>Friday: 10.00-21.00</Typography>
-              <Typography>Sasturday: .00-21.00</Typography>
-              <Typography>Sunda</Typography>
+              <Typography>MonDay - Friday: 7:00-21:00</Typography>
+              <Typography>Weekend: 9:00 - 21:00</Typography>
             </Box>
           </Box>
         </Box>
-        <Typography sx={{ textAlign: 'center', my: '3rem', fontWeight: 600 }}>Copyright @2025 | Web make by Cuong, Duc, Hien</Typography>
-        {/* <Box sx={{
-          marginLeft: '550px',
-          width: '32px',
-          height: '32px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItem: 'center',
-          gap: 2,
-          marginTop: '50px',
-          borderRadius: '50px'
-        }}>
-          <img
-            src='https://cdn.jim-nielsen.com/ios/512/facebook-2019-05-21.png?rf=1024' alt='facebookIcon'
-          />
-          <img
-            src='https://cdn-icons-png.freepik.com/256/15707/15707869.png?semt=ais_hybrid'
-            alt='instagramIcon'
-          />
-          <img
-            src='https://logos.logofury.com/logo_src/3a96be3599c2f454056db9858b954c60.jpeg'
-            alt='tiktokIcon'
-          />
-          <img
-            src='https://cdn.pixabay.com/photo/2023/04/25/00/48/youtube-7949229_1280.png'
-            alt='youtubeIcon'
-          />
-        </Box> */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', m: '44px 0 16px', gap: 3 }}>
+          { socialMedia.map((items, idx) => (
+            <a href={items.link} key={idx}>
+              <img src={items.icon} style={{ width: '40px', borderRadius: '8px' }} />
+            </a>
+          ))}
+        </Box>
+        <Typography sx={{ textAlign: 'center', m: '8px 0 16px', fontWeight: 600, fontSize: '16px' }}>Copyright @2025 | Web make by Gia Duc</Typography>
       </Box>
     </Box>
   )

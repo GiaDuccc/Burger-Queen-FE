@@ -5,7 +5,7 @@ import playIcon from '~/assets/play-white.png'
 import pauseIcon from '~/assets/pause-white.png'
 
 
-export default function HeroSection({ video, title, descTitle }) {
+export default function HeroSection({ video, title, descTitle, type }) {
 
   const [scale, setScale] = useState(1)
   const [borderRadius, setBorderRadius] = useState('0px')
@@ -23,6 +23,7 @@ export default function HeroSection({ video, title, descTitle }) {
   }
 
   useEffect(() => {
+    if (type === 'img') return
 
     const videoObserver = new IntersectionObserver(([entry]) => {
       setIsVisible(entry.isIntersecting)
@@ -74,6 +75,8 @@ export default function HeroSection({ video, title, descTitle }) {
   // }, [isVisible])
 
   useEffect(() => {
+    if (type === 'img') return
+
     const savedY = sessionStorage.getItem('scrollYStorage')
     if (savedY) {
       const scroll = parseFloat(savedY)
@@ -130,7 +133,8 @@ export default function HeroSection({ video, title, descTitle }) {
         {/* Video */}
         <Box
           ref={videoRef}
-          component="video"
+          // ref={type === 'video' ? videoRef : null}
+          component={type}
           autoPlay
           loop
           muted
@@ -154,7 +158,7 @@ export default function HeroSection({ video, title, descTitle }) {
             width: '40px',
             height: '40px',
             borderRadius: '40px',
-            display: 'flex',
+            display: type === 'img' ? 'none' : 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',

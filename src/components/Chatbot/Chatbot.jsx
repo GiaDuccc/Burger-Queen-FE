@@ -97,7 +97,8 @@ function Chatbot() {
           top: 0, left: 4,
           margin: 0,
           fontSize: '32px', fontWeight: '600',
-          display: isExpand ? 'block' : 'none'
+          display: isExpand ? 'block' : 'none',
+          opacity: showConversation ? 1 : 0
         }}>Chatbot</p>
 
         {/* Toggle Button */}
@@ -195,7 +196,8 @@ function Chatbot() {
                 p: '8px',
                 bgcolor: '#fafafa',
                 borderTop: '1px solid #e0e0e0',
-                borderRadius: '0 0 16px 16px'
+                borderRadius: '0 0 16px 16px',
+                opacity: showConversation ? 1 : 0
               }}
             >
               <TextField

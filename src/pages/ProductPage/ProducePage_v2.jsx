@@ -164,7 +164,7 @@ function ProductPage() {
     >
       <Header />
       <Slogan />
-      <HeroSection video={productHeroSection} title={'My product'} descTitle={'More Than Just Shoes.'} />
+      <HeroSection video={productHeroSection} title={'My product'} descTitle={'More Than Just Shoes.'} type='video' />
       {/* Product list & Filter */}
       <Box
         ref={contentRef}

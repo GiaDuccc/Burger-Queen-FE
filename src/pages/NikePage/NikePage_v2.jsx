@@ -38,7 +38,7 @@ function NikePage() {
       {/* </Box> */}
       <Slogan />
       <HeroSection
-        video={nikeVideoHeroSection} title={'NIKE'} descTitle={'Just do it.'}
+        video={nikeVideoHeroSection} title={'NIKE'} descTitle={'Just do it.'} type='video'
       />
 
       {types?.map((type, idx) => (

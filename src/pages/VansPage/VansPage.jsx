@@ -1,7 +1,7 @@
 import Header from '~/components/Header/Header'
 import Slogan from '~/components/Slogan/Slogan'
 import HeroSection from '~/components/HeroSection/HeroSection'
-import nikeVideoHeroSection from '~/assets/videoHeroSection/Nike. Just Do It. Nike VN.mp4'
+import video from '~/assets/videoHeroSection/vans.png'
 import Container from '@mui/material/Container'
 import NavBar from '~/components/NavBar/NavBar'
 import Slider from '~/components/Slider/Slider_v2'
@@ -38,7 +38,7 @@ function VansPage() {
       {/* </Box> */}
       <Slogan />
       <HeroSection
-        video={nikeVideoHeroSection} title={'VANS'} descTitle={'Off The Wall.'}
+        video={video} title={'VANS'} descTitle={'Off The Wall.'} type='img'
       />
 
       {types?.map((type, idx) => (

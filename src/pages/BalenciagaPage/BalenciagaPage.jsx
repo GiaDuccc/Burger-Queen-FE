@@ -1,7 +1,7 @@
 import Header from '~/components/Header/Header'
 import Slogan from '~/components/Slogan/Slogan'
 import HeroSection from '~/components/HeroSection/HeroSection'
-import nikeVideoHeroSection from '~/assets/videoHeroSection/Nike. Just Do It. Nike VN.mp4'
+import img from '~/assets/videoHeroSection/balenciaga.jpg'
 import Container from '@mui/material/Container'
 import NavBar from '~/components/NavBar/NavBar'
 import Slider from '~/components/Slider/Slider_v2'
@@ -30,15 +30,11 @@ function BalenciagaPage() {
       scrollBehavior: 'smooth'
     }}>
       <Header />
-      {/* <Box className='slide-from-right' sx={{
-        transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
-        minHeight: types ? '150px' : 0
-      }}> */}
       <NavBar brand={brand} scrollToSection={(id) => scrollToSection(id)} setTypes={(types) => setTypes(types)} />
       {/* </Box> */}
       <Slogan />
       <HeroSection
-        video={nikeVideoHeroSection} title={'BALENCIAGA'} descTitle={'It\'s Different.'}
+        video={img} title={'BALENCIAGA'} descTitle={'It\'s Different.'} type='img'
       />
 
       {types?.map((type, idx) => (

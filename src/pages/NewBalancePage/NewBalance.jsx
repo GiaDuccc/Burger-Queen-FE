@@ -5,7 +5,7 @@ import Container from '@mui/material/Container'
 import { useState } from 'react'
 import NavBar from '~/components/NavBar/NavBar'
 import Footer from '~/components/Footer/Footer'
-import video1 from '~/assets/videoHeroSection/newbalance.mp4'
+import video1 from '~/assets/videoHeroSection/newbalance.jpg'
 import Slider from '~/components/Slider/Slider_v2'
 
 function NewBalance() {
@@ -32,7 +32,7 @@ function NewBalance() {
       <Header />
       <NavBar brand={brand} scrollToSection={(id) => scrollToSection(id)} setTypes={(types) => setTypes(types)} />
       <Slogan />
-      <HeroSection video={video1} title={'New Balance'} descTitle={'We Got Now.'} />
+      <HeroSection video={video1} title={'New Balance'} descTitle={'We Got Now.'} type='img'/>
       {types?.map((type, idx) => (
         <Slider brand={brand} key={idx} id={type} name={type.slice(0, 1).toUpperCase() + type.slice(1)} type={type} />
       ))}
