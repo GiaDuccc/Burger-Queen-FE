@@ -494,7 +494,7 @@ function ShoppingCart({ open, toggleDrawer }) {
               </Box>
             )) : (
               <Box className='fade-in-up' sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                <Typography sx={{ fontSize: '32px', fontWeight: '600' }}>Add Product đi fen</Typography>
+                <Typography sx={{ fontSize: '32px', fontWeight: '600' }}>Your cart is empty</Typography>
               </Box>
             )}
           </Box>
