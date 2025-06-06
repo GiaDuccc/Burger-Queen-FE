@@ -12,6 +12,7 @@ import { fetchCustomerDetailAPI, fetchGetOrder, updateCustomer } from '~/apis'
 import OrderDetail from '~/components/OrderDetail/OrderDetail'
 import '~/App.css'
 import warningIcon from '~/assets/danger.png'
+import Footer from '~/components/Footer/Footer'
 
 function Dashboard() {
 
@@ -37,7 +38,7 @@ function Dashboard() {
       }
     }
     setIsLoadingOrder(false)
-    setOrders(newOrders.reverse())
+    setOrders(newOrders.reverse().slice(0, 10))
   }
 
   function getCountryName(code) {
@@ -89,8 +90,7 @@ function Dashboard() {
       width: '100%',
       height: 'fit-content',
       display: 'flex',
-      flexDirection: 'column',
-      pb: '64px'
+      flexDirection: 'column'
     }}>
       <Header />
       {/* Content */}
@@ -101,7 +101,7 @@ function Dashboard() {
           flexDirection: 'column',
           width: '55%',
           mx: 'auto',
-          mt: '20px'
+          my: '20px'
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -596,6 +596,7 @@ function Dashboard() {
           )}
         </Box>
       </Box>
+      <Footer />
 
       {orderDetail && (
         <OrderDetail open={Boolean(orderDetail)} onClose={() => setOrderDetail(null)} orderId={orderDetail} />

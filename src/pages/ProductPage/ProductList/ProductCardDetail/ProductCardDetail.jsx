@@ -40,6 +40,7 @@ export default function ProductCardDetail({ product, open, onClose }) {
       }
     })
   )
+
   const [activeProduct, setActiveProduct] = useState(productList[0])
 
   const [activeSize, setActiveSize] = useState(null)
@@ -319,9 +320,10 @@ export default function ProductCardDetail({ product, open, onClose }) {
                 <Typography sx={{ fontSize: '16px', color: '#7e7e85', pb: '4px' }} >{activeProduct.type.slice(0, 1).toUpperCase() + product.type.slice(1)}</Typography>
                 <Typography sx={{ fontSize: '18px', fontWeight: '600', color: '#000000c2', pt: '8px' }}>{Number(activeProduct.price).toLocaleString('vi-VN')}đ</Typography>
               </Box>
+              <Typography sx={{ fontSize: '16px', color: '#7e7e85', py: '8px' }} >{activeProduct.color.slice(0, 1).toUpperCase() + activeProduct.color.slice(1)}</Typography>
               {/* Image List */}
               <Box
-                sx={{ display: 'flex', gap: 1, pt: '32px', flexWrap: 'wrap' }}
+                sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}
               >
                 {productList.map(product => (
                   <Box

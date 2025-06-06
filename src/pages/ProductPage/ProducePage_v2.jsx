@@ -16,6 +16,7 @@ import leftIcon from '~/assets/left.png'
 import rightIcon from '~/assets/right.png'
 import '~/App.css'
 import theme from '~/theme'
+import Footer from '~/components/Footer/Footer'
 
 function ProductPage() {
   // state lưu danh sách sản phẩm
@@ -170,7 +171,7 @@ function ProductPage() {
         ref={contentRef}
         id="productContent"
         sx={{
-          p: '0 84px 128px',
+          p: '0 84px 64px',
           height: 'fit-content',
           width: '100%'
         }}
@@ -289,6 +290,7 @@ function ProductPage() {
           </Box>)
         }
       </Box>
+      <Footer />
     </Container>
   )
 }

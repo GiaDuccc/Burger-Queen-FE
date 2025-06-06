@@ -89,7 +89,7 @@ function Chatbot() {
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
-          transition: 'all 0.35s cubic-bezier(0.42, 0, 0.58, 1)'
+          transition: 'all 0.4s cubic-bezier(0.42, 0, 0.58, 1)'
         }}
       >
         <p style={{

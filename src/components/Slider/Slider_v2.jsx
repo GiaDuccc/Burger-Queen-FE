@@ -6,20 +6,24 @@ import rightIcon from '~/assets/right.png'
 import leftIcon from '~/assets/left.png'
 import ProductCardDetail from '~/pages/ProductPage/ProductList/ProductCardDetail/ProductCardDetail'
 import { useSearchParams } from 'react-router-dom'
+import '~/App.css'
 
 function Slider({ id, name, type, brand }) {
   const [products, setProducts] = useState([])
   const sliderRef = useRef(null)
   const [productSelected, setProductSelected] = useState(null)
   const [, setSearchParams] = useSearchParams()
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true)
       const data = await fetchLimitedProductsAPI(brand, type)
+      if (data) setIsLoading(false)
       setProducts(data)
       // console.log(data)
     })()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]) // Gọi lại nếu type thay đổi
 
   const sliderNextItem = () => {
@@ -56,7 +60,12 @@ function Slider({ id, name, type, brand }) {
           }
         }}
       >
-        {products.map((item, index) => (
+        {isLoading && (
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '50vh', flex: 8 }}>
+            <Box className='spinner-large'></Box>
+          </Box>
+        )}
+        {!isLoading && products.map((item, index) => (
           <Box
             key={index}
             onClick={() => {
@@ -96,7 +105,7 @@ function Slider({ id, name, type, brand }) {
           </Box>
         ))}
       </Box>
-      {products.length > 3 && (
+      {products?.length > 3 && (
         <Box sx={{ display: 'flex', gap: 2, p: '16px 32px', justifyContent: 'right' }}>
           <Box
             sx={{

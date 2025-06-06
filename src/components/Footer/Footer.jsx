@@ -48,7 +48,7 @@ function Footer() {
               <a href='/'>Home</a>
               <a href='#'>About</a>
               <a href='#'>Services</a>
-              <a href='#'>Features</a>
+              {/* <a href='#'>Features</a> */}
             </Box>
           </Box>
 
