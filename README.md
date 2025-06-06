@@ -1,9 +1,11 @@
 # <span style="color: #f39c12">NICE STORE - Online Shoe Store</span>
 
+### Link website demo: [NICE STORE](https://shop-web-three.vercel.app/)
+
 # Table of Contents
 
 * [**Introduction**](#introduction)
-* [**Technologies**](#Technologies)
+* [**Technologies**](#technologies)
 * [**Features**](#features)
   * [**1. User Features**](#1-user-features)
     * [1.1. User Registration and Login](#11-user-registration-and-login)
@@ -19,9 +21,9 @@
       * [2.3. Product Management](#23-product-management)
       * [2.4. Order Management](#24-order-management)
 
-* [Installation](#installation)
-* [Usage](#usage)
-* [Contributing](#contributing)
+* [**Installation**](#installation)
+* [**Project structure frontend**](#project-structure-frontend)
+* [**Project structure backend**](#project-structure-backend)
 
 # Introduction
 
@@ -175,7 +177,7 @@ git clone https://github.com/GiaDuccc/shop-web.git
 git clone https://github.com/GiaDuccc/shop-api.git
 ```
 
-### # 2. Navigate to the project folder
+### # 2. Navigate to the front-end project folder
 ```cd shop-web```
 
 ### # 3. Install dependencies
@@ -198,9 +200,267 @@ if (process.env.BUILD_MODE === 'production') {
 export const API_ROOT = apiRoot
 ```
 
-### # 5. Open file constants.js
+### # 5. Run Front-end Project
+``` yarn dev ```
 
+### # 6. Navigate to the back-end project folder
+```
+cd ..
+cd shop-api
+```
 
+### # 7. Install dependencies
+```yarn install```
+
+### # 8. Create .env
+```
+type nul > .env
+code .env
+
+#.env - “Fill in the empty fields”
+
+APP_HOST= 
+APP_PORT= 
+MONGODB_URI= 
+DATABASE_NAME=
+AUTHOR=
+GEMINI_KEY=
+CLOUDINARY_NAME=
+CLOUDINARY_API_KEY =
+CLOUDINARY_API_SECRET =
+CLOUDINARY_URL =
+```
+
+### # 9. Run Back-end Project
+``` yarn dev ```
+
+### # 10. Go to project
+``` -> http://localhost:5173/ ```
+
+# Project-structure-frontend
+
+```
+shop-web/
+├── public/
+│   └── (Your public assets like index.html, favicon.ico, etc.)
+│
+├── src/
+│   ├── apis/
+│   │   └── index.js
+│   │
+│   ├── assets/
+│   │   └── (Your image files, font files, etc.)
+│   │
+│   ├── components/
+│   │   ├── Button/
+│   │   │   └── Button.jsx
+│   │   │
+│   │   ├── Cart/
+│   │   │   └── Cart.jsx
+│   │   │
+│   │   ├── Chatbot/
+│   │   │   └── Chatbot.jsx
+│   │   │
+│   │   ├── Footer/
+│   │   │   └── Footer.jsx
+│   │   │
+│   │   ├── Header/
+│   │   │   └── Header.jsx
+│   │   │
+│   │   ├── HeroSection/
+│   │   │   └── HeroSection.jsx
+│   │   │
+│   │   ├── ModalWarning/
+│   │   │   └── ModalWarning.jsx
+│   │   │
+│   │   ├── NavBar/
+│   │   │   └── NavBar.jsx
+│   │   │
+│   │   ├── OrderDetail/
+│   │   │   └── OrderDetail.jsx
+│   │   │
+│   │   ├── Search/
+│   │   │   └── Search.jsx
+│   │   │
+│   │   ├── Slider/
+│   │   │   ├── Slider.jsx
+│   │   │   └── Slider_v2.jsx
+│   │   │
+│   │   ├── SliderUtilities/
+│   │   │   └── SliderUtilities.jsx
+│   │   │
+│   │   └── Slogan/
+│   │       └── Slogan.jsx
+│   │
+│   ├── pages/
+│   │   ├── AdidasPage/
+│   │   │   └── AdidasPage.jsx
+│   │   │
+│   │   ├── Admin/
+│   │   │   ├── Customer/
+│   │   │   │   ├── CustomerDetail/
+│   │   │   │   │   └── CustomerDetail.jsx
+│   │   │   │   │
+│   │   │   │   └── Customer.jsx
+│   │   │   │
+│   │   │   ├── Dashboard/
+│   │   │   │   ├── ChartYear.jsx
+│   │   │   │   └── Dashboard.jsx
+│   │   │   │
+│   │   │   ├── Order/
+│   │   │   │   └── Order.jsx
+│   │   │   │
+│   │   │   ├── Product/
+│   │   │   │   ├── AddProduct/
+│   │   │   │   │   └── AddProduct.jsx
+│   │   │   │   │
+│   │   │   │   ├── EditProduct/
+│   │   │   │   │   └── EditProduct.jsx
+│   │   │   │   │
+│   │   │   │   ├── ModalWarning/
+│   │   │   │   │   └── ModalWarning.jsx
+│   │   │   │   │
+│   │   │   │   └── Product.jsx
+│   │   │   │
+│   │   │   └── Admin.jsx
+│   │   │
+│   │   ├── BalenciagaPage/
+│   │   │   └── BalenciagaPage.jsx
+│   │   │
+│   │   ├── Checkout/
+│   │   │   └── Checkout.jsx
+│   │   │
+│   │   ├── HomePage/
+│   │   │   ├── HomePage_v2.jsx
+│   │   │   └── HomePage.jsx
+│   │   │
+│   │   ├── NewBalancePage/
+│   │   │   └── NewBalance.jsx
+│   │   │
+│   │   ├── NikePage/
+│   │   │   ├── NikePage_v2.jsx
+│   │   │   └── NikePage.jsx
+│   │   │
+│   │   ├── ProductPage/
+│   │   │   ├── Filter/
+│   │   │   │   ├── FilterOptions/
+│   │   │   │   │   └── FilterOptions.jsx
+│   │   │   │   │
+│   │   │   │   ├── FilterItems/
+│   │   │   │   │   └── FilterItems.jsx
+│   │   │   │   │
+│   │   │   │   └── Filter.jsx
+│   │   │   │
+│   │   │   ├── ProductList/
+│   │   │   │   ├── ProductCard/
+│   │   │   │   │   └── ProductCard.jsx
+│   │   │   │   │
+│   │   │   │   ├── ProductCardDetail/
+│   │   │   │   │   └── ProductCardDetail.jsx
+│   │   │   │   │
+│   │   │   │   └── ProductList.jsx
+│   │   │   │
+│   │   │   ├── ProductPage_v2.jsx
+│   │   │   └── ProductPage_v1.jsx
+│   │   │
+│   │   ├── Profile/
+│   │   │   └── Profile.jsx
+│   │   │
+│   │   ├── PumaPage/
+│   │   │   └── PumaPage.jsx
+│   │   │
+│   │   ├── SignIn/
+│   │   │   └── SignIn.jsx
+│   │   │
+│   │   ├── SignUp/
+│   │   │   └── SignUp.jsx
+│   │   │
+│   │   ├── selectValue.jsx
+│   │   │
+│   │   └── VansPage/
+│   │       └── VansPage.jsx
+│   │
+│   ├── App.css
+│   ├── App.jsx
+│   ├── main.jsx
+│   ├── theme.js
+│   └── utils/
+│       └── constants.js
+│
+├── .eslintrc.cjs
+├── .gitignore
+├── index.html
+├── jsconfig.json
+├── package.json
+├── README.md
+├── vercel.json
+├── vite.config.js
+└── yarn.lock
+```
+# Project-structure-backend
+```
+shop-api/
+├── node_modules/
+│
+├── src/
+│   ├── config/
+│   │   ├── cors.js
+│   │   ├── environment.js
+│   │   └── mongodb.js
+│   │
+│   ├── controllers/
+│   │   ├── chatbotController.js
+│   │   ├── customerController.js
+│   │   ├── orderController.js
+│   │   └── productController.js
+│   │
+│   ├── middlewares/
+│   │   └── errorHandlingMiddleware.js
+│   │
+│   ├── models/
+│   │   ├── chatbotModel.js
+│   │   ├── customerModel.js
+│   │   ├── orderModel.js
+│   │   └── productModel.js
+│   │
+│   ├── routes/
+│   │   └─ v1/
+│   │      ├── chatbotRouter.js
+│   │      ├── customerRouter.js
+│   │      ├── index.js
+│   │      ├── orderRouter.js
+│   │      └── productRouter.js
+│   │
+│   ├── services/
+│   │   ├── chatbotService.js
+│   │   ├── customerService.js
+│   │   ├── orderService.js
+│   │   └── productService.js
+│   │
+│   ├── utils/
+│   │   ├── algorithms.js
+│   │   ├── ApiError.js
+│   │   ├── cloudinary.js
+│   │   ├── constants.js
+│   │   ├── formatters.js
+│   │   ├── sorts.js
+│   │   └── validators.js
+│   │
+│   └── validations/
+│       ├── customerValidation.js
+│       ├── orderValidation.js
+│       └── productValidation.js
+│
+├── .babelrc
+├── .env
+├── .eslintrc.cjs
+├── .gitignore
+├── jsconfig.json
+├── package.json
+├── README.md
+├── server.js
+└── yarn.lock
+```
 
 
 
