@@ -36,8 +36,9 @@ function Dashboard() {
         const data = await fetchGetOrder(order.orderId)
         newOrders.push(data)
       }
+      else setIsLoadingOrder(false)
     }
-    setIsLoadingOrder(false)
+
     setOrders(newOrders.reverse().slice(0, 10))
   }
 
@@ -81,7 +82,7 @@ function Dashboard() {
     if (!user) navigate('/sign-in')
     setIsLoadingOrder(true)
     fetchOrders()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

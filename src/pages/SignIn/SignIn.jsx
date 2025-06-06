@@ -81,12 +81,13 @@ function Login() {
       sx={{
         bgcolor: 'white',
         width: '100%',
-        // height: 'fit-content'
-        height: '1000px'
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column'
       }}
     >
       <Header />
-      <Box>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* Title */}
         <Typography sx={{
           fontSize: '40px',
@@ -105,9 +106,10 @@ function Login() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            mt: '52px'
+            mt: '52px',
+            flex: 1
           }}>
-          <Box sx={{ width: '60%', textAlign: 'center' }}>
+          <Box sx={{ width: '60%', textAlign: 'center', flex: 1 }}>
             <Typography sx={{
               color: 'rgb(78, 78, 78)',
               fontSize: '28px',

@@ -68,7 +68,7 @@ function Chatbot() {
       sx={{
         position: 'fixed',
         bottom: 0, right: 0,
-        m: '0 12px 12px 0',
+        m: '0 24px 12px 0',
         width: isExpand ? '400px' : '65px',
         height: isExpand ? '500px' : '65px',
         bgcolor: '#fff',

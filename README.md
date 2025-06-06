@@ -1,479 +1,147 @@
-// const [lastNameValue, setLastNameValue] = useState('')
-  // const [lastNameValueError, setLastNameValueError] = useState({
-  //   nameError: '',
-  //   error: false
-  // })
+# <span style="color: #f39c12">NICE STORE - Online Shoe Store</span>
 
-  // const [firstNameValue, setFirstNameValue] = useState('')
-  // const [firstNameValueError, setFirstNameValueError] = useState(false)
+# Table of Contents
 
-  // const [countryValue, setCountryValue] = useState('')
-  // const [countryValueError, setCountryValueError] = useState(false)
+* [**Introduction**](#introduction)
+* [**Features**](#features)
+  * [**1. User Features**](#1-user-features)
+    * [1.1. User Registration and Login](#11-user-registration-and-login)
+    * [1.2. Product Listing and Filtering](#12-product-listing-and-filtering)
+    * [1.3. Product Search](#13-product-search)
+    * [1.4. Add Products to Shopping Cart](#14-add-products-to-shopping-cart)
+    * [1.5. Order Checkout and Payment](#15-order-checkout-and-payment)
+    * [1.6. Profile and Order History](#16-profile-and-order-history)
+    * [1.7. Integrated Customer Support Chatbot](#17-integrated-customer-support-chatbot)
+  * [**2. Admin Features**](#2-admin-features)
+      * [2.1. Dashboard](#21-dashboard)
+      * [2.2. Customer Management](#22-customer-management)
+      * [2.3. Product Management](#23-product-management)
+      * [2.4. Order Management](#24-order-management)
 
-  // const [dob, setDob] = useState({
-  //   day: '',
-  //   month: '',
-  //   year: ''
-  // })
+* [Installation](#installation)
+* [Usage](#usage)
+* [Contributing](#contributing)
 
-  // const [emailValue, setEmailValue] = useState('')
-  // const [emailValueError, setEmailValueError] = useState(false)
+# Introduction
 
-  // const [phoneValue, setPhoneValue] = useState('')
-  // const [phoneValueError, setPhoneValueError] = useState(false)
+### This online shoe store website is designed to provide a modern and convenient shopping experience for users. Customers can easily register an account, log in, browse the product catalog, add items to the shopping cart, and proceed to checkout.
+### The admin panel is tailored for efficient management of products, orders, and users. The platform features a clean, user-friendly interface and integrates a chatbot to enhance customer support.
+![home-page](./public/introduce/home.png)
 
-  // const [passwordValue, setPasswordValue] = useState('')
-  // const [passwordValueError, setPasswordValueError] = useState(false)
+# Features
 
-  // const [confirmPasswordValue, setConfirmPasswordValue] = useState('')
-  // const [confirmPasswordValueError, setConfirmPasswordValueError] = useState(false)
+## 1. User Features
 
-  <Box sx={{ position: 'relative' }}>
-            <TextField
-              className={countryValueError ? 'shake' : ''}
-              onChange={(e) => {
-                setCountryValue(e.target.value)
-                setCountryValueError(false)
-              }}
-              onBlur={() => countryValue === '' && setCountryValueError(true)}
-              id="select_country"
-              select
-              label={'Country/Region' + (countryValueError ? '-is required' : '')}
-              slotProps={{
-                select: {
-                  native: true
-                }
-              }}
-              InputProps={{
-                disableUnderline: true
-              }}
-              variant="filled"
-              sx={{
-                width: '100%',
-                backgroundColor: 'white',
-                '& .MuiFilledInput-root': {
-                  backgroundColor: 'white',
-                  borderRadius: '16px',
-                  paddingRight: '10px',
-                  color: 'rgba(0, 0, 0, 0.85)',
-                  border: countryValueError ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
-                  '&.Mui-focused': {
-                    border: countryValueError ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
-                    borderRadius: '16px',
-                    backgroundColor: 'white'
-                  }
-                },
-                '& .MuiInputLabel-root': {
-                  color: countryValueError ? 'rgb(184, 53, 53)' : '#666'
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: countryValueError ? ' rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
-                },
-                '& select': {
-                  appearance: 'none',
-                  WebkitAppearance: 'none',
-                  MozAppearance: 'none',
-                  background: 'none',
-                  paddingRight: '30px'
-                },
-                '& .MuiSelect-icon': {
-                  display: 'none'
-                }
-              }}
-            >
-              {countries.map((country, idx) => (
-                <option
-                  key={idx}
-                  value={country.code}
-                  style={{
-                    backgroundColor: 'white',
-                    color: 'black'
-                  }}
-                >
-                  {country.name}
-                </option>
-              ))}
-            </TextField>
-            <KeyboardArrowDownIcon sx={{
-              color: 'black',
-              position: 'absolute',
-              top: '50%',
-              right: '15px',
-              pointerEvents: 'none',
-              transform: 'translateY(-50%)'
-            }} />
-          </Box>
-          <hr style={{
-            border: 'none',
-            borderTop: '1px solid #ccc',
-            margin: '12px 0'
-          }} />
-          {/* Date */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, textAlign: 'left' }}>
-            <Box>
-              <Typography sx={{ fontSize: '16px', fontWeight: '600', color: 'rgb(78, 78, 78)' }}>Date of Birth</Typography>
-            </Box>
-            <Box sx={{
-              display: 'flex',
-              gap: 1,
-              width: '100%'
-            }}>
-              {/* Day */}
-              <Box sx={{ position: 'relative', width: '100%' }}>
-                <TextField
-                  onChange={(e) => setDob({ ...dob, day: e.target.value })}
-                  id="select_day"
-                  select
-                  label="Day"
-                  value={dob.day}
-                  variant="filled"
-                  slotProps={{
-                    select: {
-                      native: true
-                    }
-                  }}
-                  InputProps={{
-                    disableUnderline: true
-                  }}
-                  sx={{
-                    width: '100%',
-                    backgroundColor: 'white',
-                    '& .MuiFilledInput-root': {
-                      backgroundColor: 'white',
-                      borderRadius: '16px',
-                      paddingRight: '10px',
-                      color: 'rgba(0, 0, 0, 0.85)',
-                      border: '2px solid rgb(170, 170, 170)',
-                      '&.Mui-focused': {
-                        border: '2px solid rgba(0, 0, 0, 0.65)',
-                        borderRadius: '16px',
-                        backgroundColor: 'white'
-                      }
-                    },
-                    '& .MuiInputLabel-root': {
-                      color: '#666'
-                    },
-                    '& .MuiInputLabel-root.Mui-focused': {
-                      color: 'rgba(0,0,0,.85)'
-                    }
-                  }}
-                >
-                  {days.map((day, idx) => (
-                    <option key={idx} value={day} style={{
-                      backgroundColor: 'white',
-                      color: 'black'
-                    }}>
-                      {day}
-                    </option>
-                  ))}
-                </TextField>
-                <KeyboardArrowDownIcon sx={{
-                  color: 'black',
-                  position: 'absolute',
-                  top: '50%',
-                  right: '15px',
-                  pointerEvents: 'none',
-                  transform: 'translateY(-50%)'
-                }} />
-              </Box>
-              {/* Month */}
-              <Box sx={{ position: 'relative', width: '100%' }}>
-                <TextField
-                  onChange={(e) => setDob({ ...dob, month: e.target.value })}
-                  id="filled-select-currency-native"
-                  value={dob.month}
-                  select
-                  label="Month"
-                  variant="filled"
-                  slotProps={{
-                    select: {
-                      native: true
-                    }
-                  }}
-                  InputProps={{
-                    disableUnderline: true
-                  }}
-                  sx={{
-                    width: '100%',
-                    backgroundColor: 'white',
-                    '& .MuiFilledInput-root': {
-                      backgroundColor: 'white',
-                      borderRadius: '16px',
-                      paddingRight: '10px',
-                      color: 'rgba(0, 0, 0, 0.85)',
-                      border: '2px solid rgb(170, 170, 170)',
-                      '&.Mui-focused': {
-                        border: '2px solid rgba(0, 0, 0, 0.65)',
-                        borderRadius: '16px',
-                        backgroundColor: 'white'
-                      }
-                    },
-                    '& .MuiInputLabel-root': {
-                      color: '#666'
-                    },
-                    '& .MuiInputLabel-root.Mui-focused': {
-                      color: 'rgba(0,0,0,.85)'
-                    }
-                  }}
-                >
-                  {months.map((month, idx) => (
-                    <option key={idx} value={month} style={{
-                      backgroundColor: 'white',
-                      color: 'black'
-                    }}>
-                      {month}
-                    </option>
-                  ))}
-                </TextField>
-                <KeyboardArrowDownIcon sx={{
-                  color: 'black',
-                  position: 'absolute',
-                  top: '50%',
-                  right: '15px',
-                  pointerEvents: 'none',
-                  transform: 'translateY(-50%)'
-                }} />
-              </Box>
-              {/* Year */}
-              <Box sx={{ position: 'relative', width: '100%' }}>
-                <TextField
-                  onChange={(e) => setDob({ ...dob, year: e.target.value })}
-                  id="filled-select-currency-native"
-                  select
-                  label="Year"
-                  variant="filled"
-                  slotProps={{
-                    select: {
-                      native: true
-                    }
-                  }}
-                  InputProps={{
-                    disableUnderline: true
-                  }}
-                  sx={{
-                    width: '100%',
-                    backgroundColor: 'white',
-                    '& .MuiFilledInput-root': {
-                      backgroundColor: 'white',
-                      borderRadius: '16px',
-                      paddingRight: '10px',
-                      color: 'rgba(0, 0, 0, 0.85)',
-                      border: '2px solid rgb(170, 170, 170)',
-                      '&.Mui-focused': {
-                        border: '2px solid rgba(0, 0, 0, 0.65)',
-                        borderRadius: '16px',
-                        backgroundColor: 'white'
-                      }
-                    },
-                    '& .MuiInputLabel-root': {
-                      color: '#666'
-                    },
-                    '& .MuiInputLabel-root.Mui-focused': {
-                      color: 'rgba(0,0,0,.85)'
-                    }
-                  }}
-                >
-                  {years.map((year, idx) => (
-                    <option key={idx} value={year} style={{
-                      backgroundColor: 'white',
-                      color: 'black'
-                    }}>
-                      {year}
-                    </option>
-                  ))}
-                </TextField>
-                <KeyboardArrowDownIcon sx={{
-                  color: 'black',
-                  position: 'absolute',
-                  top: '50%',
-                  right: '15px',
-                  pointerEvents: 'none',
-                  transform: 'translateY(-50%)'
-                }} />
-              </Box>
-            </Box>
-          </Box>
-          {/* Email */}
-          <Box>
-            <TextField
-              className={emailValueError ? 'shake' : ''}
-              onChange={(e) => {
-                setEmailValue(e.target.value)
-                setEmailValueError(false)
-              }}
-              onBlur={() => emailValue === '' && setEmailValueError(true)}
-              id="filledEmail"
-              label={'Email' + (emailValueError ? '-is required' : '')}
-              variant="filled"
-              InputProps={{
-                disableUnderline: true
-              }}
-              sx={{
-                flex: 1,
-                backgroundColor: 'white',
-                width: '100%',
-                '& .MuiFilledInput-root': {
-                  backgroundColor: 'white',
-                  borderRadius: '16px',
-                  paddingRight: '10px',
-                  color: 'rgba(0, 0, 0, 0.85)',
-                  border: emailValueError ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
-                  '&.Mui-focused': {
-                    border: emailValueError ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
-                    borderRadius: '16px',
-                    backgroundColor: 'white'
-                  }
-                },
-                '& .MuiInputLabel-root': {
-                  color: emailValueError ? 'rgb(184, 53, 53)' : '#666'
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: emailValueError ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
-                }
-              }}
-            />
-          </Box>
-          {/* Phone */}
-          <Box>
-            <TextField
-              className={phoneValueError ? 'shake' : ''}
-              onChange={(e) => {
-                setPhoneValue(e.target.value)
-                setPhoneValueError(false)
-              }}
-              onBlur={() => phoneValue === '' && setPhoneValueError(true)}
-              id="filledPhone"
-              label={'Phone' + (phoneValueError ? '-is required' : '')}
-              variant="filled"
-              InputProps={{
-                disableUnderline: true
-              }}
-              sx={{
-                flex: 1,
-                backgroundColor: 'white',
-                width: '100%',
-                '& .MuiFilledInput-root': {
-                  backgroundColor: 'white',
-                  borderRadius: '16px',
-                  paddingRight: '10px',
-                  color: 'rgba(0, 0, 0, 0.85)',
-                  border: phoneValueError ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
-                  '&.Mui-focused': {
-                    border: phoneValueError ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
-                    borderRadius: '16px',
-                    backgroundColor: 'white'
-                  }
-                },
-                '& .MuiInputLabel-root': {
-                  color: phoneValueError ? 'rgb(184, 53, 53)' : '#666'
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: phoneValueError ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
-                }
-              }}
-            />
-          </Box>
-          <hr style={{
-            border: 'none',
-            borderTop: '1px solid #ccc',
-            margin: '12px 0'
-          }} />
-          {/* Password */}
-          <Box>
-            <TextField
-              className={passwordValueError ? 'shake' : ''}
-              onChange={(e) => {
-                setPasswordValue(e.target.value)
-                setPasswordValueError(false)
-              }}
-              onBlur={() => passwordValue === '' && setPasswordValueError(true)}
-              id="filledPassword"
-              label={'Password' + (passwordValueError ? '-is required' : '')}
-              variant="filled"
-              InputProps={{
-                disableUnderline: true
-              }}
-              sx={{
-                flex: 1,
-                backgroundColor: 'white',
-                width: '100%',
-                '& .MuiFilledInput-root': {
-                  backgroundColor: 'white',
-                  borderRadius: '16px',
-                  paddingRight: '10px',
-                  color: 'rgba(0, 0, 0, 0.85)',
-                  border: passwordValueError ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
-                  '&.Mui-focused': {
-                    border: passwordValueError ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
-                    borderRadius: '16px',
-                    backgroundColor: 'white'
-                  }
-                },
-                '& .MuiInputLabel-root': {
-                  color: passwordValueError ? 'rgb(184, 53, 53)' : '#666'
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: passwordValueError ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
-                }
-              }}
-            />
-          </Box>
-          {/* Confirm Password */}
-          <Box>
-            <TextField
-              className={confirmPasswordValueError ? 'shake' : ''}
-              onChange={(e) => {
-                setConfirmPasswordValue(e.target.value)
-                setConfirmPasswordValueError(false)
-              }}
-              onBlur={() => confirmPasswordValue === '' && setConfirmPasswordValueError(true)}
-              id="filledConfirmPassword"
-              label={'Confirm Password' + (confirmPasswordValueError ? '-is required' : '')}
-              variant="filled"
-              InputProps={{
-                disableUnderline: true
-              }}
-              type="password"
-              sx={{
-                flex: 1,
-                backgroundColor: 'white',
-                width: '100%',
-                '& .MuiFilledInput-root': {
-                  backgroundColor: 'white',
-                  borderRadius: '16px',
-                  paddingRight: '10px',
-                  color: 'rgba(0, 0, 0, 0.85)',
-                  border: confirmPasswordValueError ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
-                  '&.Mui-focused': {
-                    border: confirmPasswordValueError ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
-                    borderRadius: '16px',
-                    backgroundColor: 'white'
-                  }
-                },
-                '& .MuiInputLabel-root': {
-                  color: confirmPasswordValueError ? 'rgb(184, 53, 53)' : '#666'
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: confirmPasswordValueError ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
-                }
-              }}
-            />
-          </Box>
+  ### 1.1. User Registration and Login
+  #### The registration form includes multiple input fields such as full name, email, and password, with real-time validation. Users receive immediate feedback if the input is invalid (e.g., incorrect email format).
+  ![Registration](./public/introduce/sign-up.png)
 
-          {/* Submit */}
-          <Box
-            onClick={() => handleSubmit()}
-            sx={{
-              bgcolor: 'rgba(0,0,0,.85)',
-              width: '100%',
-              p: '12px',
-              borderRadius: '12px',
-              transition: 'all 0.3s cubic-bezier(0.42, 0, 0.58, 1)',
-              '&:hover': {
-                transform: 'scale(1.02)',
-                transformOrigin: 'center',
-                cursor: 'pointer'
-              }
-            }} >
-            <Typography sx={{ fontSize: '16px', fontWeight: '600' }}>Continue</Typography>
-          </Box>
+  #### The login page features an intuitive design with built-in validation. Users can only enter their password after providing a valid email address or phone number. The system checks whether the email exists and whether the entered password matches the associated account.
+  ![Login](./public/introduce/sign-in.png)
+
+  ### 1.2. Product Listing and Filtering
+  #### The product listing page features a minimalist design with integrated filtering and sorting options. The user-friendly interface allows customers to preview product images in different colours by simply hovering over the colour options, without needing to open the product detail page.
+  ![list-product](./public/introduce/list-product.png)
+  #### Multiple filters for refined product search.
+  ![Filter](./public/introduce/filter.png)
+  #### After finding a desired product, users can click on it to view detailed information.
+  ![product-detail](./public/introduce/product-detail.png)
+
+  ### 1.3. Product Search
+  #### Instead of manually browsing the product page, users can use the search bar to quickly find items:
+
+  - Previous search queries are saved for convenience
+
+  - A preview of matching products is displayed instantly, allowing users to view details and add items to the cart directly
+  
+  ![search-recent](./public/introduce/search-recent.png)
+  ![search-detail](./public/introduce/search-detail.png)
+
+  - Alternatively, users can navigate to the product listing page showing all search results based on the entered keywor
+
+  ![search-result](./public/introduce/search-result.png)
+
+  ### 1.4. Add Products to Shopping Cart
+  - Products can be added to the cart directly from the product detail page
+  - Users can adjust product quantity (increase or decrease)
+  - Remove items from the cart
+  - Product colour is displayed based on the selected option
+
+  ![cart](./public/introduce/product-cart.png)
+
+  ### 1.5. Order Checkout and Payment
+  - Displays a detailed summary of the order
+  - Allows users to edit recipient information: name, phone number, and delivery address
+  - Offers multiple simulated payment method options
+
+  ![checkout-payment](./public/introduce/check-out.png)
+  ![checkout-payment](./public/introduce/check-out-2.png)
+
+  ### 1.6. Profile and Order History
+  - Displays user profile information
+
+  ![profile](./public/introduce/profile.png)
+  - Shows a list of previously placed orders with details
+
+  ![order-history](./public/introduce/order-detail.png)
+
+  ### 1.7. Integrated Customer Support Chatbot
+  - A built-in chatbot is available to assist users
+  - Although currently in the testing phase, it works reliably
+  - Allows users to search for products and check availability in real time
+
+  <img src="./public/introduce/chatbot.png" width="300px" alt="chatbot">
+
+## 2. Admin Features
+  ### 2.1. Dashboard
+  - Visual dashboard with interactive charts and analytics
+  - Tracks total active products, registered users, and completed orders
+  - Displays revenue and top-selling products for business insights
+
+  ![dashboard](./public/introduce/dashboard.png)
+
+  ### 2.2. Customer Management
+  - User-friendly interface for managing customer accounts
+
+  ![customer-management](./public/introduce/admin-customer.png)
+  - View detailed customer information and their order history
+
+  ![customer-detail](./public/introduce/customer-detail.png)
+  - Only managers are allowed to delete customer accounts
+  - Administrators can assign specific roles to members (Admin, Manager, Client)
+  - Includes sorting and searching features for easier customer management
+
+
+  ### 2.3. Product Management
+  - User-friendly interface for managing products
+
+  ![product](./public/introduce/admin-product.png)
+  - Add new products and edit existing ones
+
+  ![add-product](./public/introduce/add-product.png)
+  ![edit-product](./public/introduce/edit-product-info.png)
+  ![edit-product](./public/introduce/edit-product-colors.png)
+  - Delete products with confirmation alert to prevent accidental removal
+  - Includes sorting and searching features for easier product management
+
+  ### 2.4. Order Management
+  - User-friendly interface for managing customer orders
+  - View full order details including items, total price, and customer info
+  - Order deletion is restricted to managers for safety
+  - Supports sorting and searching to quickly find specific orders
+  - Allow update order status
+
+  ![order-management](./public/introduce/admin-order.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
