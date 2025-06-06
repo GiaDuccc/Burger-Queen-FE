@@ -1,10 +1,10 @@
 {
-  "name": "shoes-shop",
+  "name": "nice-store-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "author": "GiaDuc",
-  "description": "https://youtube.com/@trungquandev",
+  "description": "hi every one",
   "engines": {
     "node": ">=18.x"
   },
