@@ -19,7 +19,6 @@ const ColorChangeSlogan = () => {
 
   return (
     <Box
-      className='fade-in-up'
       sx={{
         width: '100%',
         bgcolor: colorSlogan.bgcolor,

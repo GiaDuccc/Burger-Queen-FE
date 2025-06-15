@@ -54,7 +54,8 @@ export default function ProductCardDetail({ product, open, onClose }) {
 
   const handleClose = () => {
     const currentParams = Object.fromEntries(searchParams.entries())
-    delete currentParams.slug
+    delete currentParams.product
+    delete currentParams.active
     setSearchParams(currentParams, { replace: false })
     onClose()
   }
@@ -95,11 +96,9 @@ export default function ProductCardDetail({ product, open, onClose }) {
     setActiveSize(null)
   }, [activeProduct])
 
-  // useEffect(() => {
-  //   // console.log('activeProduct', activeProduct)
-  //   // console.log('currentImage', currentImage)
-  //   console.log('product', product)
-  // }, [])
+  useEffect(() => {
+    setSearchParams({ ...Object.fromEntries([...searchParams]), active: 'productDetail', product: product.slug }, { replace: true })
+  }, [])
 
   return (
     <Modal

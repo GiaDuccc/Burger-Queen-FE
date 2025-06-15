@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField'
 import Cart from '../Cart/Cart'
 import Search from '../Search/Search'
 import { fetchAllProductAPI } from '~/apis'
+import { useSearchParams } from 'react-router-dom'
 
 const headerHeight = (theme) => theme.shop.headerHeight
 
@@ -19,6 +20,8 @@ function Header() {
   const [openCart, setOpenCart] = useState(false)
   const [openSearch, setOpenSearch] = useState(false)
   const [productList, setProductList] = useState([])
+  const [searchParam, setSearchParam] = useSearchParams()
+  const isActive = searchParam.get('active') || false
 
   useEffect(() => {
     (async () => {
@@ -27,15 +30,32 @@ function Header() {
     })()
   }, [])
 
+
+  useEffect(() => {
+    if (openCart) {
+      setSearchParam({ ...Object.fromEntries([...searchParam]), active: 'cart' })
+    } else if (openSearch) {
+      setSearchParam({ ...Object.fromEntries([...searchParam]), active: 'search' })
+    } else if (!openCart && !openSearch && isActive) {
+      const params = Object.fromEntries([...searchParam])
+      delete params.active
+      setSearchParam(params)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCart, openSearch])
+
   return (
     <Box sx={{
       width: '100%',
-      heigth: headerHeight,
+      height : headerHeight,
       bgcolor: 'white',
       display: 'flex',
       justifyContent: 'center',
       gap: 2,
-      overflow: 'hidden'
+      overflow: 'hidden',
+      position: isActive ? 'none' : 'sticky',
+      top: 0,
+      zIndex: isActive ? 0 : 10
     }}>
       <Link href="/" sx={{ height: headerHeight, padding: '0 16px' }} >
         <img src={logoIcon} alt="logo" style={{ height: '44px' }} />
@@ -61,7 +81,6 @@ function Header() {
         <Link href="/product" underline="none" >Product</Link>
         <Link href="/nike" underline="none" >Nike</Link>
         <Link href="/adidas" underline="none" >Adidas</Link>
-        {/* <Link href="/biti's" underline="none" >Biti&apos;s</Link> */}
         <Link href="/puma" underline="none" >Puma</Link>
         <Link href="/new-balance" underline="none" >NewBalance</Link>
         <Link href="/vans" underline="none" >Vans</Link>
@@ -77,7 +96,9 @@ function Header() {
         }
       }}>
         <TextField placeholder='Search' type="text"
-          onClick={() => setOpenSearch(!openSearch)}
+          onClick={() => {
+            setOpenSearch(!openSearch)
+          }}
           sx={{
             minWidth: 180,
             padding: '0 24px',
@@ -131,7 +152,9 @@ function Header() {
         />
         <Search open={openSearch} toggleDrawer={() => setOpenSearch(!openSearch)} productList={productList} />
         <Box sx={{ height: headerHeight, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-          onClick={() => setOpenCart(!openCart)}
+          onClick={() => {
+            setOpenCart(!openCart)
+          }}
         >
           <img src={shoppingBagIcon} alt="cart" style={{ height: '17px' }} />
         </Box>

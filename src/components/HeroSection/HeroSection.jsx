@@ -22,6 +22,8 @@ export default function HeroSection({ video, title, descTitle, type }) {
     setPlayVideo(!playVideo)
   }
 
+  const pathName = window.location.pathname
+
   useEffect(() => {
     if (type === 'img') return
 
@@ -35,65 +37,43 @@ export default function HeroSection({ video, title, descTitle, type }) {
 
     return () => {
       if (videoRef.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         videoObserver.unobserve(videoRef.current)
       }
     }
   }, [])
 
-  // useEffect(() => {
-
-  //   const handleScroll = () => {
-  //     if (!isVisible) {
-  //       scale > 0.98 && setScale(1)
-  //       borderRadius < 6 && setBorderRadius('0')
-  //       return
-  //     }
-
-  //     const scrollY = window.scrollY
-  //     console.log('scrollY', scrollY)
-
-  //     sessionStorage.setItem('scrollYStorage', scrollY)
-
-  //     let newScale = Math.max(0.88, 1 - scrollY / 4.7 / 1000)
-  //     let newBorderRadius = Math.min(52, scrollY / 14)
-  //     console.log('newScale', newScale)
-  //     console.log('newBorderRadius', newBorderRadius)
-  //     // if (scrollY < 30) {
-  //     //   newScale = 1
-  //     //   newBorderRadius = 0
-  //     // }
-  //     // newScale > 0.98 ? setScale(1) : setScale(newScale)
-  //     // newBorderRadius < 6 ? setBorderRadius('0px') : setBorderRadius(`${newBorderRadius}px`)
-  //     setScale(newScale)
-  //     setBorderRadius(`${newBorderRadius}px`)
-  //   }
-
-  //   window.addEventListener('scroll', handleScroll)
-
-  //   return () => window.removeEventListener('scroll', handleScroll)
-  // }, [isVisible])
-
   useEffect(() => {
     if (type === 'img') return
 
-    const savedY = sessionStorage.getItem('scrollYStorage')
-    if (savedY) {
-      const scroll = parseFloat(savedY)
-      let newScale = Math.max(0.88, 1 - scroll / 4.7 / 1000)
-      let newBorderRadius = Math.min(52, scroll / 14)
-      if (scroll < 30) {
-        newScale = 1
-        newBorderRadius = 0
+    const saved = sessionStorage.getItem('scrollY')
+    let scroll = 0
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed && parsed.pathName === pathName) {
+          scroll = parseFloat(parsed.scrollY) || 0
+        }
+      } catch {
+        scroll = parseFloat(saved) || 0
       }
-      setScale(newScale)
-      setBorderRadius(`${newBorderRadius}px`)
     }
+    let newScale = Math.max(0.88, 1 - scroll / 4.7 / 1000)
+    let newBorderRadius = Math.min(52, scroll / 14)
+    if (scroll < 30) {
+      newScale = 1
+      newBorderRadius = 0
+    }
+    setScale(newScale)
+    setBorderRadius(`${newBorderRadius}px`)
+
     const handleScroll = () => {
       if (!isVisible) return
 
       const scrollY = window.scrollY
-      sessionStorage.setItem('scrollYStorage', scrollY)
+      sessionStorage.setItem('scrollY', JSON.stringify({
+        pathName: pathName,
+        scrollY: scrollY
+      }))
 
       let newScale = Math.max(0.88, 1 - scrollY / 4.7 / 1000)
       let newBorderRadius = Math.min(52, scrollY / 14)
@@ -104,8 +84,10 @@ export default function HeroSection({ video, title, descTitle, type }) {
 
     window.addEventListener('scroll', handleScroll)
 
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isVisible])
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [isVisible, pathName])
 
 
   return (
@@ -131,24 +113,37 @@ export default function HeroSection({ video, title, descTitle, type }) {
         }}
       >
         {/* Video */}
-        <Box
-          ref={videoRef}
-          // ref={type === 'video' ? videoRef : null}
-          component={type}
-          autoPlay
-          loop
-          muted
-          playsInline
-          src={video}
-          sx={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            overflowY: 'hidden',
-            border: 'none'
-          }}
-          onClick={togglePlayVideo}
-        />
+        {type === 'video' ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted
+            playsInline
+            src={video}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              overflowY: 'hidden',
+              border: 'none'
+            }}
+            onClick={togglePlayVideo}
+          />
+        ) : (
+          <Box
+            component="img"
+            src={video}
+            alt={title}
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              overflowY: 'hidden',
+              border: 'none'
+            }}
+          />
+        )}
         <Box
           sx={{
             position: 'absolute',

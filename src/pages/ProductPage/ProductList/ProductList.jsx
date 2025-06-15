@@ -10,17 +10,17 @@ function ProductList({ products }) {
 
   const [searchParams, setSearchParams] = useSearchParams()
 
-  useEffect(() => {
-    const slug = searchParams.get('slug')
+  // useEffect(() => {
+  //   const slug = searchParams.get('slug')
 
-    if (!slug) {
-      setSelectedProduct(null)
-      return
-    }
+  //   if (!slug) {
+  //     setSelectedProduct(null)
+  //     return
+  //   }
 
-    const foundProduct = products.find(p => p.slug === slug)
-    setSelectedProduct(foundProduct || null)
-  }, [searchParams, products])
+  //   const foundProduct = products.find(p => p.slug === slug)
+  //   setSelectedProduct(foundProduct || null)
+  // }, [searchParams, products])
 
   return (
     <Box
@@ -41,9 +41,9 @@ function ProductList({ products }) {
           onClick={() => {
             setSelectedProduct(product)
 
-            const currentParams = Object.fromEntries(searchParams.entries())
-            currentParams.slug = product.slug
-            setSearchParams(currentParams, { replace: false })
+            // const currentParams = Object.fromEntries(searchParams.entries())
+            // currentParams.slug = product.slug
+            // setSearchParams(currentParams, { replace: false })
           }}
         />
       ))}

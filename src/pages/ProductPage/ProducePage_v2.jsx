@@ -9,14 +9,14 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { fetchAllProductAPI, fetchAllProductPageAPI } from '~/apis'
+import { fetchAllProductPageAPI } from '~/apis'
 import ProductList from './ProductList/ProductList'
 import Filter from './Filter/Filter'
 import leftIcon from '~/assets/left.png'
 import rightIcon from '~/assets/right.png'
 import '~/App.css'
-import theme from '~/theme'
 import Footer from '~/components/Footer/Footer'
+import FadeInSection from '~/components/FadeInSection/FadeInSection'
 
 function ProductPage() {
   // state lưu danh sách sản phẩm
@@ -208,7 +208,6 @@ function ProductPage() {
           >
 
             {/* Filter */}
-            {/* <Filter filterOptions={filterOptions} /> */}
             <Filter currentPage={currentPage} />
 
             {/* Products list */}

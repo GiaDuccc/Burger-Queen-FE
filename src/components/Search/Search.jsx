@@ -108,7 +108,6 @@ function Search({ open, toggleDrawer, productList }) {
             width: '100vw',
             bgcolor: 'white',
             overflow: 'hidden',
-            // borderRadius: '0 0 32px 32px',
             height: '60%',
             boxShadow: '4px 4px 15px rgb(80, 80, 80)'
           }

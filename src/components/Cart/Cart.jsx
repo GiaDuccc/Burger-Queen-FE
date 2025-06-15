@@ -311,7 +311,8 @@ function ShoppingCart({ open, toggleDrawer }) {
           borderRadius: '32px 0 0 32px',
           height: '95%',
           mt: '20px',
-          boxShadow: '4px 4px 15px rgb(80, 80, 80)'
+          boxShadow: '4px 4px 15px rgb(80, 80, 80)',
+          zIndex: 1000 // Đảm bảo Drawer nằm trên các thành phần khác
         }
       }}
     >

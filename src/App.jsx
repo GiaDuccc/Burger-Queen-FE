@@ -15,7 +15,7 @@ import { useEffect } from 'react'
 import VansPage from './pages/VansPage/VansPage'
 import BalenciagaPage from './pages/BalenciagaPage/BalenciagaPage'
 import Chatbot from './components/Chatbot/Chatbot'
-
+import About from './pages/About/About'
 
 function App() {
 
@@ -54,6 +54,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/checkout' element={<Checkout />} />
           <Route path='/admin' element={<Admin />} />
+          <Route path='/about' element={<About />} />
         </Routes>
       </>
     )

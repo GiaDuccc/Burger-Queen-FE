@@ -5,12 +5,15 @@ import { useEffect, useState } from 'react'
 import closeIcon from '~/assets/x-white.png'
 import '~/App.css'
 import { fetchGetOrder, fetchProductDetailsAPI } from '~/apis'
+import { useSearchParams } from 'react-router-dom'
 
 export default function OrderDetail({ orderId, open, onClose }) {
 
   const [order, setOrder] = useState({})
   const [products, setProducts] = useState({})
   const [isLoadingOrder, setIsLoadingOrder] = useState(false)
+  const [searchParam, setSearchParam] = useSearchParams()
+
 
   const statusColors = {
     pending: '#ffa706',
@@ -44,8 +47,9 @@ export default function OrderDetail({ orderId, open, onClose }) {
   }
 
   useEffect(() => {
+    setSearchParam({ ...Object.fromEntries([...searchParam]), active: 'order' })
     fetchOrder()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 
@@ -57,7 +61,12 @@ export default function OrderDetail({ orderId, open, onClose }) {
         overflowY: 'scroll',
         transition: 'opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)'
       }}
-      onClick={onClose}
+      onClick={() => {
+        const params = Object.fromEntries([...searchParam])
+        delete params.active
+        setSearchParam(params)
+        onClose()
+      }}
     >
       <Box
         sx={{
@@ -122,7 +131,12 @@ export default function OrderDetail({ orderId, open, onClose }) {
                       transition: 'color 0.3s cubic-bezier(0.42, 0, 0.58, 1)'
                     }
                   }}
-                  onClick={onClose}
+                  onClick={() => {
+                    const params = Object.fromEntries([...searchParam])
+                    delete params.active
+                    setSearchParam(params)
+                    onClose()
+                  }}
                 >
                   <img src={closeIcon} style={{ width: '20px', height: '20px' }} />
                 </Box>
