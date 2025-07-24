@@ -19,9 +19,7 @@ import leftIcon from '~/assets/left.png'
 import rightIcon from '~/assets/right.png'
 import '~/App.css'
 
-function Order() {
-
-  const user = JSON.parse(localStorage.getItem('user'))
+function Order({ userId, userRole }) {
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [orderList, setOrderList] = useState([])
@@ -525,7 +523,7 @@ function Order() {
           </Box>
         )}
       </Box>
-      {showWarning && user.role === 'manager' && (
+      {showWarning && userRole === 'manager' && (
         <ModalWarning open={showWarning} onClose={() => setShowWarning(false)} cancel={() => setShowWarning(false)} handleDelete={() => {
           handleDelete()
           setShowWarning(false)

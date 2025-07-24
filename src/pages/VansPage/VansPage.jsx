@@ -1,7 +1,7 @@
 import Header from '~/components/Header/Header'
 import Slogan from '~/components/Slogan/Slogan'
 import HeroSection from '~/components/HeroSection/HeroSection'
-import video from '~/assets/videoHeroSection/vans.png'
+import video from '~/assets/videoHeroSection/This is Off the Wall - VANS.mp4'
 import Container from '@mui/material/Container'
 import NavBar from '~/components/NavBar/NavBar'
 import Slider from '~/components/Slider/Slider_v2'
@@ -38,7 +38,7 @@ function VansPage() {
       {/* </Box> */}
       <Slogan />
       <HeroSection
-        video={video} title={'VANS'} descTitle={'Off The Wall.'} type='img'
+        video={video} title={'VANS'} descTitle={'Off The Wall.'} type='video'
       />
 
       {types?.map((type, idx) => (

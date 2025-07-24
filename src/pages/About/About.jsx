@@ -2,7 +2,7 @@ import Footer from '~/components/Footer/Footer'
 import Header from '~/components/Header/Header'
 import Slogan from '~/components/Slogan/Slogan'
 import React from 'react'
-import FadeInSection from '~/components/FadeInSection/FadeInSection'
+import FadeInSection from '~/components/FadeInSection/FadeInSection60'
 
 function About() {
   return (

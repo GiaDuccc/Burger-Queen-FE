@@ -25,7 +25,8 @@ function SlideDownSection({ children }) {
       ref={domRef}
       style={{
         transform: isVisible ? 'translateY(0)' : 'translateY(-40px)',
-        transition: 'transform 0.6s cubic-bezier(0.42, 0, 0.58, 1)'
+        opacity: isVisible ? 1 : 0,
+        transition: 'opacity 0.7s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1)'
       }}
     >
       {children}

@@ -19,8 +19,12 @@ import '~/App.css'
 import { addInformationToOrderAPI, fetchCustomerDetailAPI, fetchGetOrder, updatedOrderAPI, updateOrderInCustomer, updateQuantitySold } from '~/apis'
 import { useNavigate } from 'react-router-dom'
 import dingSound from '~/assets/ding-sound.mp3'
+import { jwtDecode } from 'jwt-decode'
 
 function Checkout() {
+
+  const accessToken = localStorage.getItem('accessToken')
+  const token = accessToken ? jwtDecode(accessToken) : null
 
   const [customer, setCustomer] = useState(null)
   const navigate = useNavigate()
@@ -53,8 +57,7 @@ function Checkout() {
   }
 
   const fetchCustomer = async () => {
-    const customerId = JSON.parse(localStorage.getItem('user'))
-    const customer = await fetchCustomerDetailAPI(customerId._id)
+    const customer = await fetchCustomerDetailAPI(token.userId)
     setCustomer(customer)
     setName(`${customer?.lastName} ${customer?.firstName}`)
     setPhone(`${customer?.phone}`)
@@ -90,8 +93,7 @@ function Checkout() {
       )
     )
     await updatedOrderAPI(customer.orders[customer.orders.length - 1].orderId, getTotal(), Object.entries(paymentSelect).find(([, value]) => value)?.[0])
-    await updateOrderInCustomer(customer._id, customer.orders[customer.orders.length - 1].orderId).then(data => {
-      localStorage.setItem('user', JSON.stringify(data))
+    await updateOrderInCustomer(customer._id, customer.orders[customer.orders.length - 1].orderId).then(() => {
       setTimeout(() => {
         tickSound.volume = 0.4
         tickSound.play()
