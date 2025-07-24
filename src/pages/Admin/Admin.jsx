@@ -12,10 +12,13 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import four from '~/assets/four.png'
 import zero from '~/assets/zero.png'
 import three from '~/assets/three.png'
+import { fetchLogoutAPI } from '~/apis'
+import { jwtDecode } from 'jwt-decode'
 
 function Admin() {
 
-  const user = JSON.parse(localStorage.getItem('user')) || null
+  const accessToken = localStorage.getItem('accessToken')
+  const token = accessToken ? jwtDecode(accessToken) : null
 
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -30,9 +33,19 @@ function Admin() {
     setSearchParams({ section: section }, { replace: true })
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('user')
-    navigate('/sign-in')
+  const handleLogout = async () => {
+    try {
+      // Gọi API logout để invalidate token ở server
+      await fetchLogoutAPI()
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      // Xóa tất cả user data và token
+      localStorage.removeItem('token')
+      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('user')
+      navigate('/sign-in')
+    }
   }
 
   useEffect(() => {
@@ -43,9 +56,9 @@ function Admin() {
   }, [])
 
   useEffect(() => {
-    if (!user) navigate('/sign-in')
-    else if (user.role !== 'admin' && user.role !== 'manager') setIsAdmin(false)
-  }, [user, navigate])
+    if (!token) navigate('/sign-in')
+    else if (token.role !== 'admin' && token.role !== 'manager') setIsAdmin(false)
+  }, [token, navigate])
 
   if (!isAdmin) return (
     <Box
@@ -237,9 +250,9 @@ function Admin() {
           flex: 9
         }}>
           {openPage === 'dashboard' && (<Dashboard />)}
-          {openPage === 'product' && (<Product />)}
-          {openPage === 'customer' && (<Customer />)}
-          {openPage === 'order' && (<Order />)}
+          {openPage === 'product' && (<Product userId={token.userId} userRole={token.role} />)}
+          {openPage === 'customer' && (<Customer userId={token.userId} userRole={token.role} />)}
+          {openPage === 'order' && (<Order userId={token.userId} userRole={token.role} />)}
         </Box>
       </Box>
     </Container>

@@ -10,12 +10,14 @@ import Cart from '../Cart/Cart'
 import Search from '../Search/Search'
 import { fetchAllProductAPI } from '~/apis'
 import { useSearchParams } from 'react-router-dom'
+import { jwtDecode } from 'jwt-decode'
 
 const headerHeight = (theme) => theme.shop.headerHeight
 
 function Header() {
 
-  const user = JSON.parse(localStorage.getItem('user'))
+  const accessToken = localStorage.getItem('accessToken')
+  const token = accessToken ? jwtDecode(accessToken) : null
 
   const [openCart, setOpenCart] = useState(false)
   const [openSearch, setOpenSearch] = useState(false)
@@ -51,11 +53,11 @@ function Header() {
       bgcolor: 'white',
       display: 'flex',
       justifyContent: 'center',
-      gap: 2,
-      overflow: 'hidden',
-      position: isActive ? 'none' : 'sticky',
-      top: 0,
-      zIndex: isActive ? 0 : 10
+      gap: 2
+      // overflow: 'hidden',
+      // position: isActive ? 'none' : 'sticky',
+      // top: 0,
+      // zIndex: isActive ? 0 : 10
     }}>
       <Link href="/" sx={{ height: headerHeight, padding: '0 16px' }} >
         <img src={logoIcon} alt="logo" style={{ height: '44px' }} />
@@ -159,7 +161,7 @@ function Header() {
           <img src={shoppingBagIcon} alt="cart" style={{ height: '17px' }} />
         </Box>
         <Cart open={openCart} toggleDrawer={() => setOpenCart(!openCart)} />
-        <Link href={user ? '/profile' : '/sign-in'}
+        <Link href={token ? '/profile' : '/sign-in'}
           sx={{ height: headerHeight, display: 'flex', alignItems: 'center' }} >
           <img src={signInIcon} alt="sign-in" style={{ height: '17px' }} />
         </Link>

@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import playIcon from '~/assets/play-white.png'
 import pauseIcon from '~/assets/pause-white.png'
+import FadeInSection from '../FadeInSection/FadeInSection40'
 
 
 export default function HeroSection({ video, title, descTitle, type }) {
@@ -92,85 +93,89 @@ export default function HeroSection({ video, title, descTitle, type }) {
 
   return (
     <Box sx={{ width: '100%' }} >
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'rgba(0,0,0,.85)', p: '64px 92px ', height: '200px' }} >
-        <Typography variant='h1' sx={{ fontSize: '52px', fontWeight: '650' }}>{title.toUpperCase()}</Typography>
-        <Typography variant='h1' sx={{ fontSize: '32px', fontWeight: '600' }} >
-          <span style={{ width: '300px' }}>{descTitle}</span>
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          position: 'relative',
-          top: 0,
-          overflow: 'hidden',
-          zIndex: 0,
-          width: '100%',
-          height: '100vh',
-          transform: `scale(${scale})`,
-          transformOrigin: 'top center',
-          borderRadius,
-          transition: 'transform 0.2 cubic-bezier(0.42, 0, 0.58, 1), border-radius 0.2s cubic-bezier(0.42, 0, 0.58, 1)'
-        }}
-      >
-        {/* Video */}
-        {type === 'video' ? (
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            src={video}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              overflowY: 'hidden',
-              border: 'none'
-            }}
-            onClick={togglePlayVideo}
-          />
-        ) : (
-          <Box
-            component="img"
-            src={video}
-            alt={title}
-            sx={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              overflowY: 'hidden',
-              border: 'none'
-            }}
-          />
-        )}
+      <FadeInSection delay={500}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'rgba(0,0,0,.85)', p: '64px 92px ', height: '200px' }} >
+          <Typography variant='h1' sx={{ fontSize: '52px', fontWeight: '650' }}>{title.toUpperCase()}</Typography>
+          <Typography variant='h1' sx={{ fontSize: '32px', fontWeight: '600' }} >
+            <span style={{ width: '300px' }}>{descTitle}</span>
+          </Typography>
+        </Box>
+      </FadeInSection>
+      <FadeInSection delay={800}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '89%',
-            right: '4%',
-            bgcolor: '#333336',
-            width: '40px',
-            height: '40px',
-            borderRadius: '40px',
-            display: type === 'img' ? 'none' : 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            '&:hover svg': {
-              color: 'white',
-              transition: 'color 0.3s cubic-bezier(0.42, 0, 0.58, 1)'
-            }
+            position: 'relative',
+            top: 0,
+            overflow: 'hidden',
+            zIndex: 0,
+            width: '100%',
+            height: '90vh',
+            transform: `scale(${scale})`,
+            transformOrigin: 'top center',
+            borderRadius,
+            transition: 'transform 0.2 cubic-bezier(0.42, 0, 0.58, 1), border-radius 0.2s cubic-bezier(0.42, 0, 0.58, 1)'
           }}
-          onClick={togglePlayVideo}
         >
-          {playVideo ?
-            <img src={pauseIcon} style={{ width: '16px', height: '16px' }} />
-            :
-            <img src={playIcon} style={{ width: '16px', height: '16px' }} />
-          }
+          {/* Video */}
+          {type === 'video' ? (
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              src={video}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                overflowY: 'hidden',
+                border: 'none'
+              }}
+              onClick={togglePlayVideo}
+            />
+          ) : (
+            <Box
+              component="img"
+              src={video}
+              alt={title}
+              sx={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                overflowY: 'hidden',
+                border: 'none'
+              }}
+            />
+          )}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '89%',
+              right: '4%',
+              bgcolor: '#333336',
+              width: '40px',
+              height: '40px',
+              borderRadius: '40px',
+              display: type === 'img' ? 'none' : 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              '&:hover svg': {
+                color: 'white',
+                transition: 'color 0.3s cubic-bezier(0.42, 0, 0.58, 1)'
+              }
+            }}
+            onClick={togglePlayVideo}
+          >
+            {playVideo ?
+              <img src={pauseIcon} style={{ width: '16px', height: '16px' }} />
+              :
+              <img src={playIcon} style={{ width: '16px', height: '16px' }} />
+            }
+          </Box>
         </Box>
-      </Box>
+      </FadeInSection>
     </Box>
   )
 }

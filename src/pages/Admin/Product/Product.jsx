@@ -17,10 +17,9 @@ import ModalWarning from './ModalWarning/ModalWarning'
 import EditProduct from './EditProduct/EditProduct'
 import AddProduct from './AddProduct/AddProduct'
 import theme from '~/theme'
+import { jwtDecode } from 'jwt-decode'
 
-function Product() {
-
-  const user = JSON.parse(localStorage.getItem('user'))
+function Product({ userId, userRole }) {
   // set param trên URL
   const [searchParams, setSearchParams] = useSearchParams()
   const currentPage = parseInt(searchParams.get('page')) || 1
@@ -368,19 +367,19 @@ function Product() {
           </Box>
         </Box>
       )}
-      {showWarning && user.role === 'manager' && (
+      {showWarning && userRole === 'manager' && (
         <ModalWarning open={showWarning} onClose={() => setShowWarning(false)} cancel={() => setShowWarning(false)} handleDelete={() => {
           handleDelete()
           setShowWarning(false)
         }} />
       )}
-      {productToEdit && user.role === 'manager' && (
+      {productToEdit && userRole === 'manager' && (
         <EditProduct open={Boolean(productToEdit)} onClose={() => setProductToEdit(null)} product={productToEdit} refresh={() => {
           setIsLoadingProducts(true)
           fetchProducts()
         }} />
       )}
-      {isAddProduct && user.role === 'manager' && (
+      {isAddProduct && userRole === 'manager' && (
         <AddProduct open={Boolean(isAddProduct)} onClose={() => setIsAddProduct(false)} refresh={() => {
           setIsLoadingProducts(true)
           fetchProducts()

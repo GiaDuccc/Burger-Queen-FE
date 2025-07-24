@@ -12,12 +12,13 @@ import heartIcon from '~/assets/heart-outline.png'
 import heartColorIcon from '~/assets/heart-color.png'
 import dingSound from '~/assets/ding-sound.mp3'
 import tapSound from '~/assets/tap-sound.mp3'
-import { addProductToOrder } from '~/apis'
-
+import { addOrderToCustomer, addProductToOrder, fetchCreateOrder, fetchCustomerDetailAPI } from '~/apis'
+import { jwtDecode } from 'jwt-decode'
 
 export default function ProductCardDetail({ product, open, onClose }) {
 
-  const user = JSON.parse(localStorage.getItem('user'))
+  const user = jwtDecode(localStorage.getItem('accessToken')) || null
+
   const navigate = useNavigate()
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -73,7 +74,16 @@ export default function ProductCardDetail({ product, open, onClose }) {
     }
 
     try {
-      await addProductToOrder(user.orders[user.orders.length - 1].orderId, productData).then(() => {
+      let customerData = await fetchCustomerDetailAPI(user.userId)
+      if (!customerData.orders || customerData.orders.length === 0) {
+        const order = await fetchCreateOrder()
+        const data = { orderId: order._id, status: order.status }
+        const updatedCustomer = await addOrderToCustomer(user.userId, data)
+        // localStorage.setItem('user', JSON.stringify(updatedCustomer))
+
+        customerData = updatedCustomer
+      }
+      await addProductToOrder(customerData.orders[customerData.orders.length - 1].orderId, productData).then(() => {
         tickSound.volume = 0.25
         tickSound.play()
         setTimeout(() => {

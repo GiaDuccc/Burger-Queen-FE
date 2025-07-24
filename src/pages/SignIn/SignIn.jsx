@@ -40,7 +40,10 @@ function Login() {
     setTimeout(async () => {
       await fetchLoginAPI(user)
         .then(data => {
-          localStorage.setItem('user', JSON.stringify(data))
+          // Lưu JWT token và refresh token
+          localStorage.setItem('accessToken', data.token)
+          localStorage.setItem('refreshToken', data.refreshToken)
+
           tickSound.volume = 0.4
           tickSound.play()
           setTimeout(() => {
@@ -52,7 +55,7 @@ function Login() {
         })
         .catch(error => {
           setSubmitStatus('failed')
-          setIsValid(error.response.data.message)
+          setIsValid(error.response?.data?.message || 'Login failed')
         })
     }, 2000)
   }
@@ -159,6 +162,7 @@ function Login() {
                 sx={{
                   width: '55%',
                   backgroundColor: 'white',
+                  transition: 'transform 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
                   '& .MuiFilledInput-root': {
                     backgroundColor: 'white',
                     borderRadius: '16px',

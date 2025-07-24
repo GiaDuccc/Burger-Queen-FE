@@ -3,7 +3,7 @@ import Drawer from '@mui/material/Drawer'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Link from '@mui/material/Link'
-import { addOrderToCustomer, fetchCreateOrder, fetchGetOrder, increaseQuantityAPI, decreaseQuantityAPI, removeProductFromOrderAPI, fetchProductDetailsAPI } from '~/apis'
+import { addOrderToCustomer, fetchCreateOrder, fetchGetOrder, increaseQuantityAPI, decreaseQuantityAPI, removeProductFromOrderAPI, fetchProductDetailsAPI, fetchCustomerDetailAPI } from '~/apis'
 import { useEffect, useState } from 'react'
 import removeIcon from '~/assets/minus.png'
 import addIcon from '~/assets/plus.png'
@@ -12,11 +12,15 @@ import outOfStock from '~/assets/outOfStock.png'
 import deliveryIcon from '~/assets/delivery.png'
 import { useNavigate } from 'react-router-dom'
 import closeIcon from '~/assets/x-white.png'
+import { jwtDecode } from 'jwt-decode'
 
 
 function ShoppingCart({ open, toggleDrawer }) {
 
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
+  const accessToken = localStorage.getItem('accessToken')
+  const token = accessToken ? jwtDecode(accessToken) : null
+
+  const [customer, setCustomer] = useState(null)
 
   const [orderData, setOrderData] = useState(null)
   const [products, setProducts] = useState([])
@@ -113,28 +117,30 @@ function ShoppingCart({ open, toggleDrawer }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user) return
+      if (!token) return
 
-      if (!user.orders || user.orders.length === 0) {
+      const customer = await fetchCustomerDetailAPI(token.userId)
+      setCustomer(customer)
+      if (!customer.orders || customer.orders.length === 0) {
         const order = await fetchCreateOrder()
         const data = { orderId: order._id, status: order.status }
-        const updatedCustomer = await addOrderToCustomer(user._id, data)
-        localStorage.setItem('user', JSON.stringify(updatedCustomer))
+        const updatedCustomer = await addOrderToCustomer(token.userId, data)
+        // localStorage.setItem('user', JSON.stringify(updatedCustomer))
 
-        setUser(updatedCustomer)
+        setCustomer(updatedCustomer)
         setOrderData(order)
       } else {
-        if (user.orders[user.orders.length - 1]?.status !== 'cart') {
+        if (customer.orders[customer.orders.length - 1]?.status !== 'cart') {
           const order = await fetchCreateOrder()
           const data = { orderId: order._id, status: order.status }
-          const updatedCustomer = await addOrderToCustomer(user._id, data)
-          localStorage.setItem('user', JSON.stringify(updatedCustomer))
+          const updatedCustomer = await addOrderToCustomer(token.userId, data)
+          // localStorage.setItem('user', JSON.stringify(updatedCustomer))
 
-          setUser(updatedCustomer)
+          setCustomer(updatedCustomer)
           setOrderData(order)
           return
         }
-        const lastOrder = await fetchGetOrder(user.orders[user.orders.length - 1].orderId)
+        const lastOrder = await fetchGetOrder(customer.orders[customer.orders.length - 1].orderId)
         setOrderData(lastOrder)
 
         const productList = await Promise.all(
@@ -152,46 +158,49 @@ function ShoppingCart({ open, toggleDrawer }) {
         setIsLoading(false)
       }, 800)
     }
-  }, [open, user])
+  }, [open])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user) return
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (!userId) return
 
-      if (!user.orders || user.orders.length === 0) {
-        const order = await fetchCreateOrder()
-        const data = { orderId: order._id, status: order.status }
-        const updatedCustomer = await addOrderToCustomer(user._id, data)
-        localStorage.setItem('user', JSON.stringify(updatedCustomer))
+  //     const user = await fetchCustomerDetailAPI(userId).then(() => {
+  //       setUser(user)
+  //     })
+  //     if (!user.orders || user.orders.length === 0) {
+  //       const order = await fetchCreateOrder()
+  //       const data = { orderId: order._id, status: order.status }
+  //       const updatedCustomer = await addOrderToCustomer(userId, data)
+  //       // localStorage.setItem('user', JSON.stringify(updatedCustomer))
 
-        setUser(updatedCustomer)
-        setOrderData(order)
-      } else {
-        if (user.orders[user.orders.length - 1]?.status !== 'cart') {
-          const order = await fetchCreateOrder()
-          const data = { orderId: order._id, status: order.status }
-          const updatedCustomer = await addOrderToCustomer(user._id, data)
-          localStorage.setItem('user', JSON.stringify(updatedCustomer))
+  //       setUser(updatedCustomer)
+  //       setOrderData(order)
+  //     } else {
+  //       if (user.orders[user.orders.length - 1]?.status !== 'cart') {
+  //         const order = await fetchCreateOrder()
+  //         const data = { orderId: order._id, status: order.status }
+  //         const updatedCustomer = await addOrderToCustomer(userId, data)
+  //         // localStorage.setItem('user', JSON.stringify(updatedCustomer))
 
-          setUser(updatedCustomer)
-          setOrderData(order)
-          return
-        }
-        const lastOrder = await fetchGetOrder(user.orders[user.orders.length - 1].orderId)
-        setOrderData(lastOrder)
+  //         setUser(updatedCustomer)
+  //         setOrderData(order)
+  //         return
+  //       }
+  //       const lastOrder = await fetchGetOrder(user.orders[user.orders.length - 1].orderId)
+  //       setOrderData(lastOrder)
 
-        const productList = await Promise.all(
-          lastOrder.items.map(item => fetchProductDetailsAPI(item.productId))
-        )
-        setProducts(productList)
-        setQuantitySelect(lastOrder.items.map(item => item.quantity))
-      }
-    }
-    fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  //       const productList = await Promise.all(
+  //         lastOrder.items.map(item => fetchProductDetailsAPI(item.productId))
+  //       )
+  //       setProducts(productList)
+  //       setQuantitySelect(lastOrder.items.map(item => item.quantity))
+  //     }
+  //   }
+  //   fetchData()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
 
-  if (!user) return (
+  if (!token) return (
     <Drawer
       anchor="right"
       open={open}

@@ -6,7 +6,7 @@ import { useState } from 'react'
 import NavBar from '~/components/NavBar/NavBar'
 import Footer from '~/components/Footer/Footer'
 import Slider from '~/components/Slider/Slider_v2'
-import video from '~/assets/videoHeroSection/puma.png'
+import video from '~/assets/videoHeroSection/PUMA. GO WILD..mp4'
 
 function PumaPage() {
   const brand = window.location.pathname.slice(1)
@@ -31,7 +31,7 @@ function PumaPage() {
       <Header />
       <NavBar brand={brand} scrollToSection={(id) => scrollToSection(id)} setTypes={(types) => setTypes(types)} />
       <Slogan />
-      <HeroSection video={video} title={'Puma'} descTitle={'Forever Faster.'} type='img' />
+      <HeroSection video={video} title={'Puma'} descTitle={'Forever Faster.'} type='video' />
       {types?.map((type, idx) => (
         <Slider brand={brand} key={idx} id={type} name={type.slice(0, 1).toUpperCase() + type.slice(1)} type={type} />
       ))}

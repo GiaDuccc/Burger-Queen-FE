@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
-import HomePage from './pages/HomePage/HomePage_v2'
+import HomePage from './pages/HomePage/HomePage'
 import SignIn from './pages/SignIn/SignIn'
 import SignUp from './pages/SignUp/SignUp'
-import NikePage from './pages/NikePage/NikePage_v2'
+import NikePage from './pages/NikePage/NikePage'
 import AdidasPage from './pages/AdidasPage/AdidasPage'
 import NewBalance from './pages/NewBalancePage/NewBalance'
 import PumaPage from './pages/PumaPage/PumaPage'
-import ProductPage from './pages/ProductPage/ProducePage_v2'
+import ProductPage from './pages/ProductPage/ProducePage'
 import Profile from './pages/Profile/Profile'
 import Checkout from './pages/Checkout/Checkout'
 import Admin from './pages/Admin/Admin'
@@ -20,17 +20,32 @@ import About from './pages/About/About'
 function App() {
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'))
+    const token = localStorage.getItem('token')
+    const user = JSON.parse(localStorage.getItem('user') || 'null')
 
-    if (user) {
+    if (token && user) {
       const fetchCustomerDetail = async () => {
-        await fetchCustomerDetailAPI(user._id).then(data => {
-          if (data.role !== user.role) localStorage.removeItem('user')
-        })
+        try {
+          const data = await fetchCustomerDetailAPI(user._id)
+          if (data.role !== user.role) {
+            // Role thay đổi, logout user
+            localStorage.removeItem('token')
+            localStorage.removeItem('refreshToken')
+            localStorage.removeItem('user')
+          }
+        } catch (error) {
+          // Chỉ logout nếu là lỗi authentication
+          if (error.response?.status === 401 || error.response?.status === 403) {
+            localStorage.removeItem('token')
+            localStorage.removeItem('refreshToken')
+            localStorage.removeItem('user')
+          }
+          // Các lỗi khác (network, server down) không logout
+          console.error('Error checking user details:', error)
+        }
       }
       fetchCustomerDetail()
     }
-
   }, [])
 
   const AppRouter = () => {

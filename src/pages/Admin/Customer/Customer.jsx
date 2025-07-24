@@ -19,9 +19,7 @@ import rightIcon from '~/assets/right.png'
 import CustomerDetail from './CustomerDetail/CustomerDetail'
 import '~/App.css'
 
-function Customer() {
-
-  const user = JSON.parse(localStorage.getItem('user'))
+function Customer({ userId, userRole }) {
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [customerList, setCustomerList] = useState([])
@@ -44,7 +42,7 @@ function Customer() {
   const [roleSelected, setRoleSelected] = useState(null)
 
   const handleChangeRole = (oldRole, idx) => {
-    if (oldRole === 'manager' || user.role === 'admin') return
+    if (oldRole === 'manager' || userRole === 'admin') return
     if (roleSelected) {
       if (idx !== roleSelected.idx) {
         if (role.indexOf(oldRole) + 1 >= role.length) {
@@ -435,7 +433,7 @@ function Customer() {
                       />
                       <Box
                         onClick={(e) => {
-                          if (user.role !== 'manager' || user.role === customer.role) e.preventDefault()
+                          if (userRole !== 'manager' || userRole === customer.role) e.preventDefault()
                           else setCustomerToDelete(customer._id)
                         }}
                         component='img'

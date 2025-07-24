@@ -8,38 +8,76 @@ import settingsIcon from '~/assets/settings.png'
 import editIcon from '~/assets/edit.png'
 import logOutIcon from '~/assets/logout.png'
 import { useEffect, useState } from 'react'
-import { fetchCustomerDetailAPI, fetchGetOrder, updateCustomer } from '~/apis'
+import { fetchCustomerDetailAPI, fetchGetOrder, updateCustomer, fetchLogoutAPI } from '~/apis'
 import OrderDetail from '~/components/OrderDetail/OrderDetail'
 import '~/App.css'
 import warningIcon from '~/assets/danger.png'
 import Footer from '~/components/Footer/Footer'
+import { jwtDecode } from 'jwt-decode'
+import styles from './Profile.module.css'
+import { useForm, Controller } from 'react-hook-form'
 
 function Dashboard() {
 
-  const user = JSON.parse(localStorage.getItem('user'))
   const navigate = useNavigate()
 
   const [orders, setOrders] = useState([])
   const [customer, setCustomer] = useState({})
   const [orderDetail, setOrderDetail] = useState(null)
   const [isLoadingOrder, setIsLoadingOrder] = useState(false)
-  const [editInfo, setEditInfo] = useState({})
-  const [errorInfo, setErrorInfo] = useState({})
   const [isEdit, setIsEdit] = useState(false)
 
-  const fetchOrders = async () => {
-    const customer = await fetchCustomerDetailAPI(user._id)
-    setCustomer(customer)
-    let newOrders = []
-    for (const order of customer.orders) {
-      if (order.status !== 'cart') {
-        const data = await fetchGetOrder(order.orderId)
-        newOrders.push(data)
-      }
-      else setIsLoadingOrder(false)
-    }
+  const user = jwtDecode(localStorage.getItem('accessToken'))
 
-    setOrders(newOrders.reverse().slice(0, 10))
+  // React Hook Form setup
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty, isValid }
+  } = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      lastName: '',
+      firstName: '',
+      email: '',
+      phone: '',
+      address: ''
+    }
+  })
+
+  const fetchOrders = async () => {
+    try {
+      setIsLoadingOrder(true)
+      const customer = await fetchCustomerDetailAPI(user.userId)
+      setCustomer(customer)
+
+      let newOrders = []
+      if (customer.orders) {
+        for (const order of customer.orders) {
+          if (order.status !== 'cart') {
+            try {
+              const data = await fetchGetOrder(order.orderId)
+              newOrders.push(data)
+            } catch (orderError) {
+              console.error('Error fetching order:', order.orderId, orderError)
+              // Continue với order khác nếu có lỗi
+            }
+          }
+        }
+        setOrders(newOrders.reverse().slice(0, 10))
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error)
+      // Nếu là lỗi authentication, redirect về login
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        navigate('/sign-in')
+      }
+    } finally {
+      setIsLoadingOrder(false)
+    }
   }
 
   function getCountryName(code) {
@@ -55,97 +93,107 @@ function Dashboard() {
     canceled: '#ff4f4f'
   }
 
-  const logOut = () => {
-    localStorage.removeItem('user')
-    navigate('/sign-in')
+  const logOut = async () => {
+    try {
+      // Gọi API logout để invalidate token ở server
+      await fetchLogoutAPI()
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      // Xóa tất cả user data và token
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
+      navigate('/sign-in')
+    }
   }
 
-  const handleUpdateInfo = async () => {
-
-    await updateCustomer(customer._id, editInfo)
-      .then(() => {
-        setIsEdit(false)
-        fetchOrders()
-      })
-      .catch(data => {
-        if (data.response.data.message.includes('lastName')) setErrorInfo(prev => ({ ...prev, lastName: 'Last Name is not allow empty' }))
-        if (data.response.data.message.includes('firstName')) setErrorInfo(prev => ({ ...prev, firstName: 'First Name is not allow empty' }))
-        if (data.response.data.message.includes('email')) setErrorInfo(prev => ({ ...prev, email: 'Email is not allow empty' }))
-        if (data.response.data.message.includes('phone')) setErrorInfo(prev => ({ ...prev, phone: 'Phone is not allow empty' }))
-        if (data.response.data.message.includes('address')) setErrorInfo(prev => ({ ...prev, address: 'Address is not allow empty' }))
-        if (data.response.data.errors.email) setErrorInfo(prev => ({ ...prev, email: 'Email is exist' }))
-        if (data.response.data.errors.phone) setErrorInfo(prev => ({ ...prev, phone: 'Phone is exist' }))
-      })
+  const handleUpdateInfo = async (formData) => {
+    // So sánh formData với customer, chỉ lấy các trường thay đổi
+    const changedFields = {};
+    Object.keys(formData).forEach((key) => {
+      if (formData[key] !== customer[key]) {
+        changedFields[key] = formData[key];
+      }
+    });
+    if (Object.keys(changedFields).length === 0) {
+      setIsEdit(false);
+      return;
+    }
+    try {
+      await updateCustomer(customer._id, changedFields);
+      setIsEdit(false);
+      fetchOrders();
+    } catch (error) {
+      console.error('Update customer error:', error);
+      // Handle specific errors if needed
+    }
   }
 
   useEffect(() => {
-    if (!user) navigate('/sign-in')
-    setIsLoadingOrder(true)
+    if (!user) {
+      navigate('/sign-in')
+      return
+    }
     fetchOrders()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Update form default values when customer data changes
+  useEffect(() => {
+    if (customer && Object.keys(customer).length > 0) {
+      reset({
+        lastName: customer.lastName || '',
+        firstName: customer.firstName || '',
+        email: customer.email || '',
+        phone: customer.phone || '',
+        address: customer.address || ''
+      })
+    }
+  }, [customer, reset])
+
   return (
-    <Container disableGutters maxWidth={false} sx={{
-      bgcolor: 'white',
-      width: '100%',
-      height: 'fit-content',
-      display: 'flex',
-      flexDirection: 'column'
-    }}>
+    <Container className={styles.container} disableGutters maxWidth={false}>
       <Header />
       {/* Content */}
-      <Box
-        className='fade-in-up'
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '55%',
-          mx: 'auto',
-          my: '20px'
-        }}
-      >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography sx={{ color: 'rgba(0,0,0,.85)', fontWeight: '600', fontSize: '32px' }}>
+      <div className={`${styles.content} fade-in-up`}>
+        <div className={styles.contentHeader}>
+          <p className={`${styles.customerId} font-size-32 m-0`}>
             {`Customer #${customer?.phone}`}
-          </Typography>
-          <Box sx={{
-            display: 'flex',
-            gap: 4,
-            '& p': {
-              color: 'rgb(105, 105, 105)',
-              textDecoration: 'none',
-              fontSize: '16px'
-            },
-            '& div:hover': {
-              color: 'rgb(105, 105, 105)',
-              textDecoration: 'underline',
-              cursor: 'pointer'
-            }
-          }}>
-            <Box
+          </p>
+          <div className={`${styles.buttonFeature} flex gap-32`}>
+            {/* Admin */}
+            <div className='align-center gap-8'
               onClick={() => navigate('/admin')}
-              sx={{ display: (customer?.role === 'admin' || customer?.role === 'manager') ? 'flex' : 'none', alignItems: 'center', gap: 1 }}
+              style={{ display: (customer?.role === 'admin' || customer?.role === 'manager') ? 'flex' : 'none' }}
             >
-              <Typography>Admin</Typography>
+              <p>Admin</p>
               {/* <SettingsIcon sx={{ fontSize: '16px' }} /> */}
-              <img src={settingsIcon} style={{ width: '16px', height: '16px', opacity: .6 }} />
-            </Box>
-            <Box
+              <img className='width-16px height-16px opacity-6' src={settingsIcon} />
+            </div>
+            {/* Edit */}
+            <div
               onClick={() => {
                 setIsEdit(!isEdit)
-                setErrorInfo({})
-                setEditInfo({})
+                if (!isEdit) {
+                  // Reset form to current customer values when entering edit mode
+                  reset({
+                    lastName: customer.lastName || '',
+                    firstName: customer.firstName || '',
+                    email: customer.email || '',
+                    phone: customer.phone || '',
+                    address: customer.address || ''
+                  })
+                }
               }}
-              sx={{ display: 'flex', alignItems: 'center', gap: 1, userSelect: 'none' }}
+              className={`${styles.editButton}`}
             >
-              <Typography>{isEdit ? 'Cancel' : 'Edit'}</Typography>
+              <p>{isEdit ? 'Cancel' : 'Edit'}</p>
               {/* <SettingsIcon sx={{ fontSize: '16px' }} /> */}
-              <Box sx={{ width: '18px', height: '18px', position: 'relative' }}>
-                <img src={editIcon} style={{ width: '100%', height: '100%', opacity: .6 }} />
+              <div className='width-18px height-18px position-relative'>
+                <img className='width-100 height-100 opacity-6' src={editIcon} />
                 {isEdit && (
-                  <Box
-                    sx={{
+                  <div
+                    style={{
                       position: 'absolute',
                       top: 9,
                       left: -2,
@@ -157,17 +205,19 @@ function Dashboard() {
                     }}
                   />
                 )}
-              </Box>
-            </Box>
-            <Box
+              </div>
+            </div>
+            {/* Log Out */}
+            <div
               onClick={() => logOut()}
-              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+              className='align-center gap-8 flex'
             >
-              <Typography>Log Out</Typography>
-              <img src={logOutIcon} style={{ width: '16px', height: '16px', opacity: .5 }} />
-            </Box>
-          </Box>
-        </Box>
+              <p>Log Out</p>
+              <img className='width-16px height-16px opacity-6' src={logOutIcon} />
+            </div>
+          </div>
+        </div>
+        {/* Divider */}
         <hr style={{
           width: '100%',
           border: 'none',
@@ -175,274 +225,287 @@ function Dashboard() {
           margin: '4px auto'
         }} />
         {/* User Detail */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', mt: '32px', gap: 3, width: '100%' }}>
+        <div className='userDetailWrapper flex flex-col mt-24 gap-24 width-100'>
           {isEdit ? (
-            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'end' }}>
-              <TextField
-                onClick={(e) => e.target.value = ''}
-                onChange={(e) => {
-                  setEditInfo(prev => ({ ...prev, lastName: e.target.value }))
-                  setErrorInfo(prev => ({ ...prev, lastName: '' }))
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === '') e.target.value = customer.lastName
-                }}
-                id="filledLastName"
-                className={errorInfo.lastName ? 'shake' : ''}
-                label={
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {errorInfo.lastName && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
-                    {errorInfo.lastName ? errorInfo.lastName : 'Last Name'}
-                  </span>
-                }
-                variant="filled"
-                defaultValue={customer.lastName}
-                // value={editInfo.lastName ? editInfo.lastName : customer.lastName}
-                InputProps={{
-                  disableUnderline: true
-                }}
-                sx={{
-                  flex: 1,
-                  backgroundColor: 'white',
-                  width: '100%',
-                  '& .MuiFilledInput-root': {
-                    backgroundColor: 'white',
-                    borderRadius: '16px',
-                    color: 'rgba(0, 0, 0, 0.85)',
-                    border: errorInfo.lastName ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
-                    '&.Mui-focused': {
-                      border: errorInfo.lastName ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
-                      borderRadius: '16px',
-                      backgroundColor: 'white'
-                    },
-                    '& input:-webkit-autofill': {
-                      borderRadius: '16px'
+            <form onSubmit={handleSubmit(handleUpdateInfo)} className='userDetailEdit width-100 flex flex-col gap-16 align-end'>
+              {/* Last Name */}
+              <Controller
+                name="lastName"
+                control={control}
+                rules={{ required: 'Last Name is required' }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="lastName"
+                    className={errors.lastName ? 'shake' : ''}
+                    label={
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {errors.lastName && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
+                        {errors.lastName ? errors.lastName.message : 'Last Name'}
+                      </span>
                     }
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: errorInfo.lastName ? 'rgb(184, 53, 53)' : '#666'
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: errorInfo.lastName ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                    variant="filled"
+                    error={!!errors.lastName}
+                    InputProps={{
+                      disableUnderline: true
+                    }}
+                    sx={{
+                      flex: 1,
+                      backgroundColor: 'white',
+                      width: '100%',
+                      '& .MuiFilledInput-root': {
+                        backgroundColor: 'white',
+                        borderRadius: '16px',
+                        color: 'rgba(0, 0, 0, 0.85)',
+                        border: errors.lastName ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
+                        '&.Mui-focused': {
+                          border: errors.lastName ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
+                          borderRadius: '16px',
+                          backgroundColor: 'white'
+                        }
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: errors.lastName ? 'rgb(184, 53, 53)' : '#666'
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: errors.lastName ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                      }
+                    }}
+                  />
+                )}
+              />
+
+              {/* First Name */}
+              <Controller
+                name="firstName"
+                control={control}
+                rules={{ required: 'First Name is required' }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="firstName"
+                    className={errors.firstName ? 'shake' : ''}
+                    label={
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {errors.firstName && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
+                        {errors.firstName ? errors.firstName.message : 'First Name'}
+                      </span>
+                    }
+                    variant="filled"
+                    error={!!errors.firstName}
+                    InputProps={{
+                      disableUnderline: true
+                    }}
+                    sx={{
+                      flex: 1,
+                      backgroundColor: 'white',
+                      width: '100%',
+                      '& .MuiFilledInput-root': {
+                        backgroundColor: 'white',
+                        borderRadius: '16px',
+                        color: 'rgba(0, 0, 0, 0.85)',
+                        border: errors.firstName ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
+                        '&.Mui-focused': {
+                          border: errors.firstName ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
+                          borderRadius: '16px',
+                          backgroundColor: 'white'
+                        }
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: errors.firstName ? 'rgb(184, 53, 53)' : '#666'
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: errors.firstName ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                      }
+                    }}
+                  />
+                )}
+              />
+
+              {/* Email */}
+              <Controller
+                name="email"
+                control={control}
+                rules={{
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'Invalid email address'
                   }
                 }}
-              />
-              <TextField
-                onClick={(e) => e.target.value = ''}
-                onChange={(e) => {
-                  setEditInfo(prev => ({ ...prev, firstName: e.target.value }))
-                  setErrorInfo(prev => ({ ...prev, firstName: '' }))
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === '') e.target.value = customer.firstName
-                }}
-                id="filledLastName"
-                className={errorInfo.firstName ? 'shake' : ''}
-                label={
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {errorInfo.firstName && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
-                    {errorInfo.firstName ? errorInfo.firstName : 'First Name'}
-                  </span>
-                }
-                variant="filled"
-                defaultValue={customer.firstName}
-                InputProps={{
-                  disableUnderline: true
-                }}
-                sx={{
-                  flex: 1,
-                  backgroundColor: 'white',
-                  width: '100%',
-                  '& .MuiFilledInput-root': {
-                    backgroundColor: 'white',
-                    borderRadius: '16px',
-                    color: 'rgba(0, 0, 0, 0.85)',
-                    border: errorInfo.firstName ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
-                    '&.Mui-focused': {
-                      border: errorInfo.firstName ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
-                      borderRadius: '16px',
-                      backgroundColor: 'white'
-                    },
-                    '& input:-webkit-autofill': {
-                      borderRadius: '16px'
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="email"
+                    type="email"
+                    className={errors.email ? 'shake' : ''}
+                    label={
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {errors.email && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
+                        {errors.email ? errors.email.message : 'Email'}
+                      </span>
                     }
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: errorInfo.firstName ? 'rgb(184, 53, 53)' : '#666'
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: errorInfo.firstName ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                    variant="filled"
+                    error={!!errors.email}
+                    InputProps={{
+                      disableUnderline: true
+                    }}
+                    sx={{
+                      flex: 1,
+                      backgroundColor: 'white',
+                      width: '100%',
+                      '& .MuiFilledInput-root': {
+                        backgroundColor: 'white',
+                        borderRadius: '16px',
+                        color: 'rgba(0, 0, 0, 0.85)',
+                        border: errors.email ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
+                        '&.Mui-focused': {
+                          border: errors.email ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
+                          borderRadius: '16px',
+                          backgroundColor: 'white'
+                        }
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: errors.email ? 'rgb(184, 53, 53)' : '#666'
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: errors.email ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                      }
+                    }}
+                  />
+                )}
+              />
+
+              {/* Phone */}
+              <Controller
+                name="phone"
+                control={control}
+                rules={{
+                  required: 'Phone is required',
+                  pattern: {
+                    value: /^[0-9]{10,11}$/,
+                    message: 'Phone must be 10-11 digits'
                   }
                 }}
-              />
-              <TextField
-                onClick={(e) => e.target.value = ''}
-                onChange={(e) => {
-                  setEditInfo(prev => ({ ...prev, email: e.target.value }))
-                  setErrorInfo(prev => ({ ...prev, email: '' }))
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === '') e.target.value = customer.email
-                }}
-                id="filledLastName"
-                className={errorInfo.email ? 'shake' : ''}
-                label={
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {errorInfo.email && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
-                    {errorInfo.email ? errorInfo.email : 'Email'}
-                  </span>
-                }
-                variant="filled"
-                defaultValue={customer.email}
-                InputProps={{
-                  disableUnderline: true
-                }}
-                sx={{
-                  flex: 1,
-                  backgroundColor: 'white',
-                  width: '100%',
-                  '& .MuiFilledInput-root': {
-                    backgroundColor: 'white',
-                    borderRadius: '16px',
-                    color: 'rgba(0, 0, 0, 0.85)',
-                    border: errorInfo.email ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
-                    '&.Mui-focused': {
-                      border: errorInfo.email ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
-                      borderRadius: '16px',
-                      backgroundColor: 'white'
-                    },
-                    '& input:-webkit-autofill': {
-                      borderRadius: '16px'
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="phone"
+                    className={errors.phone ? 'shake' : ''}
+                    label={
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {errors.phone && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
+                        {errors.phone ? errors.phone.message : 'Phone'}
+                      </span>
                     }
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: errorInfo.email ? 'rgb(184, 53, 53)' : '#666'
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: errorInfo.email ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
-                  }
-                }}
+                    variant="filled"
+                    error={!!errors.phone}
+                    InputProps={{
+                      disableUnderline: true
+                    }}
+                    sx={{
+                      flex: 1,
+                      backgroundColor: 'white',
+                      width: '100%',
+                      '& .MuiFilledInput-root': {
+                        backgroundColor: 'white',
+                        borderRadius: '16px',
+                        color: 'rgba(0, 0, 0, 0.85)',
+                        border: errors.phone ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
+                        '&.Mui-focused': {
+                          border: errors.phone ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
+                          borderRadius: '16px',
+                          backgroundColor: 'white'
+                        }
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: errors.phone ? 'rgb(184, 53, 53)' : '#666'
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: errors.phone ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                      }
+                    }}
+                  />
+                )}
               />
-              <TextField
-                onClick={(e) => e.target.value = ''}
-                onChange={(e) => {
-                  setEditInfo(prev => ({ ...prev, phone: e.target.value }))
-                  setErrorInfo(prev => ({ ...prev, phone: '' }))
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === '') e.target.value = customer.phone
-                }}
-                id="filledPhone"
-                className={errorInfo.phone ? 'shake' : ''}
-                label={
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {errorInfo.phone && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
-                    {errorInfo.phone ? errorInfo.phone : 'Phone'}
-                  </span>
-                }
-                variant="filled"
-                defaultValue={customer.phone}
-                InputProps={{
-                  disableUnderline: true
-                }}
-                sx={{
-                  flex: 1,
-                  backgroundColor: 'white',
-                  width: '100%',
-                  '& .MuiFilledInput-root': {
-                    backgroundColor: 'white',
-                    borderRadius: '16px',
-                    color: 'rgba(0, 0, 0, 0.85)',
-                    border: errorInfo.phone ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
-                    '&.Mui-focused': {
-                      border: errorInfo.phone ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
-                      borderRadius: '16px',
-                      backgroundColor: 'white'
-                    },
-                    '& input:-webkit-autofill': {
-                      borderRadius: '16px'
+
+              {/* Address */}
+              <Controller
+                name="address"
+                control={control}
+                rules={{ required: 'Address is required' }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="address"
+                    className={errors.address ? 'shake' : ''}
+                    label={
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {errors.address && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
+                        {errors.address ? errors.address.message : 'Address'}
+                      </span>
                     }
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: errorInfo.phone ? 'rgb(184, 53, 53)' : '#666'
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: errorInfo.phone ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
-                  }
-                }}
+                    variant="filled"
+                    error={!!errors.address}
+                    InputProps={{
+                      disableUnderline: true
+                    }}
+                    sx={{
+                      flex: 1,
+                      backgroundColor: 'white',
+                      width: '100%',
+                      '& .MuiFilledInput-root': {
+                        backgroundColor: 'white',
+                        borderRadius: '16px',
+                        color: 'rgba(0, 0, 0, 0.85)',
+                        border: errors.address ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
+                        '&.Mui-focused': {
+                          border: errors.address ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
+                          borderRadius: '16px',
+                          backgroundColor: 'white'
+                        }
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: errors.address ? 'rgb(184, 53, 53)' : '#666'
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: errors.address ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
+                      }
+                    }}
+                  />
+                )}
               />
-              <TextField
-                onClick={(e) => e.target.value = ''}
-                onChange={(e) => {
-                  setEditInfo(prev => ({ ...prev, address: e.target.value }))
-                  setErrorInfo(prev => ({ ...prev, address: '' }))
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === '') e.target.value = customer.address
-                }}
-                id="filledLastName"
-                className={errorInfo.address ? 'shake' : ''}
-                label={
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {errorInfo.address && <img src={warningIcon} style={{ width: '16px', height: '16px' }} />}
-                    {errorInfo.address ? errorInfo.address : 'Address'}
-                  </span>
-                }
-                variant="filled"
-                defaultValue={customer.address}
-                InputProps={{
-                  disableUnderline: true
-                }}
-                sx={{
-                  flex: 1,
-                  backgroundColor: 'white',
-                  width: '100%',
-                  '& .MuiFilledInput-root': {
-                    backgroundColor: 'white',
-                    borderRadius: '16px',
-                    color: 'rgba(0, 0, 0, 0.85)',
-                    border: errorInfo.address ? '2px solid rgb(184, 53, 53)' : '2px solid rgb(170, 170, 170)',
-                    '&.Mui-focused': {
-                      border: errorInfo.address ? '2px solid rgb(184, 53, 53)' : '2px solid rgba(0, 0, 0, 0.65)',
-                      borderRadius: '16px',
-                      backgroundColor: 'white'
-                    },
-                    '& input:-webkit-autofill': {
-                      borderRadius: '16px'
-                    }
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: errorInfo.address ? 'rgb(184, 53, 53)' : '#666'
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: errorInfo.address ? 'rgb(184, 53, 53)' : 'rgba(0,0,0,.85)'
-                  }
-                }}
-              />
+
+              {/* Submit Button */}
               <Box
-                onClick={() => {
-                  if (Object.values(errorInfo).some(value => value) || Object.keys(editInfo).length === 0) return
-                  handleUpdateInfo()
-                }}
+                component="button"
+                type="submit"
+                disabled={!isDirty || !isValid}
                 sx={{
-                  width: '100%', height: '40px',
+                  width: '100%',
+                  height: '40px',
                   bgcolor: 'rgba(0,0,0, .85)',
                   borderRadius: '12px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: Object.values(errorInfo).some(value => value) || Object.keys(editInfo).length === 0 ? 'default' : 'pointer',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: (!isDirty || !isValid) ? 'default' : 'pointer',
                   transition: 'all 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
-                  opacity: Object.values(errorInfo).some(value => value) || Object.keys(editInfo).length === 0 && .4,
+                  opacity: (!isDirty || !isValid) ? 0.4 : 1,
                   '& p': {
-                    color: '#fff', fontSize: '18px', fontWeight: '600'
+                    color: '#fff',
+                    fontSize: '18px',
+                    fontWeight: '600'
                   },
                   '&:hover': {
-                    transform: !Object.values(errorInfo).some(value => value) || Object.keys(editInfo).length === 0 && 'scaleX(1.02)',
-                    opacity: !Object.values(errorInfo).some(value => value) || Object.keys(editInfo).length === 0 && .8
+                    transform: (isDirty && isValid) ? 'scaleX(1.02)' : 'none',
+                    opacity: (isDirty && isValid) ? 0.8 : (!isDirty || !isValid) ? 0.4 : 1
                   }
                 }}>
                 <Typography>Update</Typography>
               </Box>
-            </Box>
+            </form>
           ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
@@ -595,8 +658,8 @@ function Dashboard() {
               ))}
             </Box>
           )}
-        </Box>
-      </Box>
+        </div>
+      </div>
       <Footer />
 
       {orderDetail && (
