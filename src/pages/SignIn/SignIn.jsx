@@ -162,6 +162,7 @@ function Login() {
                 sx={{
                   width: '55%',
                   backgroundColor: 'white',
+                  zIndex: 0,
                   transition: 'transform 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
                   '& .MuiFilledInput-root': {
                     backgroundColor: 'white',
@@ -242,6 +243,7 @@ function Login() {
                     sx={{
                       width: '100%',
                       backgroundColor: 'white',
+                      zIndex: 0,
                       transition: 'transform 0.2s cubic-bezier(0.42, 0, 0.58, 1)',
                       '& .MuiFilledInput-root': {
                         backgroundColor: 'white',
