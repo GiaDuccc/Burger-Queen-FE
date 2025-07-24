@@ -17,7 +17,8 @@ import { jwtDecode } from 'jwt-decode'
 
 export default function ProductCardDetail({ product, open, onClose }) {
 
-  const user = jwtDecode(localStorage.getItem('accessToken')) || null
+  const accessToken = localStorage.getItem('accessToken') || null
+  const user = accessToken ? jwtDecode(accessToken) : null
 
   const navigate = useNavigate()
 
