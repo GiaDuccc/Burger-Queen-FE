@@ -35,10 +35,6 @@ const theme = extendTheme({
         }
       }
     }
-  },
-  typography: {
-    fontFamily: 'Inter, sans-serif'
-    // fontFamily: 'SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif'
   }
 })
 
