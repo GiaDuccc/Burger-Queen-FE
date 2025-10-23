@@ -1,30 +1,54 @@
 import styles from './Header.module.scss';
+// import logo from '~/assets/logo.png'
 import logoChu from '~/assets/logo-chu.png'
 import moreIcon from '~/assets/more.png'
 import searchIcon from '~/assets/search.png'
 import notificationIcon from '~/assets/notification.png'
 import profilePicIcon from '~/assets/profile.png'
-import threeDotHorizontalIcon from '~/assets/threeDotHorizontal.png'
+import profileMoreIcon from '~/assets/threeDotHorizontal.png'
+import { useState } from 'react';
 
 function Header() {
+
+  const [isActiveMore, setIsActiveMore] = useState(false);
+  const [isActiveSearch, setIsActiveSearch] = useState(false);
+  const [isActiveNotification, setIsActiveNotification] = useState(false);
+  const [isActiveProfileMore, setIsActiveProfileMore] = useState(false);
+
   return (
-    <div className={styles.header}>
-      <div className={styles.logoDiv}>
-        <img src={logoChu} alt="Logo" style={{ height: "100%" }} />
-      </div>
-      <div className={styles.searchAndProfile}>
-        <div className={styles.searchBox}>
-          <span className={styles.moreIcon}><img src={moreIcon} alt="More" style={{ width: '20px', height: '20px', opacity: 0.6 }} /></span>
-          <div className={styles.search}>
-            <span className={styles.searchIcon}><img src={searchIcon} alt="Search" style={{ width: '20px', height: '20px', opacity: 0.6 }} /></span>
-            <input className={styles.searchInput} type="text" placeholder="Search now" />
+    <div className={styles.headerContainer}>
+      <div className={styles.subHeaderContainer1}>
+        <header className={styles.header1}>
+          <div className={styles.logoDiv}>
+            <img src={logoChu} alt="Logo" className={styles.logo} />
           </div>
-        </div>
-        <div className={styles.profileBox}>
-          <span className={styles.notificationIcon}><img src={notificationIcon} alt="Notification" style={{ width: '22px', height: '22px', opacity: 0.6 }} /></span>
-          <span className={styles.profilePic}><img src={profilePicIcon} alt="Profile" style={{ width: '40px', height: '40px' }} /></span>
-          <span className={styles.threeDotHorizontalIcon}><img src={threeDotHorizontalIcon} alt="More Options" style={{ width: '20px', height: '20px', opacity: 0.6 }} /></span>
-        </div>
+          <div className={styles.button}>
+            <img src={moreIcon} alt="moreIcon" className={styles.buttonIcon} />
+          </div>
+        </header>
+      </div>
+      <div className={styles.subHeaderContainer2}>
+        <header className={styles.header2}>
+          <div className={styles.searchDiv}>
+            <div
+              className={styles.button}
+            >
+              <img src={searchIcon} alt="searchIcon" className={styles.buttonIcon} />
+            </div>
+            <input className={styles.searchInput} placeholder='Search now' />
+          </div>
+          <div className={styles.profileDiv}>
+            <div className={`${styles.button}`}>
+              <img src={notificationIcon} alt="notificationIcon" className={styles.buttonIcon} />
+            </div>
+            <div className={styles.avatarDiv}>
+              <img src={profilePicIcon} alt="profilePicIcon" className={styles.avatar} />
+            </div>
+            <div className={`${styles.button}`}>
+              <img src={profileMoreIcon} alt="threeDotHorizontalIcon" className={styles.buttonIcon} />
+            </div>
+          </div>
+        </header>
       </div>
     </div>
   )

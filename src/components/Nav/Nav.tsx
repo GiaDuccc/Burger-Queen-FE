@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom'
 interface SubMenuItem {
   id: string
   title: string
-  url?: string}
+  url?: string
+}
 
 interface MenuItem {
   id: string
@@ -29,24 +30,29 @@ function Nav() {
     {
       id: 'dashboard',
       title: 'Dashboard',
-      url: 'dashboard',
+      url: '/dashboard',
       icon: '📊'
     },
     {
       id: 'menu',
       title: 'Menu',
-      icon: '🍔',
-      subItems: [
-        { id: 'burger', title: 'Burger'},
-        { id: 'chips', title: 'Chips' },
-        { id: 'drink', title: 'Drink'},
-        { id: 'chicken', title: 'Chicken'},
-        { id: 'combo', title: 'Combo'}
-      ]
+      url: 'menu',
+      icon: '🍔'
     },
     {
       id: 'branches',
       title: 'Branches',
+      icon: '👥',
+      subItems: [
+        { id: 'employees', title: 'Employees', url: 'management/employees' },
+        { id: 'branches', title: 'Branches', url: 'management/branches' },
+        { id: 'companies', title: 'Companies', url: 'management/companies' },
+        { id: 'roles', title: 'Roles & Permissions', url: 'management/roles' }
+      ]
+    },
+    {
+      id: 'employees',
+      title: 'Employees',
       icon: '👥',
       subItems: [
         { id: 'employees', title: 'Employees', url: 'management/employees' },
@@ -64,16 +70,6 @@ function Nav() {
         { id: 'pending-orders', title: 'Pending Orders', url: 'orders/pending' },
         { id: 'completed-orders', title: 'Completed Orders', url: 'orders/completed' },
         { id: 'cancelled-orders', title: 'Cancelled Orders', url: 'orders/cancelled' }
-      ]
-    },
-    {
-      id: 'analytics',
-      title: 'Analytics',
-      icon: '📈',
-      subItems: [
-        { id: 'sales-report', title: 'Sales Report', url: '/analytics/sales' },
-        { id: 'customer-report', title: 'Customer Report', url: '/analytics/customers' },
-        { id: 'inventory-report', title: 'Inventory Report', url: '/analytics/inventory' }
       ]
     },
     {
@@ -105,10 +101,6 @@ function Nav() {
     setActiveDropdown(activeDropdown === itemId ? null : itemId)
   }
 
-  const subItemClick = (subItemId: string) => {
-    navigate(`/admin/menu?type=${subItemId}`)
-  }
-
   const renderNavItem = (item: MenuItem) => {
     const hasSubItems = item.subItems && item.subItems.length > 0
     const isActive = activeDropdown === item.id
@@ -128,7 +120,7 @@ function Nav() {
     return (
       <li key={item.id} className={styles.navItem}>
         <a
-          href={item.url || "#"}
+          href={`/admin/${item.url}` || "#"}
           className={`${styles.navLink} ${hasSubItems ? styles.hasDropdown : ''} ${isActive ? styles.active : ''}`}
           onMouseEnter={() => hasSubItems && setHoveredItem(item.id)}
           onMouseLeave={() => setHoveredItem(null)}
@@ -159,7 +151,6 @@ function Nav() {
             {item.subItems!.map((subItem) => (
               <li
                 key={subItem.id} className={styles.dropdownItem}
-                onClick= {() => subItemClick(subItem.id)}
               >
                 <p className={styles.dropdownLink}>
                   {subItem.title}
@@ -173,10 +164,12 @@ function Nav() {
   }
 
   return (
-    <div className={styles.nav}>
-      <ul className={styles.navList}>
-        {navItems.map(renderNavItem)}
-      </ul>
+    <div className={styles.navContainer}>
+      <nav className={styles.nav}>
+        <ul className={styles.navList}>
+          {navItems.map(renderNavItem)}
+        </ul>
+      </nav>
     </div>
   )
 }

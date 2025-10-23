@@ -1,72 +1,134 @@
-.header {
+$colorHoverButton: #ff7d01;
+
+.headerContainer {
   width: 100%;
-  height: 60px;
-  background-color: white;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
+  height: 100px;
+  background-color: transparent;
+  padding: 16px 16px 12px 16px; 
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  display: flex;
 }
 
-.logoDiv {
-  width: 240px;
+.subHeaderContainer1 {
+  width: 264px;
+  height: 100%;
+  background-color: transparent;
+  padding-right: 24px;
+}
+
+.subHeaderContainer2 {
+  flex: 1;
+  height: 100%;
+  background-color: transparent;
+}
+
+.header1 {
+  width: 100%;
   height: 100%;
   background-color: white;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.searchAndProfile {
-  flex: 1;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px
+  padding: 0 12px;
 }
-.searchBox {
-  display: flex;
-  align-items: center;
-}
-.moreIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-right: 12px
-}
-.search {
-  display: flex;
-  align-items: center;
-  padding: 16px
-}
-.searchIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.searchInput {
+
+.header2 {
+  width: 100%;
+  height: 100%;
   background-color: white;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  border-radius: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+}
+
+.logoDiv {
+  width: 148px;
+  height: 56px;
+  // background-color: #f4b966;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  transition: all 0.25s cubic-bezier(0.42, 0, 0.58, 1);
+
+  &:hover {
+    background-color: $colorHoverButton;
+    cursor: pointer;
+  }
+}
+
+.iconDiv {
+  width: 40px;
+  height: 40px;
+  // background-color: #f4b966;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+
+  &:hover {
+    background-color: $colorHoverButton;
+    cursor: pointer;
+  }
+  &:hover .icon {
+    filter: invert(1);
+  }
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.logo {
+  width: 120px;
+  height: 64px;
+}
+
+.searchDiv {
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  background-color: #fff;
   border: none;
-  padding: 12px 12px;
+  padding: 12px 16px;
   font-size: 16px;
   font-weight: 500;
-  color: #333;
   outline: none;
+  color:rgba(0, 0, 0, 0.7);
   min-width: 300px;
-  transition: border-color 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+  margin-left: 8px; 
+  border-radius: 100px;
 
   &::placeholder {
     color: rgb(0, 0, 0);
-    opacity: 0.4;
-    font-size: 14px;
+    opacity: 0.7;
+    font-size: 16px;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
   }
 
   &:focus {
     border: none;
     box-shadow: none;
     outline: none;
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
   }
 
   &:hover {
@@ -74,26 +136,51 @@
   }
 }
 
-.profileBox {
+.profileDiv {
+  width: 200px;
+  height: 48px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-around;
 }
-.profilePic {
-  width: 40px;
-  height: 40px;
+
+.avatarDiv {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  cursor: pointer;
 }
-.notificationIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+.avatar {
+  width: 100%;
+  height: 100%;
 }
-.threeDotHorizontalIcon {
+
+.button {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background-color: #ffffff;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+
+  &:hover {
+    background-color: #ff7d01;
+    cursor: pointer;
+
+    .buttonIcon {
+      filter: invert(1);
+    }
+  }
+
+}
+
+.buttonIcon {
+  width: 20px;
+  height: 20px;
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
 }
