@@ -1,0 +1,374 @@
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin btn ($width, $height) {
+  @include flex-center;
+  width:  $width;
+  height: $height;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: none;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+
+  &:hover {
+    background-color: #ff7d01;
+    cursor: pointer;
+
+
+    .buttonIcon {
+      filter: invert(1);
+    }
+  }
+
+}
+
+@mixin btn-icon ($width, $height) {
+  width: $width;
+  height: $height;
+  transition: all 0.1s cubic-bezier(0.42, 0, 0.58, 1);
+  user-select: none;
+
+  &:hover {
+    filter: invert(1);
+    cursor: pointer;
+  }
+}
+
+.addComboContainer {
+  width: 40%;
+  background-color: transparent;
+  margin: 12px 16px;
+  height: calc(100% - 100px);
+}
+
+.addComboDiv {
+  width: 40%;
+  height: fit-content;
+  max-height: 83%;
+  background-color: white;
+  margin: 12px 16px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  padding: 16px 20px 20px;
+  position: fixed;
+  top: 100px;
+  right: 0;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Edge mới, Opera */
+  }
+}
+
+.headerDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.headerTitle {
+  font-weight: 1000;
+  color: black;
+  line-height: 40px;
+  color: #ff7d01
+}
+
+.button {
+  @include btn(36px, 36px);
+}
+
+.buttonIcon {
+  @include btn-icon(16px, 16px);
+}
+
+.addComboContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.addComboFieldDiv {
+  display: flex;
+  flex-direction: column;
+  // margin-top: 20px;
+  gap: 4px;
+  width: 100%;
+}
+
+.fieldTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.fieldInput {
+  padding: 0 16px;
+  border-radius: 16px;
+  background-color: #ffffff;
+  outline: 2px solid #919191;
+  border: none;
+  height: 48px;
+  color: #000;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  // font-weight: 800;
+
+  &::placeholder {
+    color: #b0b0b0;
+  }
+
+  &:focus {
+    box-shadow: none;
+    outline: 2px solid #ff7d01;
+    color: #000;
+  }
+}
+
+.fieldInputActived {
+  padding: 0 16px;
+  border-radius: 16px;
+  background-color: #e3e3e3;
+  outline: 2px solid #919191;
+  border: none;
+  height: 48px;
+  color: #000;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+
+  &::placeholder {
+    color: #000;
+  }
+
+  &:focus {
+    box-shadow: none;
+    outline: 2px solid #ff7d01;
+    color: #000;
+  }
+}
+
+.addButtonDiv {
+  @include flex-center;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  justify-content: right;
+}
+
+.addButton {
+  @include flex-center;
+  width: 30%;
+  height: 48px;
+  border-radius: 40px;
+  background-color: #ffffff;
+  color: black;
+  border: none;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ff7d01;
+    color: white
+  }
+}
+
+.fieldItemsDiv {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  width: 100%;
+}
+
+.fieldFoodSearchDiv {
+  width: 40%;
+  position: relative;
+}
+
+.listFoodSearchDiv {
+  position: absolute;
+  flex: 1;
+  background-color: white;
+  max-height: 224px;
+  height: fit-content;
+  bottom: 0;
+  width: 100%;
+  right: -108%;
+  border-radius: 16px 16px 16px 0;
+  // border: 2px solid #919191;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.foodSearchItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+
+  &:hover {
+    background-color: #ff7d01;
+    cursor: pointer;
+
+    .foodSearchItemName {
+      color: white;
+    }
+  }
+}
+
+.foodSearchItemImage {
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+}
+
+.foodSearchItemInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px;
+}
+
+.foodSearchItemName {
+  color: #ff7d01;
+  font-weight: 800;
+  font-size: 12px;
+  transition: all 0.1s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.foodSearchItemPrice {
+  font-weight: 800;
+  color: black;
+  font-size: 12px;
+}
+
+.currency {
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.fieldFoodSelected {
+  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.foodSelectedItem {
+  display: flex;
+  width: 100%;
+  height: 104px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 16px;
+  gap: 12px;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
+}
+
+.foodSelectedItemImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+}
+
+.foodSelectedItemInfo {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.foodSelectedItemName {
+  color: #ff7d01;
+}
+
+.foodSelectedItemPrice {
+  color: black;
+}
+
+
+.foodSelectedItemFunctions {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.foodSelectedItemRemoveButton {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.foodSelectedItemQuantityInput {
+  width: 48px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 12px;
+  border: 2px solid #919191;
+  outline: none;
+  background-color: #ffffff;
+  color: #000;
+  text-align: center;
+  font-weight: 800;
+
+  /* Ẩn mũi tên tăng giảm trong Chrome, Edge, Safari */
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.foodSelectedUpdateQuantityDiv {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.foodSelectedQuantity {
+  font-size: 16px;
+  font-weight: 800;
+  color: black;
+  border: 2px solid #919191;
+  padding: 0 12px;
+  border-radius: 16px;
+}
+
+.trashButton {
+  @include btn(30px, 30px);
+}
+
+.foodSelectedUpdateQuantityButton {
+  @include btn(24px, 24px);
+}
+

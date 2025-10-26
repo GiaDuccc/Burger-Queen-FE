@@ -1,0 +1,23 @@
+.container {
+  width: 100%;
+  min-height: 100%;
+  height: fit-content;
+  background-color: #fff;
+}
+
+.container img {
+  user-select: none;
+}
+
+.layout {
+  display: flex;
+  height: calc(100% - 100px);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 10px 16px 0 0;
+
+}
