@@ -1,0 +1,167 @@
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.updateFoodContainer {
+  width: 40%;
+  background-color: transparent;
+  margin: 12px 16px;
+  height: calc(100% - 100px);
+}
+
+.updateFoodDiv {
+  width: 40%;
+  height: fit-content;
+  max-height: 83%;
+  background-color: white;
+  margin: 12px 16px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  padding: 16px 20px 20px;
+  position: fixed;
+  top: 100px;
+  right: 0;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Edge mới, Opera */
+}
+}
+
+.headerDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.headerTitle {
+  font-weight: 1000;
+  color: black;
+  line-height: 40px;
+  color: #ff7d01
+}
+
+.button {
+  @include flex-center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  // border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  border: none;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+
+  &:hover {
+    background-color: #ff7d01;
+    cursor: pointer;
+
+    .buttonIcon {
+      filter: invert(1);
+    }
+  }
+
+}
+
+.buttonIcon {
+  width: 20px;
+  height: 20px;
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.updateFoodContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.updateFoodFieldDiv {
+  display: flex;
+  flex-direction: column;
+  // margin-top: 20px;
+  gap: 4px;
+}
+
+.fieldTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.fieldInput {
+  padding: 0 16px;
+  border-radius: 16px;
+  background-color: #ffffff;
+  outline: 2px solid #919191;
+  border: none;
+  height: 48px;
+  color: #000;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+
+  &::placeholder {
+    color: #b0b0b0;
+  }
+
+  &:focus {
+    box-shadow: none;
+    outline: 2px solid #ff7d01;
+    color: #000;
+  }
+}
+
+.fieldInputActived {
+  padding: 0 16px;
+  border-radius: 16px;
+  background-color: #e3e3e3;
+  outline: 2px solid #919191;
+  border: none;
+  height: 48px;
+  color: #000;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+
+  &::placeholder {
+    color: #000;
+  }
+
+  &:focus {
+    box-shadow: none;
+    outline: 2px solid #ff7d01;
+    color: #000;
+  }
+}
+
+.updateButtonDiv {
+  @include flex-center;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  justify-content: right;
+}
+
+.updateButton {
+  @include flex-center;
+  width: 30%;
+  height: 48px;
+  border-radius: 40px;
+  background-color: #ffffff;
+  color: black;
+  border: none;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ff7d01;
+    color: white
+  }
+}
