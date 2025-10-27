@@ -6,6 +6,11 @@ export const getAllFoodbyType = async (foodType: string) => {
   return response.data
 }
 
+export const getFoodDetail = async (foodId: string) => {
+  const response = await axios.get(`${API_ROOT}/v1/food/${foodId}`)
+  return response.data
+}
+
 export const getFoodType = async () => {
   const response = await axios.get(`${API_ROOT}/v1/food/getFoodType`)
   return response.data
@@ -23,5 +28,10 @@ export const deleteFood = async (foodId: string) => {
 
 export const searchFood = async (keyword: string) => {
   const response = await axios.get(`${API_ROOT}/v1/food/searchFood?keyword=${keyword}`)
+  return response.data
+}
+
+export const updateFood = async (foodId: string, foodData: object) => {
+  const response = await axios.put(`${API_ROOT}/v1/food/${foodId}`, foodData)
   return response.data
 }

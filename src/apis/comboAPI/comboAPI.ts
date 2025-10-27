@@ -15,3 +15,8 @@ export const createCombo = async (data: object) => {
   const response = await axios.post(`${API_ROOT}/v1/combo`, data);
   return response.data;
 }
+
+export const updateCombo = async (comboId: string, data: object) => {
+  const response = await axios.put(`${API_ROOT}/v1/combo/${comboId}`, data);
+  return response.data;
+}

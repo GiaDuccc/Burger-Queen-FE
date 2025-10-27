@@ -1,15 +1,15 @@
-import styles from './AddCombo.module.scss'
+import styles from './UpdateCombo.module.scss'
 import closeIcon from '~/assets/close.png'
 import trashIcon from '~/assets/trash.png'
 import increaseIcon from '~/assets/rightArrowBlack.png'
 import decreaseIcon from '~/assets/leftArrowBlack.png'
-import { searchFood } from '~/apis/foodAPI/foodAPI';
-import { createCombo } from '~/apis/comboAPI/comboAPI'
+import { getFoodDetail, searchFood } from '~/apis/foodAPI/foodAPI';
+import { updateCombo } from '~/apis/comboAPI/comboAPI'
 import { useEffect, useState } from 'react';
 
-interface AddComboProps {
+interface UpdateComboProps {
   onClose: () => void;
-  // foodTypeActive: string;
+  comboActive: any;
 }
 
 const fields = [
@@ -20,12 +20,14 @@ const fields = [
   { field: 'imageUrl', label: 'Image URL' }
 ]
 
-function AddCombo(props: AddComboProps) {
+
+function UpdateCombo(props: UpdateComboProps) {
 
   const [keyword, setKeyword] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [listFoodSelected, setListFoodSelected] = useState<any[]>([]);
+  const [comboActive, setComboActive] = useState(props.comboActive);
 
   useEffect(() => {
     const fetchSearchResults = async () => {
@@ -42,6 +44,25 @@ function AddCombo(props: AddComboProps) {
     console.log("listFoodSelected: ", listFoodSelected);
   }, [listFoodSelected]);
 
+  useEffect(() => {
+  if (props.comboActive.foods.length) {
+    const fetch = async () => {
+      const tmp = await Promise.all(
+        props.comboActive.foods.map(async (item: any) => {
+          const foodDetail = await getFoodDetail(item.foodId);
+          return {
+            quantity: item.quantity,
+            food: foodDetail,
+          };
+        })
+      );
+      setListFoodSelected(tmp);
+    };
+
+    fetch();
+  }
+}, [props.comboActive]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -55,12 +76,12 @@ function AddCombo(props: AddComboProps) {
     };
 
     console.log(comboData);
-    await createCombo(comboData)
+    await updateCombo(props.comboActive._id, comboData)
       .then((res) => {
-        console.log('Combo created successfully:', res);
+        console.log('Combo updated successfully:', res);
       })
       .catch((error) => {
-        console.error('Error creating combo:', error);
+        console.error('Error updating combo:', error);
       });
 
     props.onClose();
@@ -106,17 +127,17 @@ function AddCombo(props: AddComboProps) {
   }
 
   return (
-    <div className={styles.addComboContainer}>
-      <div className={styles.addComboDiv}>
+    <div className={styles.updateComboContainer}>
+      <div className={styles.updateComboDiv}>
         <div className={styles.headerDiv}>
-          <h1 className={styles.headerTitle}>ADD COMBO</h1>
+          <h1 className={styles.headerTitle}>UPDATE COMBO</h1>
           <button className={styles.button} onClick={props.onClose}>
             <img className={styles.buttonIcon} src={closeIcon} alt="close icon" />
           </button>
         </div>
-        <form className={styles.addComboContent} onSubmit={(e) => handleSubmit(e)}>
+        <form className={styles.updateComboContent} onSubmit={(e) => handleSubmit(e)}>
           {fields.map((field) => (
-            <div className={styles.addComboFieldDiv} key={field.field}>
+            <div className={styles.updateComboFieldDiv} key={field.field}>
               {field.field === 'items' ? (
                 <>
                   <div className={styles.fieldItemsDiv}>
@@ -210,19 +231,23 @@ function AddCombo(props: AddComboProps) {
                 <>
                   <h3 className={styles.fieldTitle}>{field.label}</h3>
                   <input name={`${field.field}`} type={field.field === 'price' ? 'number' : 'text'}
+                    className={styles.fieldInput}
+                    placeholder={comboActive[field.field]}
+                    value={comboActive[field.field]}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault(); // ⛔ chặn submit khi nhấn Enter
                       }
                     }}
-                    className={styles.fieldInput} placeholder={`Enter ${field.label}`} />
+                    onChange={(e) => setComboActive({ ...comboActive, [field.field]: e.target.value })}
+                  />
                 </>
               )}
 
             </div>
           ))}
-          <div className={styles.addButtonDiv}>
-            <button type="submit" className={styles.addButton}>ADD COMBO</button>
+          <div className={styles.updateButtonDiv}>
+            <button type="submit" className={styles.updateButton}>UPDATE COMBO</button>
           </div>
         </form>
       </div >
@@ -230,4 +255,4 @@ function AddCombo(props: AddComboProps) {
   )
 }
 
-export default AddCombo
+export default UpdateCombo

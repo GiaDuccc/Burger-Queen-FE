@@ -10,6 +10,8 @@ import menuStyle from './Menu.module.scss'
 import { deleteCombo, getAllCombo } from '~/apis/comboAPI/comboAPI';
 import AddFood from './AddFood/AddFood';
 import AddCombo from './AddCombo/AddCombo';
+import UpdateFood from './UpdateFood/UpdateFood';
+import UpdateCombo from './UpdateCombo/UpdateCombo';
 
 interface FoodByType {
   foodType: string;
@@ -20,11 +22,20 @@ function Menu() {
 
   const [foodByType, setFoodByType] = useState<FoodByType[]>([]);
   const [isAddingFoodOrCombo, setIsAddingFoodOrCombo] = useState<boolean>(false);
-  const [foodTypeActive, setFoodTypeActive] = useState<string>('');
+  const [foodActive, setFoodActive] = useState<any>({});
+  const [isActiveUpdateFoodOrCombo, setIsActiveUpdateFoodOrCombo] = useState<boolean>(false);
 
-  const handleAddFoodOrCombo = (foodType: string) => {
+  const handleAddFoodOrCombo = (food: any) => {
     setIsAddingFoodOrCombo(true);
-    setFoodTypeActive(foodType);
+    setIsActiveUpdateFoodOrCombo(false);
+    setFoodActive(food);
+  }
+
+  const handleUpdateFoodOrCombo = (food: any) => {
+    console.log(food)
+    setIsActiveUpdateFoodOrCombo(true);
+    setIsAddingFoodOrCombo(false);
+    setFoodActive(food);
   }
 
   const handleDeleteFood = async (id: string, type: string) => {
@@ -109,7 +120,7 @@ function Menu() {
                   <button
                     className={menuStyle.foodButton}
                     onClick={() =>
-                      handleAddFoodOrCombo(item.foodType)
+                      handleAddFoodOrCombo(item)
                     }
                   >
                     <img src={addIcon} alt="addIcon" className={menuStyle.buttonIcon} />
@@ -120,6 +131,7 @@ function Menu() {
                     <div
                       className={menuStyle.foodItemCard}
                       key={food._id}
+                      onClick={() => handleUpdateFoodOrCombo(food)}
                     >
                       <div className={menuStyle.foodImageDiv}>
                         <img src={food.image} alt={food.foodName} className={menuStyle.foodImg} />
@@ -128,7 +140,10 @@ function Menu() {
                         <h3 className={menuStyle.foodName}>{food.foodName ? food.foodName : food.comboName}</h3>
                         <p className={menuStyle.foodPrice}>{food.price}<span className={menuStyle.currency}>đ</span></p>
                         <div className={menuStyle.foodButtonDiv}>
-                          <button className={menuStyle.foodButton}>
+                          <button
+                            className={menuStyle.foodButton}
+                            onClick={() => handleUpdateFoodOrCombo(food)}
+                          >
                             <img src={editIcon} alt="editIcon" className={menuStyle.buttonIcon} />
                           </button>
                           <button
@@ -148,13 +163,13 @@ function Menu() {
         </div>
         {isAddingFoodOrCombo && (
           <>
-            {foodTypeActive === 'combo' ? (
+            {foodActive.foodType === 'combo' ? (
               <AddCombo
                 onClose={() => {
                   setIsAddingFoodOrCombo(false);
                   fetchData();
                 }}
-                foodTypeActive={foodTypeActive}
+              // foodTypeActive={foodTypeActive}
               />
             ) : (
               <AddFood
@@ -162,12 +177,32 @@ function Menu() {
                   setIsAddingFoodOrCombo(false);
                   fetchData();
                 }}
-                foodTypeActive={foodTypeActive}
-              />  
+                foodTypeActive={foodActive.foodType}
+              />
             )}
           </>
         )}
-
+        {isActiveUpdateFoodOrCombo && (
+          <>
+            {foodActive?.foodType ? (
+              <UpdateFood
+                onClose={() => {
+                  setIsActiveUpdateFoodOrCombo(false);
+                  fetchData();
+                }}
+                foodActive={foodActive}
+              />
+            ) : (
+              <UpdateCombo
+                onClose={() => {
+                  setIsActiveUpdateFoodOrCombo(false);
+                  fetchData();
+                }}
+                comboActive={foodActive}
+              />
+            )}
+          </>
+        )}
       </div>
     </div>
   )
