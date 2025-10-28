@@ -3,7 +3,6 @@ import styles from './Nav.module.scss'
 import rightArrowBlackIcon from '~/assets/rightArrowBlack.png'
 import rightArrowWhiteIcon from '~/assets/rightArrowWhite.png'
 import downArrowBlackIcon from '~/assets/downArrowWhite.png'
-import { useNavigate } from 'react-router-dom'
 
 interface SubMenuItem {
   id: string
@@ -22,8 +21,6 @@ interface MenuItem {
 function Nav() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-  // const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   // Mock data cho navigation
   const navItems: MenuItem[] = [
@@ -43,41 +40,36 @@ function Nav() {
       id: 'branches',
       title: 'Branches',
       icon: '👥',
-      subItems: [
-        { id: 'employees', title: 'Employees', url: 'management/employees' },
-        { id: 'branches', title: 'Branches', url: 'management/branches' },
-        { id: 'companies', title: 'Companies', url: 'management/companies' },
-        { id: 'roles', title: 'Roles & Permissions', url: 'management/roles' }
-      ]
+      url: 'branches',
     },
-    {
-      id: 'employees',
-      title: 'Employees',
-      icon: '👥',
-      subItems: [
-        { id: 'employees', title: 'Employees', url: 'management/employees' },
-        { id: 'branches', title: 'Branches', url: 'management/branches' },
-        { id: 'companies', title: 'Companies', url: 'management/companies' },
-        { id: 'roles', title: 'Roles & Permissions', url: 'management/roles' }
-      ]
-    },
-    {
-      id: 'orders',
-      title: 'Orders',
-      url: '/orders',
-      icon: '📋',
-      subItems: [
-        { id: 'pending-orders', title: 'Pending Orders', url: 'orders/pending' },
-        { id: 'completed-orders', title: 'Completed Orders', url: 'orders/completed' },
-        { id: 'cancelled-orders', title: 'Cancelled Orders', url: 'orders/cancelled' }
-      ]
-    },
-    {
-      id: 'inventory',
-      title: 'Inventory',
-      url: '/inventory',
-      icon: '📦'
-    },
+    // {
+    //   id: 'employees',
+    //   title: 'Employees',
+    //   icon: '👥',
+    //   subItems: [
+    //     { id: 'employees', title: 'Employees', url: 'management/employees' },
+    //     { id: 'branches', title: 'Branches', url: 'management/branches' },
+    //     { id: 'companies', title: 'Companies', url: 'management/companies' },
+    //     { id: 'roles', title: 'Roles & Permissions', url: 'management/roles' }
+    //   ]
+    // },
+    // {
+    //   id: 'orders',
+    //   title: 'Orders',
+    //   url: '/orders',
+    //   icon: '📋',
+    //   subItems: [
+    //     { id: 'pending-orders', title: 'Pending Orders', url: 'orders/pending' },
+    //     { id: 'completed-orders', title: 'Completed Orders', url: 'orders/completed' },
+    //     { id: 'cancelled-orders', title: 'Cancelled Orders', url: 'orders/cancelled' }
+    //   ]
+    // },
+    // {
+    //   id: 'inventory',
+    //   title: 'Inventory',
+    //   url: '/inventory',
+    //   icon: '📦'
+    // },
     {
       id: 'customers',
       title: 'Customers',

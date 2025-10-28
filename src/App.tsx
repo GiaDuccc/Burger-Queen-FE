@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage/HomePage'
 import Admin from './pages/Admin/Admin'
 import './App.scss'
 import Menu from './pages/Admin/Menu/Menu'
+import Branch from './pages/Admin/Branch/Branch'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/menu" element={<Menu />} />
+        <Route path="/admin/branches" element={<Branch />} />
       </Routes>
     </Router>
   )

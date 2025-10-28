@@ -50,10 +50,10 @@ $fullHeight: 100vh;
 .foodItemCard {
   display: flex;
   flex-direction: column;
-  min-width: 180px;
+  min-width: 200px;
   width: calc($fullWidth * 0.16);
   max-width: 240px;
-  min-height: 280px;
+  min-height: 312px;
   height: calc($fullWidth * 0.3);
   max-height: fit-content;
   border: 1px solid #e0e0e0;
@@ -74,8 +74,8 @@ $fullHeight: 100vh;
 
 .foodImageDiv {
   width: 100%;
+  min-height: 180px;
   height: 55%;
-  max-height: 55%;
   background-color: transparent;
   border-radius: $borderRadiusFoodItemCard $borderRadiusFoodItemCard 0 0;
   overflow: hidden;
