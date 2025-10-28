@@ -45,6 +45,10 @@ function UpdateCombo(props: UpdateComboProps) {
   }, [listFoodSelected]);
 
   useEffect(() => {
+    setComboActive(props.comboActive);
+  }, [props.comboActive]);
+
+  useEffect(() => {
   if (props.comboActive.foods.length) {
     const fetch = async () => {
       const tmp = await Promise.all(
@@ -58,7 +62,6 @@ function UpdateCombo(props: UpdateComboProps) {
       );
       setListFoodSelected(tmp);
     };
-
     fetch();
   }
 }, [props.comboActive]);

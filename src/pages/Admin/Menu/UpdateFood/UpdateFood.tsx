@@ -1,7 +1,7 @@
 import styles from './UpdateFood.module.scss'
 import closeIcon from '~/assets/close.png'
 import { updateFood } from '~/apis/foodAPI/foodAPI';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface AddFoodProps {
   onClose: () => void;
@@ -20,6 +20,10 @@ const fields = [
 function UpdateFood(props: AddFoodProps) {
 
   const [foodActive, setFoodActive] = useState(props.foodActive);
+
+  useEffect(() => {
+    setFoodActive(props.foodActive);
+  }, [props.foodActive]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, foodTypeActive: string) => {
     e.preventDefault();
