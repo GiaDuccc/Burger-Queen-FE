@@ -1,0 +1,103 @@
+@mixin paragraphStyle($fontSize, $fontWeight, $color) {
+  font-size: $fontSize;
+  font-weight: $fontWeight;
+  color: $color;
+}
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.branchContainer {
+  width: 100%;
+  height: fit-content;
+  padding-bottom: 20px;
+}
+
+.branchContent {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+}
+
+.branchCitySection {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.branchCityTitle {
+  @include paragraphStyle(32px, 1000,#ff7d01);
+}
+
+.branchList {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.branchItem {
+  max-width: 45%;
+  min-width: 400px;
+  height: 120px;
+  border-radius: 16px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+
+  &:hover {
+    .branchName {
+      text-decoration: underline;
+    }
+  }
+}
+
+.branchImageDiv {
+  @include flex-center;
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  background-color: #ffc691;
+}
+
+.branchImage {
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+}
+
+.branchInfoDiv {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.branchName {
+  @include paragraphStyle(20px, 800, black);
+}
+
+.branchAddress {
+  @include paragraphStyle(14px, 800, gray);
+}
+
+.branchStatusDiv {
+  display: flex;
+  height: 100%;
+  align-items: flex-start;
+}
+
+.branchStatus {
+  @include paragraphStyle(16px, 800, transparent);
+}
