@@ -1,5 +1,5 @@
-import styles from './SignIn.module.scss'
-import { signIn } from '~/apis/authAPI/authAPI';
+import styles from './SignInAdmin.module.scss'
+import { signInAdmin } from '~/apis/adminAPI/authAPI/authAPI';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,10 +13,9 @@ const SignIn = () => {
     const username = formData.get('username') as string;
     const password = formData.get('password') as string;
 
-    await signIn(username, password)
+    await signInAdmin(username, password)
       .then((data) => {
         toast.success(data.introduce);
-        localStorage.setItem('accessToken', data.accessToken);
         setTimeout(() => {
           navigate('/admin')
         }, 1000)

@@ -38,33 +38,6 @@
   }
 }
 
-.addComboContainer {
-  width: 40%;
-  background-color: transparent;
-  margin: 12px 16px;
-  height: calc(100% - 100px);
-}
-
-.addComboDiv {
-  width: 40%;
-  height: fit-content;
-  max-height: 83%;
-  background-color: white;
-  margin: 12px 16px;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 16px;
-  padding: 16px 20px 20px;
-  position: fixed;
-  top: 100px;
-  right: 0;
-  overflow-y: scroll;
-
-  &::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari, Edge mới, Opera */
-  }
-}
-
 .headerDiv {
   display: flex;
   align-items: center;
@@ -165,7 +138,7 @@
 
 .addButton {
   @include flex-center;
-  width: 30%;
+  width: 140px;
   height: 48px;
   border-radius: 40px;
   background-color: #ffffff;

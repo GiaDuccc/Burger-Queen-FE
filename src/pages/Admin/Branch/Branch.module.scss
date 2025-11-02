@@ -45,8 +45,9 @@
 }
 
 .branchItem {
-  max-width: 45%;
-  min-width: 400px;
+  max-width: 500px;
+  // min-width: 400px;
+  flex: 1 1 500px;
   height: 120px;
   border-radius: 16px;
   padding: 12px 20px;
