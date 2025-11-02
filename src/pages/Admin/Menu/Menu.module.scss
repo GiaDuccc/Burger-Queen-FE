@@ -9,6 +9,17 @@ $borderRadiusFoodItemCard: 24px;
 $fullWidth: 100vw;
 $fullHeight: 100vh;
 
+.container {
+  width: 100%;
+  display: flex;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .menuDiv {
   display: flex;
   flex-direction: column;
@@ -43,23 +54,23 @@ $fullHeight: 100vh;
 .foodItemsDiv {
   display: flex;
   flex-wrap: wrap;
-  gap: calc($fullWidth * 0.02);
+  gap: 32px;
   align-items: center;
 }
 
 .foodItemCard {
   display: flex;
   flex-direction: column;
-  min-width: 200px;
-  width: calc($fullWidth * 0.16);
+
+  flex: 1 1 220px;
   max-width: 240px;
-  min-height: 312px;
-  height: calc($fullWidth * 0.3);
-  max-height: fit-content;
+
+  min-height: 300px;
   border: 1px solid #e0e0e0;
   border-radius: $borderRadiusFoodItemCard;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  overflow: hidden;
 
   &:hover {
     .foodImg {
@@ -74,24 +85,18 @@ $fullHeight: 100vh;
 
 .foodImageDiv {
   width: 100%;
-  min-height: 180px;
-  height: 55%;
-  background-color: transparent;
+  height: 240px;
   border-radius: $borderRadiusFoodItemCard $borderRadiusFoodItemCard 0 0;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .foodImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: $borderRadiusFoodItemCard $borderRadiusFoodItemCard 0 0;
   transition: all 0.25s cubic-bezier(0.42, 0, 0.58, 1);
 }
-
-// .foodImg:hover {
-//   transform: scale(1.1);
-// }
 
 .foodInfo {
   text-align: center;
@@ -162,4 +167,32 @@ $fullHeight: 100vh;
   width: 20px;
   height: 20px;
   transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.sidebarContainer {
+  width: calc(100vw * 0.3);
+  background-color: transparent;
+  height: 100%;
+  margin-left: 32px;
+}
+
+.sidebarContent {
+  width: 30%;
+  height: fit-content;
+  max-height: calc($fullHeight - 132px);
+  background-color: white;
+  margin: 12px 16px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  padding: 16px 20px 20px;
+  position: fixed;
+  top: 100px;
+  right: 0;
+  overflow-y: scroll;
+  transition: all 0.3s cubic-bezier(0.42, 0, 0.58, 1);
+
+  &::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Edge mới, Opera */
+  }
 }

@@ -1,6 +1,6 @@
 import styles from './UpdateFood.module.scss'
 import closeIcon from '~/assets/close.png'
-import { updateFood } from '~/apis/foodAPI/foodAPI';
+import { updateFood } from '~/apis/adminAPI/foodAPI/foodAPI';
 import { useEffect, useState } from 'react';
 
 interface AddFoodProps {
@@ -42,43 +42,41 @@ function UpdateFood(props: AddFoodProps) {
   }
 
   return (
-    <div className={styles.updateFoodContainer}>
-      <div className={styles.updateFoodDiv}>
-        <div className={styles.headerDiv}>
-          <h1 className={styles.headerTitle}>UPDATE FOOD</h1>
-          <button className={styles.button} onClick={props.onClose}>
-            <img className={styles.buttonIcon} src={closeIcon} alt="close icon" />
-          </button>
-        </div>
-        <form className={styles.updateFoodContent} onSubmit={(e) => handleSubmit(e, props.foodActive.foodType)}>
-          {fields.map((field) => (
-            <div className={styles.updateFoodFieldDiv} key={field.field}>
-              <h3 className={styles.fieldTitle}>{field.label}</h3>
-              {field.field === 'foodType' ? (
-                <input name={`${field.field}`} type="text" className={styles.fieldInputActived} placeholder={props.foodActive.foodType} value={props.foodActive.foodType} disabled />
-              ) : (
-                <input
-                  name={`${field.field}`}
-                  type={field.field === 'price' ? 'number' : 'text'}
-                  className={styles.fieldInput}
-                  placeholder={props.foodActive[field.field]}
-                  value={foodActive[field.field]}
-                  onChange={(e) => setFoodActive({ ...foodActive, [field.field]: e.target.value })}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault(); // ⛔ chặn submit khi nhấn Enter
-                    }
-                  }}
-                />
-              )}
-            </div>
-          ))}
-          <div className={styles.updateButtonDiv}>
-            <button type="submit" className={styles.updateButton}>UPDATE FOOD</button>
-          </div>
-        </form>
+    <>
+      <div className={styles.headerDiv}>
+        <h1 className={styles.headerTitle}>UPDATE FOOD</h1>
+        <button className={styles.button} onClick={props.onClose}>
+          <img className={styles.buttonIcon} src={closeIcon} alt="close icon" />
+        </button>
       </div>
-    </div>
+      <form className={styles.updateFoodContent} onSubmit={(e) => handleSubmit(e, props.foodActive.foodType)}>
+        {fields.map((field) => (
+          <div className={styles.updateFoodFieldDiv} key={field.field}>
+            <h3 className={styles.fieldTitle}>{field.label}</h3>
+            {field.field === 'foodType' ? (
+              <input name={`${field.field}`} type="text" className={styles.fieldInputActived} placeholder={props.foodActive.foodType} value={props.foodActive.foodType} disabled />
+            ) : (
+              <input
+                name={`${field.field}`}
+                type={field.field === 'price' ? 'number' : 'text'}
+                className={styles.fieldInput}
+                placeholder={props.foodActive[field.field]}
+                value={foodActive[field.field]}
+                onChange={(e) => setFoodActive({ ...foodActive, [field.field]: e.target.value })}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault(); // ⛔ chặn submit khi nhấn Enter
+                  }
+                }}
+              />
+            )}
+          </div>
+        ))}
+        <div className={styles.updateButtonDiv}>
+          <button type="submit" className={styles.updateButton}>UPDATE FOOD</button>
+        </div>
+      </form>
+    </>
   )
 }
 

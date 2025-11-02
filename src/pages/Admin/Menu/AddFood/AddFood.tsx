@@ -1,6 +1,6 @@
 import styles from './AddFood.module.scss'
 import closeIcon from '~/assets/close.png'
-import { createFood } from '~/apis/foodAPI/foodAPI';
+import { createFood } from '~/apis/adminAPI/foodAPI/foodAPI';
 
 interface AddFoodProps {
   onClose: () => void;
@@ -35,41 +35,39 @@ function AddFood(props: AddFoodProps) {
   }
 
   return (
-    <div className={styles.addFoodContainer}>
-      <div className={styles.addFoodDiv}>
-        <div className={styles.headerDiv}>
-          <h1 className={styles.headerTitle}>ADD FOOD</h1>
-          <button className={styles.button} onClick={props.onClose}>
-            <img className={styles.buttonIcon} src={closeIcon} alt="close icon" />
-          </button>
-        </div>
-        <form className={styles.addFoodContent} onSubmit={(e) => handleSubmit(e, props.foodTypeActive)}>
-          {fields.map((field) => (
-            <div className={styles.addFoodFieldDiv} key={field.field}>
-              <h3 className={styles.fieldTitle}>{field.label}</h3>
-              {field.field === 'foodType' ? (
-                <input name={`${field.field}`} type="text" className={styles.fieldInputActived} placeholder={props.foodTypeActive} value={props.foodTypeActive} disabled />
-              ) : (
-                <input
-                  name={`${field.field}`}
-                  type={field.field === 'price' ? 'number' : 'text'}
-                  className={styles.fieldInput}
-                  placeholder={`Enter ${field.label}`}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault(); // ⛔ chặn submit khi nhấn Enter
-                    }
-                  }}
-                />
-              )}
-            </div>
-          ))}
-          <div className={styles.addButtonDiv}>
-            <button type="submit" className={styles.addButton}>ADD FOOD</button>
-          </div>
-        </form>
+    <>
+      <div className={styles.headerDiv}>
+        <h1 className={styles.headerTitle}>ADD FOOD</h1>
+        <button className={styles.button} onClick={props.onClose}>
+          <img className={styles.buttonIcon} src={closeIcon} alt="close icon" />
+        </button>
       </div>
-    </div>
+      <form className={styles.addFoodContent} onSubmit={(e) => handleSubmit(e, props.foodTypeActive)}>
+        {fields.map((field) => (
+          <div className={styles.addFoodFieldDiv} key={field.field}>
+            <h3 className={styles.fieldTitle}>{field.label}</h3>
+            {field.field === 'foodType' ? (
+              <input name={`${field.field}`} type="text" className={styles.fieldInputActived} placeholder={props.foodTypeActive} value={props.foodTypeActive} disabled />
+            ) : (
+              <input
+                name={`${field.field}`}
+                type={field.field === 'price' ? 'number' : 'text'}
+                className={styles.fieldInput}
+                placeholder={`Enter ${field.label}`}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault(); // ⛔ chặn submit khi nhấn Enter
+                  }
+                }}
+              />
+            )}
+          </div>
+        ))}
+        <div className={styles.addButtonDiv}>
+          <button type="submit" className={styles.addButton}>ADD FOOD</button>
+        </div>
+      </form>
+    </>
   )
 }
 

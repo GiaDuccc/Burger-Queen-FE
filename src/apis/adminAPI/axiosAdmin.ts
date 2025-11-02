@@ -1,14 +1,15 @@
 import axios from "axios";
 import { API_ROOT } from "~/utils/constants";
 
-const axiosClient = axios.create({
-  baseURL: `${API_ROOT}/v1/`,
+const axiosAdmin = axios.create({
+  baseURL: `${API_ROOT}/v1/admin`,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
+// Flag để tránh refresh token đồng thời nhiều lần
 let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (value?: any) => void;
@@ -26,9 +27,9 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
-axiosClient.interceptors.request.use((config) => {
+axiosAdmin.interceptors.request.use((config) => {
 
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem("accessTokenAdmin");
   if (accessToken && config.headers) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
@@ -38,7 +39,7 @@ axiosClient.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
-axiosClient.interceptors.response.use(
+axiosAdmin.interceptors.response.use(
   (response) => response,
   async (error) => {
     console.log(error)
@@ -69,7 +70,7 @@ axiosClient.interceptors.response.use(
             if (token && originalRequest.headers) {
               originalRequest.headers.Authorization = `Bearer ${token}`;
             }
-            return axiosClient(originalRequest);
+            return axiosAdmin(originalRequest);
           })
           .catch(err => {
             return Promise.reject(err);
@@ -80,7 +81,7 @@ axiosClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshResponse = await axiosClient.post("/auth/refreshAdmin");
+        const refreshResponse = await axiosAdmin.post("/auth/refreshAdmin");
         const newToken = refreshResponse.data.accessToken;
 
         // Lưu token mới
@@ -93,7 +94,7 @@ axiosClient.interceptors.response.use(
         if (originalRequest.headers) {
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
         }
-        return axiosClient(originalRequest);
+        return axiosAdmin(originalRequest);
       } catch (refreshError: any) {
         // Process queue với lỗi
         processQueue(refreshError, null);
@@ -116,4 +117,4 @@ axiosClient.interceptors.response.use(
   }
 );
 
-export default axiosClient;
+export default axiosAdmin;
