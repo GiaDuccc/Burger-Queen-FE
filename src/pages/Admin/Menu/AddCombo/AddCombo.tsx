@@ -6,6 +6,7 @@ import decreaseIcon from '~/assets/leftArrowBlack.png'
 import { searchFood } from '~/apis/adminAPI/foodAPI/foodAPI';
 import { createCombo } from '~/apis/adminAPI/comboAPI/comboAPI'
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface AddComboProps {
   onClose: () => void;
@@ -54,16 +55,14 @@ function AddCombo(props: AddComboProps) {
       }))
     };
 
-    console.log(comboData);
     await createCombo(comboData)
-      .then((res) => {
-        console.log('Combo created successfully:', res);
+      .then(() => {
+        toast.success('Combo created successfully');
+        props.onClose();
       })
       .catch((error) => {
-        console.error('Error creating combo:', error);
+        toast.error(error.response?.data?.message || 'Failed to create combo');
       });
-
-    props.onClose();
   }
 
   const handleAddFood = (food: any) => {

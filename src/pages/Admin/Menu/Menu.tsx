@@ -9,6 +9,7 @@ import AddFood from './AddFood/AddFood';
 import AddCombo from './AddCombo/AddCombo';
 import UpdateFood from './UpdateFood/UpdateFood';
 import UpdateCombo from './UpdateCombo/UpdateCombo';
+import { toast } from 'react-toastify';
 
 interface FoodByType {
   foodType: string;
@@ -39,24 +40,22 @@ function Menu() {
     console.log(id, type)
     if (type === 'combo') {
       await deleteCombo(id)
-        .then((res) => {
-          console.log('Combo deleted successfully:', res);
-          // Refresh the food list after deletion
+        .then(() => {
+          toast.success('Combo deleted successfully');
           fetchData();
         })
         .catch((error) => {
-          console.error('Error deleting combo:', error);
+          toast.error(error.response?.data?.message || 'Failed to delete combo');
         });
     }
     else {
       await deleteFood(id)
-        .then((res) => {
-          console.log('Food deleted successfully:', res);
-          // Refresh the food list after deletion
+        .then(() => {
+          toast.success('Food deleted successfully');
           fetchData();
         })
         .catch((error) => {
-          console.error('Error deleting food:', error);
+          toast.error(error.response?.data?.message || 'Failed to delete food');
         });
     }
   }
@@ -80,10 +79,14 @@ function Menu() {
     );
     arrayOfFood.push({
       foodType: 'combo',
-      foods: await getAllCombo().then((combos) => combos.map((combo: any) => ({
-        ...combo,
-        image: combo.imageUrl
-      })))
+      foods: await getAllCombo()
+        .then((combos) => combos.map((combo: any) => ({
+          ...combo,
+          image: combo.imageUrl
+        })))
+        .catch((error) => {
+          toast.error(error.response?.data?.message || 'Failed to fetch combos');
+        })
     })
     setFoodByType(arrayOfFood.sort((a, b) => a.foodType.localeCompare(b.foodType)));
   }
@@ -133,12 +136,18 @@ function Menu() {
                       <div className={menuStyle.foodButtonDiv}>
                         <button
                           className={menuStyle.foodButton}
-                          onClick={() => handleUpdateFoodOrCombo(food)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateFoodOrCombo(food);
+                          }}
                         >
                           <img src={editIcon} alt="editIcon" className={menuStyle.buttonIcon} />
                         </button>
                         <button
-                          onClick={() => handleDeleteFood(food._id, item.foodType)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteFood(food._id, item.foodType);
+                          }}
                           className={menuStyle.foodButton}
                         >
                           <img src={trashIcon} alt="trashIcon" className={menuStyle.buttonIcon} />

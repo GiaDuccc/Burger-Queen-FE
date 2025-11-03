@@ -2,6 +2,7 @@ import styles from './UpdateFood.module.scss'
 import closeIcon from '~/assets/close.png'
 import { updateFood } from '~/apis/adminAPI/foodAPI/foodAPI';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface AddFoodProps {
   onClose: () => void;
@@ -29,16 +30,14 @@ function UpdateFood(props: AddFoodProps) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     formData.set('foodType', foodTypeActive);
-    console.log(Object.fromEntries(formData));
     await updateFood(props.foodActive._id, Object.fromEntries(formData))
-      .then((res) => {
-        console.log('Food updated successfully:', res);
+      .then(() => {
+        toast.success('Food updated successfully');
+        props.onClose();
       })
       .catch((error) => {
-        console.error('Error updating food:', error);
+        toast.error(error.response?.data?.message || 'Failed to update food');
       });
-
-    props.onClose();
   }
 
   return (

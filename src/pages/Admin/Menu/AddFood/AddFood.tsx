@@ -1,6 +1,7 @@
 import styles from './AddFood.module.scss'
 import closeIcon from '~/assets/close.png'
 import { createFood } from '~/apis/adminAPI/foodAPI/foodAPI';
+import { toast } from 'react-toastify';
 
 interface AddFoodProps {
   onClose: () => void;
@@ -22,16 +23,14 @@ function AddFood(props: AddFoodProps) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     formData.set('foodType', foodTypeActive);
-    console.log(Object.fromEntries(formData));
     await createFood(Object.fromEntries(formData))
-      .then((res) => {
-        console.log('Food created successfully:', res);
+      .then(() => {
+        toast.success('Food created successfully');
+        props.onClose();
       })
       .catch((error) => {
-        console.error('Error creating food:', error);
+        toast.error(error.response?.data?.message || 'Failed to create food');
       });
-
-    props.onClose();
   }
 
   return (
