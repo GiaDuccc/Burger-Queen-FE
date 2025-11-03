@@ -6,6 +6,7 @@ import decreaseIcon from '~/assets/leftArrowBlack.png'
 import { getFoodDetail, searchFood } from '~/apis/adminAPI/foodAPI/foodAPI';
 import { updateCombo } from '~/apis/adminAPI/comboAPI/comboAPI'
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface UpdateComboProps {
   onClose: () => void;
@@ -40,9 +41,9 @@ function UpdateCombo(props: UpdateComboProps) {
     fetchSearchResults();
   }, [keyword]);
 
-  useEffect(() => {
-    console.log("listFoodSelected: ", listFoodSelected);
-  }, [listFoodSelected]);
+  // useEffect(() => {
+  //   console.log("listFoodSelected: ", listFoodSelected);
+  // }, [listFoodSelected]);
 
   useEffect(() => {
     setComboActive(props.comboActive);
@@ -77,17 +78,14 @@ function UpdateCombo(props: UpdateComboProps) {
         quantity: item.quantity
       }))
     };
-
-    console.log(comboData);
     await updateCombo(props.comboActive._id, comboData)
-      .then((res) => {
-        console.log('Combo updated successfully:', res);
+      .then(() => {
+        toast.success('Combo updated successfully');
+        props.onClose();
       })
       .catch((error) => {
-        console.error('Error updating combo:', error);
+        toast.error(error.response?.data?.message || 'Failed to update combo');
       });
-
-    props.onClose();
   }
 
   const handleAddFood = (food: any) => {
