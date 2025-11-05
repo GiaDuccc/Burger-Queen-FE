@@ -49,6 +49,12 @@ function Nav() {
       icon: '👤'
     },
     {
+      id: 'employees',
+      title: 'Employees',
+      url: 'employee',
+      icon: '👤'
+    },
+    {
       id: 'settings',
       title: 'Settings',
       icon: '⚙️',
