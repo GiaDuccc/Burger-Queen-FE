@@ -1,19 +1,47 @@
 import styles from './Header.module.scss';
-// import logo from '~/assets/logo.png'
 import logoChu from '~/assets/logo-chu.png'
 import moreIcon from '~/assets/more.png'
 import searchIcon from '~/assets/search.png'
 import notificationIcon from '~/assets/notification.png'
-import profilePicIcon from '~/assets/profile.png'
 import profileMoreIcon from '~/assets/threeDotHorizontal.png'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { myInfo } from '~/apis/adminAPI/authAPI/authAPI';
+import { toast } from 'react-toastify';
+
+interface Profile {
+  _id: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  userType: string;
+  avatarUrl: string;
+  status: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 function Header() {
 
-  const [isActiveMore, setIsActiveMore] = useState(false);
-  const [isActiveSearch, setIsActiveSearch] = useState(false);
-  const [isActiveNotification, setIsActiveNotification] = useState(false);
-  const [isActiveProfileMore, setIsActiveProfileMore] = useState(false);
+  // const [isActiveMore, setIsActiveMore] = useState(false);
+  // const [isActiveSearch, setIsActiveSearch] = useState(false);
+  // const [isActiveNotification, setIsActiveNotification] = useState(false);
+  // const [isActiveProfileMore, setIsActiveProfileMore] = useState(false);
+
+  const [profile, setProfile] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await myInfo();
+        setProfile(data);
+      } catch (error) {
+        toast.error('Failed to fetch profile information.');
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   return (
     <div className={styles.headerContainer}>
@@ -42,7 +70,7 @@ function Header() {
               <img src={notificationIcon} alt="notificationIcon" className={styles.buttonIcon} />
             </div>
             <div className={styles.avatarDiv}>
-              <img src={profilePicIcon} alt="profilePicIcon" className={styles.avatar} />
+              <img src={profile?.avatarUrl} alt="profilePicIcon" className={styles.avatar} />
             </div>
             <div className={`${styles.button}`}>
               <img src={profileMoreIcon} alt="threeDotHorizontalIcon" className={styles.buttonIcon} />
