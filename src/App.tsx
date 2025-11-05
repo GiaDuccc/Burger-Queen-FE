@@ -7,6 +7,7 @@ import Branch from './pages/Admin/Branch/Branch'
 import SignIn from './pages/Admin/SignInAdmin/SignInAdmin'
 import { ToastContainer, Flip } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import Customer from './pages/Admin/Customer/Customer'
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
         <Route path="/admin/sign-in" element={<SignIn />} />
         <Route path="/admin" element={<Admin />} >
           <Route path="menu" element={<Menu />} />
-          <Route path="branches" element={<Branch />} />
+          <Route path="branch" element={<Branch />} />
+          <Route path="customer" element={<Customer />} />
         </Route>
       </Routes>
 
