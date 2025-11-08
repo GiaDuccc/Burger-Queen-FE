@@ -8,6 +8,7 @@ import SignIn from './pages/Admin/SignInAdmin/SignInAdmin'
 import { ToastContainer, Flip } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import Customer from './pages/Admin/Customer/Customer'
+import Employee from './pages/Admin/Employee/Employee'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="menu" element={<Menu />} />
           <Route path="branch" element={<Branch />} />
           <Route path="customer" element={<Customer />} />
+          <Route path="employee" element={<Employee />} />
         </Route>
       </Routes>
 

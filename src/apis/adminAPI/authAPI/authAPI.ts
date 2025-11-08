@@ -12,6 +12,6 @@ export const signInAdmin = async (username: string, password: string) => {
 };
 
 export const myInfo = async () => {
-  const response = await axiosAdmin.get('/user/myInfo')
+  const response = await axiosAdmin.get('/auth/myInfo')
   return response.data;
 }
