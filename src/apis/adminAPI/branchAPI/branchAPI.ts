@@ -16,3 +16,8 @@ export const getBranchByCity = async (city: string) => {
   });
   return response.data;
 }
+
+export const getBranchNameById = async (branchId: string) => {
+  const response = await axiosAdmin.get(`/branch/getBranchNameById/${branchId}`);
+  return response.data;
+}
