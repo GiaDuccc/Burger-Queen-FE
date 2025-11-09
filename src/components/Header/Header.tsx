@@ -4,10 +4,11 @@ import moreIcon from '~/assets/more.png'
 import searchIcon from '~/assets/search.png'
 import notificationIcon from '~/assets/notification.png'
 import profileMoreIcon from '~/assets/threeDotHorizontal.png'
+import signOutIcon from '~/assets/signOut.png'
+import profileIcon from '~/assets/profileIcon.png'
 import { useEffect, useState } from 'react';
-import { myInfo } from '~/apis/adminAPI/authAPI/authAPI';
+import { myInfo, signOutAdmin } from '~/apis/adminAPI/authAPI/authAPI';
 import { toast } from 'react-toastify';
-
 interface Profile {
   _id: string;
   fullName: string;
@@ -26,9 +27,21 @@ function Header() {
   // const [isActiveMore, setIsActiveMore] = useState(false);
   // const [isActiveSearch, setIsActiveSearch] = useState(false);
   // const [isActiveNotification, setIsActiveNotification] = useState(false);
-  // const [isActiveProfileMore, setIsActiveProfileMore] = useState(false);
+  const [isActiveProfile, setIsActiveProfile] = useState(false);
 
   const [profile, setProfile] = useState<Profile | null>(null);
+
+  const handleSignOut = async () => {
+    await signOutAdmin()
+      .then((data) => {
+        toast.success(data.message);
+        localStorage.removeItem('accessTokenAdmin');
+        window.location.href = '/admin/sign-in';
+      })
+      .catch(() => {
+        toast.error('Sign out failed. Please try again.');
+      })
+  }
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -69,8 +82,25 @@ function Header() {
             <div className={`${styles.button}`}>
               <img src={notificationIcon} alt="notificationIcon" className={styles.buttonIcon} />
             </div>
-            <div className={styles.avatarDiv}>
+            <div
+              className={styles.avatarDiv}
+              onClick={() => setIsActiveProfile(!isActiveProfile)}
+              onBlur={() => setIsActiveProfile(false)}
+              tabIndex={0}
+            >
               <img src={profile?.avatarUrl} alt="profilePicIcon" className={styles.avatar} />
+              {isActiveProfile && (
+                <ul className={styles.profileDropdown}>
+                  <li>
+                    <img src={profileIcon} alt="profileIcon" />
+                    Profile
+                  </li>
+                  <li onClick={handleSignOut}>
+                    <img src={signOutIcon} alt="signOutIcon" />
+                    Sign out
+                  </li>
+                </ul>
+              )}
             </div>
             <div className={`${styles.button}`}>
               <img src={profileMoreIcon} alt="threeDotHorizontalIcon" className={styles.buttonIcon} />

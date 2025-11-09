@@ -15,3 +15,8 @@ export const myInfo = async () => {
   const response = await axiosAdmin.get('/auth/myInfo')
   return response.data;
 }
+
+export const signOutAdmin = async () => {
+  const res = await axiosAdmin.post('/auth/signOutAdmin');
+  return res.data;
+}

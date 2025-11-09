@@ -3,6 +3,7 @@ import styles from './Nav.module.scss'
 import rightArrowBlackIcon from '~/assets/rightArrowBlack.png'
 import rightArrowWhiteIcon from '~/assets/rightArrowWhite.png'
 import downArrowBlackIcon from '~/assets/downArrowWhite.png'
+import { jwtDecode } from 'jwt-decode'
 
 interface SubMenuItem {
   id: string
@@ -19,6 +20,8 @@ interface MenuItem {
 }
 
 function Nav() {
+  const employee = jwtDecode(localStorage.getItem('accessTokenAdmin') || '') as { employeeId: string; branchId: string; role: string };
+
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
@@ -37,12 +40,6 @@ function Nav() {
       icon: '🍔'
     },
     {
-      id: 'branches',
-      title: 'Branches',
-      icon: '👥',
-      url: 'branch',
-    },
-    {
       id: 'customers',
       title: 'Customers',
       url: 'customer',
@@ -53,19 +50,16 @@ function Nav() {
       title: 'Employees',
       url: 'employee',
       icon: '👤'
-    },
-    {
-      id: 'settings',
-      title: 'Settings',
-      icon: '⚙️',
-      subItems: [
-        { id: 'general-settings', title: 'General Settings', url: '/settings/general' },
-        { id: 'payment-settings', title: 'Payment Settings', url: '/settings/payment' },
-        { id: 'notification-settings', title: 'Notifications', url: '/settings/notifications' },
-        { id: 'security-settings', title: 'Security', url: '/settings/security' }
-      ]
     }
-  ]
+  ];
+  if (employee.role === 'manager') {
+    navItems.push({
+        id: 'branches',
+        title: 'Branches',
+        icon: '👥',
+        url: 'branch',
+      })
+  }
 
   const toggleDropdown = (itemId: string) => {
     setActiveDropdown(activeDropdown === itemId ? null : itemId)
@@ -90,7 +84,7 @@ function Nav() {
     return (
       <li key={item.id} className={styles.navItem}>
         <a
-          href={`/admin/${item.url}` || "#"}
+          href={`${item.url}` || "#"}
           className={`${styles.navLink} ${hasSubItems ? styles.hasDropdown : ''} ${isActive ? styles.active : ''}`}
           onMouseEnter={() => hasSubItems && setHoveredItem(item.id)}
           onMouseLeave={() => setHoveredItem(null)}
@@ -115,20 +109,6 @@ function Nav() {
             </span>
           )}
         </a>
-
-        {hasSubItems && (
-          <ul className={`${styles.dropdown} ${activeDropdown === item.id ? styles.active : ''}`}>
-            {item.subItems!.map((subItem) => (
-              <li
-                key={subItem.id} className={styles.dropdownItem}
-              >
-                <p className={styles.dropdownLink}>
-                  {subItem.title}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
       </li>
     )
   }
