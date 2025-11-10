@@ -4,6 +4,7 @@ import rightArrowBlackIcon from '~/assets/rightArrowBlack.png'
 import rightArrowWhiteIcon from '~/assets/rightArrowWhite.png'
 import downArrowBlackIcon from '~/assets/downArrowWhite.png'
 import { jwtDecode } from 'jwt-decode'
+import { Link } from 'react-router-dom'
 
 interface SubMenuItem {
   id: string
@@ -83,8 +84,8 @@ function Nav() {
 
     return (
       <li key={item.id} className={styles.navItem}>
-        <a
-          href={`${item.url}` || "#"}
+        <Link
+          to={`${item.url || '#'}`}
           className={`${styles.navLink} ${hasSubItems ? styles.hasDropdown : ''} ${isActive ? styles.active : ''}`}
           onMouseEnter={() => hasSubItems && setHoveredItem(item.id)}
           onMouseLeave={() => setHoveredItem(null)}
@@ -108,7 +109,7 @@ function Nav() {
               />
             </span>
           )}
-        </a>
+        </Link>
       </li>
     )
   }

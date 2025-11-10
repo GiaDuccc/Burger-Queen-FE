@@ -16,14 +16,9 @@ const SignIn = () => {
     await signInAdmin(username, password)
       .then((data) => {
         toast.success(data.introduce);
-        if (data.employee.role === 'manager') {
+        setTimeout(() => {
           navigate(`/admin/dashboard`);
-        }
-        else {
-          setTimeout(() => {
-            navigate(`/admin/branch/${data.employee.branchId}`);
-          }, 1000)
-        }
+        }, 1000)
       })
       .catch((error) => {
         toast.error(error.response?.data?.message || 'Sign in failed');

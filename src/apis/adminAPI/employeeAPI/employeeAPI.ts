@@ -5,7 +5,9 @@ export const getAllEmployees = async () => {
   return res.data;
 }
 
-export const getAllEmployeePage = async (params: Record<string, any>) => {
-  const res = await axiosAdmin.get(`/employee/getAllEmployeePage`, { params });
+export const getAllEmployeePage = async (params: Record<string, any>, branchId: string = "") => {
+  const res = await axiosAdmin.get(`/employee/getAllEmployeePage`, {
+    params: { ...params, branchId }
+  });
   return res.data;
 };

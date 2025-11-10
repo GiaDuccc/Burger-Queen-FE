@@ -10,6 +10,9 @@ import AddCombo from './AddCombo/AddCombo';
 import UpdateFood from './UpdateFood/UpdateFood';
 import UpdateCombo from './UpdateCombo/UpdateCombo';
 import { toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
+import ComboDetail from './ComboDetail/ComboDetail';
+import FoodDetail from './FoodDetail/FoodDetail';
 
 interface FoodByType {
   foodType: string;
@@ -17,6 +20,8 @@ interface FoodByType {
 }
 
 function Menu() {
+
+  const token = jwtDecode(localStorage.getItem('accessTokenAdmin') || '') as { employeeId: string; branchId: string; role: string };
 
   const [foodByType, setFoodByType] = useState<FoodByType[]>([]);
   const [isAddingFoodOrCombo, setIsAddingFoodOrCombo] = useState<boolean>(false);
@@ -31,7 +36,7 @@ function Menu() {
 
   const handleUpdateFoodOrCombo = (food: any) => {
     // console.log(food)
-    setIsActiveUpdateFoodOrCombo(true);
+    setIsActiveUpdateFoodOrCombo(!isActiveUpdateFoodOrCombo);
     setIsAddingFoodOrCombo(false);
     setFoodActive(food);
   }
@@ -111,14 +116,16 @@ function Menu() {
             >
               <div className={menuStyle.menuTitleDiv}>
                 <h2 className={menuStyle.foodType} >{item.foodType}</h2>
-                <button
-                  className={menuStyle.foodButton}
-                  onClick={() =>
-                    handleAddFoodOrCombo(item)
-                  }
-                >
-                  <img src={addIcon} alt="addIcon" className={menuStyle.buttonIcon} />
-                </button>
+                {token.role === 'manager' && (
+                  <button
+                    className={menuStyle.foodButton}
+                    onClick={() =>
+                      handleAddFoodOrCombo(item)
+                    }
+                  >
+                    <img src={addIcon} alt="addIcon" className={menuStyle.buttonIcon} />
+                  </button>
+                )}
               </div>
               <div className={menuStyle.foodItemsDiv}>
                 {Array.isArray(item.foods) && item.foods.map((food: any) => (
@@ -133,26 +140,28 @@ function Menu() {
                     <div className={menuStyle.foodInfo}>
                       <h3 className={menuStyle.foodName}>{food.foodName ? food.foodName : food.comboName}</h3>
                       <p className={menuStyle.foodPrice}>{food.price}<span className={menuStyle.currency}>đ</span></p>
-                      <div className={menuStyle.foodButtonDiv}>
-                        <button
-                          className={menuStyle.foodButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleUpdateFoodOrCombo(food);
-                          }}
-                        >
-                          <img src={editIcon} alt="editIcon" className={menuStyle.buttonIcon} />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteFood(food._id, item.foodType);
-                          }}
-                          className={menuStyle.foodButton}
-                        >
-                          <img src={trashIcon} alt="trashIcon" className={menuStyle.buttonIcon} />
-                        </button>
-                      </div>
+                      {token.role === 'manager' && (
+                        <div className={menuStyle.foodButtonDiv}>
+                          <button
+                            className={menuStyle.foodButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUpdateFoodOrCombo(food);
+                            }}
+                          >
+                            <img src={editIcon} alt="editIcon" className={menuStyle.buttonIcon} />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteFood(food._id, item.foodType);
+                            }}
+                            className={menuStyle.foodButton}
+                          >
+                            <img src={trashIcon} alt="trashIcon" className={menuStyle.buttonIcon} />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -162,7 +171,7 @@ function Menu() {
         }
       </div>
 
-      {isAddingFoodOrCombo && (
+      {isAddingFoodOrCombo && token.role === 'manager' && (
         <div className={menuStyle.sidebarContainer}>
           <div className={menuStyle.sidebarContent}>
             <>
@@ -172,7 +181,6 @@ function Menu() {
                     setIsAddingFoodOrCombo(false);
                     fetchData();
                   }}
-                // foodTypeActive={foodTypeActive}
                 />
               ) : (
                 <AddFood
@@ -187,7 +195,7 @@ function Menu() {
           </div>
         </div>
       )}
-      {isActiveUpdateFoodOrCombo && (
+      {isActiveUpdateFoodOrCombo && token.role === 'manager' && (
         <div className={menuStyle.sidebarContainer}>
           <div className={menuStyle.sidebarContent}>
             <>
@@ -201,6 +209,31 @@ function Menu() {
                 />
               ) : (
                 <UpdateCombo
+                  onClose={() => {
+                    setIsActiveUpdateFoodOrCombo(false);
+                    fetchData();
+                  }}
+                  comboActive={foodActive}
+                />
+              )}
+            </>
+          </div>
+        </div>
+      )}
+      {isActiveUpdateFoodOrCombo && token.role !== 'manager' && (
+        <div className={menuStyle.sidebarContainer}>
+          <div className={menuStyle.sidebarContent}>
+            <>
+              {foodActive?.foodType ? (
+                <FoodDetail
+                  onClose={() => {
+                    setIsActiveUpdateFoodOrCombo(false);
+                    fetchData();
+                  }}
+                  foodActive={foodActive}
+                />
+              ) : (
+                <ComboDetail
                   onClose={() => {
                     setIsActiveUpdateFoodOrCombo(false);
                     fetchData();
