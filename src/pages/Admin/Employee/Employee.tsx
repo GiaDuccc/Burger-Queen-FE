@@ -6,10 +6,13 @@ import rightIcon from '~/assets/rightArrowBlack.png';
 import leftIcon from '~/assets/leftArrowBlack.png';
 import filterIcon from '~/assets/filter.png';
 import { getAllEmployeePage } from '~/apis/adminAPI/employeeAPI/employeeAPI';
+import { jwtDecode } from 'jwt-decode';
 
 const filterOptions = ['Newest', 'Oldest', 'A-Z', 'Z-A'];
 
 function Employee() {
+
+  const token = jwtDecode(localStorage.getItem('accessTokenAdmin') || '') as { employeeId: string; branchId: string; role: string };
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -28,11 +31,15 @@ function Employee() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const fetchEmployees = async () => {
+    let branchId = "";
+    if (token.role !== "manager") {
+      branchId = token.branchId;
+    }
     await getAllEmployeePage({
       page: currentPage.toString(),
       limit: limit.toString(),
       filter: filter,
-    })
+    }, branchId )
       .then(async (data) => {
         console.log(data)
         if (data.employees.length === 0) {
