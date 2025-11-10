@@ -5,16 +5,16 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react';
 function Admin() {
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    const token = localStorage.getItem('accessTokenAdmin');
-    if (!token) {
-      navigate('/admin/sign-in', { replace: true });
-    }
+  //   const token = localStorage.getItem('accessTokenAdmin');
+  //   if (!token) {
+  //     navigate('/admin/sign-in', { replace: true });
+  //   }
 
-  }, [navigate]);
+  // }, [navigate]);
 
   return (
     <div className={styles.container}>
