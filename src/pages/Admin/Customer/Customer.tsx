@@ -3,9 +3,8 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getAllUserPage } from '~/apis/adminAPI/customerAPI/customerAPI';
-import rightIcon from '~/assets/rightArrowBlack.png';
-import leftIcon from '~/assets/leftArrowBlack.png';
 import filterIcon from '~/assets/filter.png';
+import Pagination from '~/components/Pagination/Pagination';
 
 const filterOptions = ['Newest', 'Oldest', 'A-Z', 'Z-A'];
 
@@ -74,8 +73,6 @@ function Customer() {
       <div className={customerStyles.content}>
         <div className={customerStyles.header}>
           <h1 className={customerStyles.title}>CUSTOMERS</h1>
-          {/* <div className={customerStyles.filterList}>
-          </div> */}
           <button
             type='button'
             className={customerStyles.filterButton}
@@ -107,22 +104,14 @@ function Customer() {
               <div className={customerStyles.info}>
                 <p>{customer.fullName}</p>
                 <p style={{ textDecoration: 'underline', color: '#ff7d01' }}>{customer.email}</p>
-                {/* <p>{customer.phoneNumber}</p> */}
-                {/* <p>{customer.address}</p> */}
-                <p>Join date: {new Date(customer.createdAt).toLocaleDateString()}</p>
+                <p>{customer.phoneNumber}</p>
+                <p>{customer.address}</p>
+                <p className={customerStyles.time}>Join date: {new Date(customer.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
           ))}
         </div>
-        <div className={customerStyles.pagination}>
-          <button className={customerStyles.paginationButton} disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
-            <img className={customerStyles.buttonIcon} src={leftIcon} alt="Previous" />
-          </button>
-          <p>{currentPage}</p>
-          <button className={customerStyles.paginationButton} disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
-            <img className={customerStyles.buttonIcon} src={rightIcon} alt="Next" />
-          </button>
-        </div>
+        <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
       </div>
     </div>
   )

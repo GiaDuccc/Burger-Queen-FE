@@ -11,3 +11,8 @@ export const getAllEmployeePage = async (params: Record<string, any>, branchId: 
   });
   return res.data;
 };
+
+export const getEmployeeByBranchId = async (branchId: string) => {
+  const res = await axiosAdmin.get(`/employee/getEmployeeByBranchId/${branchId}`);
+  return res.data;
+}

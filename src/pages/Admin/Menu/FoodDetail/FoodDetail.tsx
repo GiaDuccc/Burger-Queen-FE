@@ -45,7 +45,6 @@ function FoodDetail(props: FoodProps) {
                 className={styles.fieldInput}
                 placeholder={props.foodActive[field.field]}
                 value={foodActive[field.field]}
-                disabled
               />
             )}
           </div>

@@ -107,14 +107,14 @@
 }
 
 
-.customerList {
+.employeeList {
   display: flex;
   flex: 1;
   flex-wrap: wrap;
   gap: 20px;
 }
 
-.customerCard {
+.employeeCard {
   @include flex-align-center;
   flex: 1 1 calc(50% - 20px); // Chia 3 cột, trừ đi gap
   min-width: 400px; // Chiều rộng tối thiểu trước khi xuống dòng
@@ -148,6 +148,16 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  position: relative;
+}
+
+.time {
+  color: gray;
+  font-size: 14px;
+  font-style: italic;
+  position: absolute;
+  bottom: -18px;
+  right: 0;
 }
 
 .pagination {
@@ -168,4 +178,17 @@
     @include btn-icon(16px, 16px);
     user-select: none;
   }
+}
+
+.branchSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.branchName {
+  font-size: 24px;
+  font-weight: 1000;
+  color: #ff7d01;
+  text-transform: uppercase;
 }
