@@ -31,7 +31,7 @@ function Nav() {
     {
       id: 'dashboard',
       title: 'Dashboard',
-      url: '/dashboard',
+      url: 'dashboard',
       icon: '📊'
     },
     {
@@ -51,6 +51,12 @@ function Nav() {
       title: 'Employees',
       url: 'employee',
       icon: '👤'
+    },
+    {
+      id: 'orders',
+      title: 'Orders',
+      url: 'order',
+      icon: '🧾'
     }
   ];
   if (employee.role === 'manager') {

@@ -5,10 +5,18 @@ import { toast } from 'react-toastify';
 import rightIcon from '~/assets/rightArrowBlack.png';
 import leftIcon from '~/assets/leftArrowBlack.png';
 import filterIcon from '~/assets/filter.png';
-import { getAllEmployeePage } from '~/apis/adminAPI/employeeAPI/employeeAPI';
+import { getAllEmployeePage, getEmployeeByBranchId } from '~/apis/adminAPI/employeeAPI/employeeAPI';
 import { jwtDecode } from 'jwt-decode';
+import { getAllBranch } from '~/apis/adminAPI/branchAPI/branchAPI';
+import Pagination from '~/components/Pagination/Pagination';
 
 const filterOptions = ['Newest', 'Oldest', 'A-Z', 'Z-A'];
+
+interface employeeBranch {
+  branchId: string;
+  branchName: string;
+  employees: any[];
+}
 
 function Employee() {
 
@@ -16,14 +24,10 @@ function Employee() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [employees, setEmployees] = useState <any[]> ([]);
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [employeeBranch, setEmployeeBranch] = useState<employeeBranch[]>([]);
   // const [loading, setLoading] = useState(false);
   // const [error, setError] = useState<string | null>(null);
-
-  // pagination state
-  const currentPage = parseInt(searchParams.get("page") || "1");
-  const [totalPages, setTotalPages] = useState(0);
-  const limit = 20;
 
   const [filter, setFilter] = useState(
     searchParams.get("filter") || ""
@@ -31,40 +35,39 @@ function Employee() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const fetchEmployees = async () => {
-    let branchId = "";
-    if (token.role !== "manager") {
-      branchId = token.branchId;
+    if (token.role === "manager") {
+      const branches = await getAllBranch();
+      console.log(branches)
+
+      const employeeByBranch = await Promise.all(
+        branches.map(async (branch: any) => {
+          const employees = await getEmployeeByBranchId(branch._id);
+          return {
+            branchId: branch._id,
+            branchName: branch.branchName,
+            employees: employees
+          };
+        })
+      );
+
+      setEmployeeBranch(employeeByBranch);
     }
-    await getAllEmployeePage({
-      page: currentPage.toString(),
-      limit: limit.toString(),
-      filter: filter,
-    }, branchId )
-      .then(async (data) => {
-        console.log(data)
-        if (data.employees.length === 0) {
-          toast.info("No employees found");
-          return;
-        }
-        setEmployees(data.employees);
-        setTotalPages(data.totalPages);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
-  }
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage > 0 && newPage <= totalPages) {
-      setSearchParams(prev => {
-        prev.set('page', newPage.toString());
-        return prev;
-      });
-
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
+    else {
+      await getAllEmployeePage({
+        filter: filter,
+      }, token.branchId)
+        .then(async (data) => {
+          console.log(data)
+          if (data.employees.length === 0) {
+            toast.info("No employees found");
+            return;
+          }
+          setEmployees(data.employees);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
     }
   }
 
@@ -82,15 +85,14 @@ function Employee() {
 
   useEffect(() => {
     console.log(employees)
-  }, [employees]);
+    console.log(employeeBranch)
+  }, [employees, employeeBranch]);
 
   return (
     <div className={employeeStyles.container}>
       <div className={employeeStyles.content}>
         <div className={employeeStyles.header}>
-          <h1 className={employeeStyles.title}>CUSTOMERS</h1>
-          {/* <div className={employeeStyles.filterList}>
-          </div> */}
+          <h1 className={employeeStyles.title}>EMPLOYEES</h1>
           <button
             type='button'
             className={employeeStyles.filterButton}
@@ -113,31 +115,57 @@ function Employee() {
             )}
           </button>
         </div>
-        <div className={employeeStyles.customerList}>
-          {employees.length > 0 && employees.map((employee: any) => (
-            <div key={employee._id} className={employeeStyles.customerCard}>
-              <div className={employeeStyles.avatar}>
-                <img src={employee.avatarUrl} className={employeeStyles.avatarImage} alt="Avatar" />
+        {token.role === "manager" ? (
+          <>
+            {employeeBranch.length > 0 && employeeBranch.map((branch: any) => (
+              <>
+                {branch.employees.length > 0 && (
+                  <div key={branch.branchId} className={employeeStyles.branchSection}>
+                    <h2 className={employeeStyles.branchName}>{branch.branchName}</h2>
+                    <div className={employeeStyles.employeeList}>
+                      <div className={employeeStyles.employeeList}>
+                        {branch.employees.length > 0 && branch.employees.map((employee: any) => (
+                          <div key={employee._id} className={employeeStyles.employeeCard}>
+                            <div className={employeeStyles.avatar}>
+                              <img src={employee.avatarUrl} className={employeeStyles.avatarImage} alt="Avatar" />
+                            </div>
+                            <div className={employeeStyles.info}>
+                              <p>
+                                {employee.fullName} -
+                                <span style={{ color: '#ff7d01' }}> {employee.role.slice(0, 1).toUpperCase() + employee.role.slice(1)}</span>
+                              </p>
+                              <p>{employee.phoneNumber}</p>
+                              <p style={{ textDecoration: 'underline', color: '#ff7d01' }}>{employee.email}</p>
+                              <p>{employee.address}</p>
+                              <p className={employeeStyles.time}>Join date: {new Date(employee.createdAt).toLocaleDateString()}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            ))}
+          </>
+        ) : (
+          <div className={employeeStyles.employeeList}>
+            {employees.length > 0 && employees.map((employee: any) => (
+              <div key={employee._id} className={employeeStyles.employeeCard}>
+                <div className={employeeStyles.avatar}>
+                  <img src={employee.avatarUrl} className={employeeStyles.avatarImage} alt="Avatar" />
+                </div>
+                <div className={employeeStyles.info}>
+                  <p>{employee.fullName}</p>
+                  <p style={{ textDecoration: 'underline', color: '#ff7d01' }}>{employee.email}</p>
+                  <p>{employee.phoneNumber}</p>
+                  <p>{employee.address}</p>
+                  <p className={employeeStyles.time}>Join date: {new Date(employee.createdAt).toLocaleDateString()}</p>
+                </div>
               </div>
-              <div className={employeeStyles.info}>
-                <p>{employee.fullName}</p>
-                <p style={{ textDecoration: 'underline', color: '#ff7d01' }}>{employee.email}</p>
-                <p>{employee.phoneNumber}</p>
-                <p>{employee.address}</p>
-                <p>Join date: {new Date(employee.createdAt).toLocaleDateString()}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className={employeeStyles.pagination}>
-          <button className={employeeStyles.paginationButton} disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
-            <img className={employeeStyles.buttonIcon} src={leftIcon} alt="Previous" />
-          </button>
-          <p>{currentPage}</p>
-          <button className={employeeStyles.paginationButton} disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
-            <img className={employeeStyles.buttonIcon} src={rightIcon} alt="Next" />
-          </button>
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

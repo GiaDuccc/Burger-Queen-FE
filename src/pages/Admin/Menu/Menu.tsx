@@ -36,7 +36,7 @@ function Menu() {
 
   const handleUpdateFoodOrCombo = (food: any) => {
     // console.log(food)
-    setIsActiveUpdateFoodOrCombo(!isActiveUpdateFoodOrCombo);
+    setIsActiveUpdateFoodOrCombo(true);
     setIsAddingFoodOrCombo(false);
     setFoodActive(food);
   }

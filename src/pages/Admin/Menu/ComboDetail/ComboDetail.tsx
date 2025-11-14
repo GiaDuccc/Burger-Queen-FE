@@ -92,7 +92,6 @@ function ComboDetail(props: ComboProps) {
                   className={styles.fieldInput}
                   placeholder={comboActive[field.field]}
                   value={comboActive[field.field]}
-                  disabled
                 />
               </>
             )}

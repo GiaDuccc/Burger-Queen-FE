@@ -13,6 +13,7 @@ import BranchDetail from './pages/Admin/Branch/BranchDetail/BranchDetail'
 import Dashboard from './pages/Admin/Dashboard/Dashboard'
 import PublicRoute from './routes/PublicRoute'
 import ProtectedRoute from './routes/ProtectedRoute'
+import Order from './pages/Admin/Order/Order'
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="branch/:branchId" element={<BranchDetail />} />
             <Route path="customer" element={<Customer />} />
             <Route path="employee" element={<Employee />} />
+            <Route path="order" element={<Order />} />
           </Route>
         </Route>
       </Routes>
